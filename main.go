@@ -185,12 +185,12 @@ func install() {
 		fmt.Println("Error writing file:", err)
 		return
 	}
-	if err := os.WriteFile(vtolvrpath+"\\VTOLVR_Data\\resources.resource", resourcesassetsress, 0644); err != nil {
+	if err := os.WriteFile(vtolvrpath+"\\VTOLVR_Data\\resources.assets.resS", resourcesassetsress, 0644); err != nil {
 		fmt.Println("Error writing file:", err)
 		return
 	}
 	if AH94Installed {
-		if err := os.WriteFile(vtolvrpath+"\\DLC\\1770480", ah94, 0644); err != nil {
+		if err := os.WriteFile(vtolvrpath+"\\DLC\\1770480\\1770480", ah94, 0644); err != nil {
 			fmt.Println("Error writing file:", err)
 			return
 		}
@@ -204,7 +204,7 @@ func install() {
 		}
 	}
 	if EF24GInstalled {
-		if err := os.WriteFile(vtolvrpath+"\\DLC\\2531290", ef24g, 0644); err != nil {
+		if err := os.WriteFile(vtolvrpath+"\\DLC\\2531290\\2531290", ef24g, 0644); err != nil {
 			fmt.Println("Error writing file:", err)
 			return
 		}
@@ -226,15 +226,15 @@ func removeResources() {
 	}
 	err = os.Remove(libraryPath + "\\steamapps\\common\\VTOL VR\\VTOLVR_Data\\resources.assets")
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 	err = os.Remove(libraryPath + "\\steamapps\\common\\VTOL VR\\VTOLVR_Data\\resources.assets.resS")
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 	err = os.Remove(libraryPath + "\\steamapps\\common\\VTOL VR\\VTOLVR_Data\\resources.resource")
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 }
 
@@ -245,18 +245,18 @@ func removeAH94Files() {
 	}
 	err = os.Remove(libraryPath + "\\steamapps\\common\\VTOL VR\\DLC\\1770480\\1770480")
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 	if AH94CabResSInstalled {
 		err := os.Remove(libraryPath + "\\steamapps\\common\\VTOL VR\\VTOLVR_Data\\CAB-609a7bd01976702a18d81971aebebeea.resS")
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
 		}
 	}
 	if AH94CabResourceInstalled {
 		err := os.Remove(libraryPath + "\\steamapps\\common\\VTOL VR\\VTOLVR_Data\\CAB-609a7bd01976702a18d81971aebebeea.resource")
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
 		}
 	}
 }
@@ -268,18 +268,18 @@ func removeEF24GFiles() {
 	}
 	err = os.Remove(libraryPath + "\\steamapps\\common\\VTOL VR\\DLC\\2531290\\2531290")
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 	if EF24GCabResSInstalled {
 		err := os.Remove(libraryPath + "\\steamapps\\common\\VTOL VR\\VTOLVR_Data\\CAB-db515831ae078197daa2fd6af388d061.resS")
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
 		}
 	}
 	if EF24GCabResourceInstalled {
 		err := os.Remove(libraryPath + "\\steamapps\\common\\VTOL VR\\VTOLVR_Data\\CAB-db515831ae078197daa2fd6af388d061.resource")
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
 		}
 	}
 }
@@ -295,7 +295,7 @@ func checkAH94Installed() {
 	} else {
 		AH94Installed = true
 	}
-	exist = exists(libraryPath + "\\steamapps\\common\\VTOL VR\\DLC\\1770480\\1770480")
+	exist = exists(libraryPath + "\\steamapps\\common\\VTOL VR\\DLC\\1770480\\1770480.manifest")
 	if !exist {
 		AH94Installed = false
 	} else {
@@ -322,7 +322,7 @@ func checkEF24GInstalled() {
 	} else {
 		EF24GInstalled = true
 	}
-	exist = exists(libraryPath + "\\steamapps\\common\\VTOL VR\\DLC\\2531290\\2531290")
+	exist = exists(libraryPath + "\\steamapps\\common\\VTOL VR\\DLC\\2531290\\2531290.manifest")
 	if !exist {
 		EF24GInstalled = false
 	} else {
@@ -419,5 +419,3 @@ var ah94resS []byte
 var ef24g []byte
 var ef24gresource []byte
 var ef24gresS []byte
-
-const ah94path string = "\\steamapps\\common\\VTOL VR\\DLC\\1770480"

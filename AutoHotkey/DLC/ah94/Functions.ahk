@@ -2,34 +2,34 @@
 #include OCR.ahk
 
 Replace(){
-    rwrTexture("C:\Users\dazzl\Downloads\ahk\RWRBetty2\rwrTexture")
-    SoundReplace("ttsw_shoot","C:\Users\dazzl\Downloads\ahk\RWRBetty2\ttsw_shoot" )
-    SoundReplace("ttsw_flareLow","C:\Users\dazzl\Downloads\ahk\RWRBetty2\ttsw_flareLow" )
-    SoundReplace("ttsw_pitbull","C:\Users\dazzl\Downloads\ahk\RWRBetty2\ttsw_pitbull" )
-    SoundReplace("radarLockLoop","C:\Users\dazzl\Downloads\ahk\RWRBetty2\radarLockLoop" )
-    SoundReplace("ttsw_fuelDump","C:\Users\dazzl\Downloads\ahk\RWRBetty2\ttsw_fuelDump" )
-    SoundReplace("ttsw_auxEngineFailure","C:\Users\dazzl\Downloads\ahk\RWRBetty2\ttsw_auxEngineFailure" )
-    SoundReplace("ttsw_landingGear","C:\Users\dazzl\Downloads\ahk\RWRBetty2\ttsw_landingGear" )
-    SoundReplace("ttsw_pullUp","C:\Users\dazzl\Downloads\ahk\RWRBetty2\ttsw_pullUp" )
-    ReplaceEmpty("ttsw_chaffEmpty","C:\Users\dazzl\Downloads\ahk\RWRBetty2\ttsw_chaffEmpty" )
+    rwrTexture("C:\ahk\RWRBetty2\rwrTexture")
+    SoundReplace("ttsw_shoot","C:\ahk\RWRBetty2\ttsw_shoot" )
+    SoundReplace("ttsw_flareLow","C:\ahk\RWRBetty2\ttsw_flareLow" )
+    SoundReplace("ttsw_pitbull","C:\ahk\RWRBetty2\ttsw_pitbull" )
+    SoundReplace("radarLockLoop","C:\ahk\RWRBetty2\radarLockLoop" )
+    SoundReplace("ttsw_fuelDump","C:\ahk\RWRBetty2\ttsw_fuelDump" )
+    SoundReplace("ttsw_auxEngineFailure","C:\ahk\RWRBetty2\ttsw_auxEngineFailure" )
+    SoundReplace("ttsw_landingGear","C:\ahk\RWRBetty2\ttsw_landingGear" )
+    SoundReplace("ttsw_pullUp","C:\ahk\RWRBetty2\ttsw_pullUp" )
+    ReplaceEmpty("ttsw_chaffEmpty","C:\ahk\RWRBetty2\ttsw_chaffEmpty" )
     ReplaceMissileLockLoop()
-    SoundReplace("rwrNewContact2","C:\Users\dazzl\Downloads\ahk\RWRBetty2\rwrNewContact2" )
-    ReplaceNormal("ttsw_flare","C:\Users\dazzl\Downloads\ahk\RWRBetty2\ttsw_flare" )
-    SoundReplace("ttsw_chaffLow","C:\Users\dazzl\Downloads\ahk\RWRBetty2\ttsw_chaffLow" )
-    SoundReplace("mwsTone","C:\Users\dazzl\Downloads\ahk\RWRBetty2\mwsTone" )
-    SoundReplace("rwrPing2","C:\Users\dazzl\Downloads\ahk\RWRBetty2\rwrPing2" )
-    SoundReplace("ttsw_missileLaunch","C:\Users\dazzl\Downloads\ahk\RWRBetty2\ttsw_missileLaunch" )
-    SoundReplace("ttsw_bingoFuel","C:\Users\dazzl\Downloads\ahk\RWRBetty2\ttsw_bingoFuel" )
-    SoundReplace("ttsw_altitude","C:\Users\dazzl\Downloads\ahk\RWRBetty2\ttsw_altitude" )
-    SoundReplace("ttsw_wingFold","C:\Users\dazzl\Downloads\ahk\RWRBetty2\ttsw_wingFold" )
+    SoundReplace("rwrNewContact2","C:\ahk\RWRBetty2\rwrNewContact2" )
+    ReplaceNormal("ttsw_flare","C:\ahk\RWRBetty2\ttsw_flare" )
+    SoundReplace("ttsw_chaffLow","C:\ahk\RWRBetty2\ttsw_chaffLow" )
+    SoundReplace("mwsTone","C:\ahk\RWRBetty2\mwsTone" )
+    SoundReplace("rwrPing2","C:\ahk\RWRBetty2\rwrPing2" )
+    SoundReplace("ttsw_missileLaunch","C:\ahk\RWRBetty2\ttsw_missileLaunch" )
+    SoundReplace("ttsw_bingoFuel","C:\ahk\RWRBetty2\ttsw_bingoFuel" )
+    SoundReplace("ttsw_altitude","C:\ahk\RWRBetty2\ttsw_altitude" )
+    SoundReplace("ttsw_wingFold","C:\ahk\RWRBetty2\ttsw_wingFold" )
     ReplaceWarningBeep()
-    SoundReplace("ttsw_overG","C:\Users\dazzl\Downloads\ahk\RWRBetty2\ttsw_overG" )
-    SoundReplace("ttsw_leftEngineFailure","C:\Users\dazzl\Downloads\ahk\RWRBetty2\ttsw_leftEngineFailure" )
-    ReplaceEmpty("ttsw_flareEmpty","C:\Users\dazzl\Downloads\ahk\RWRBetty2\ttsw_flareEmpty" )
-    ReplaceNormal("ttsw_chaff","C:\Users\dazzl\Downloads\ahk\RWRBetty2\ttsw_chaff" )
-    SoundReplace("SARHLockLoop","C:\Users\dazzl\Downloads\ahk\RWRBetty2\SARHLockLoop" )
-    SoundReplace("ttsw_rightEngineFailure","C:\Users\dazzl\Downloads\ahk\RWRBetty2\ttsw_rightEngineFailure" )
-    SoundReplace("ttsw_autopilotOff","C:\Users\dazzl\Downloads\ahk\RWRBetty2\ttsw_autopilotOff" )
+    SoundReplace("ttsw_overG","C:\ahk\RWRBetty2\ttsw_overG" )
+    SoundReplace("ttsw_leftEngineFailure","C:\ahk\RWRBetty2\ttsw_leftEngineFailure" )
+    ReplaceEmpty("ttsw_flareEmpty","C:\ahk\RWRBetty2\ttsw_flareEmpty" )
+    ReplaceNormal("ttsw_chaff","C:\ahk\RWRBetty2\ttsw_chaff" )
+    SoundReplace("SARHLockLoop","C:\ahk\RWRBetty2\SARHLockLoop" )
+    SoundReplace("ttsw_rightEngineFailure","C:\ahk\RWRBetty2\ttsw_rightEngineFailure" )
+    SoundReplace("ttsw_autopilotOff","C:\ahk\RWRBetty2\ttsw_autopilotOff" )
 
 }
 
@@ -43,7 +43,7 @@ ReplaceWarningBeep(){
     Sleep 100
     Send "{Right}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{AppsKey}{Down}{Down}{Enter}"
     Sleep 300
-    SendText "C:\Users\dazzl\Downloads\ahk\RWRBetty2\warningBeep"
+    SendText "C:\ahk\RWRBetty2\warningBeep"
     Sleep 500
     ClickOpen()
     Sleep 100
@@ -107,7 +107,7 @@ ReplaceMissileLockLoop(){
     Sleep 100
     Send "{Right}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{AppsKey}{Down}{Down}{Enter}"
     Sleep 300
-    SendText "C:\Users\dazzl\Downloads\ahk\RWRBetty2\missileLockLoop"
+    SendText "C:\ahk\RWRBetty2\missileLockLoop"
     Sleep 500
     ClickOpen()
     Sleep 100
@@ -216,7 +216,7 @@ RightClickOnText(inputString){
 
 NavigateToAssets(){
     Send "{Click 910 35}"
-    SendText "C:\Users\dazzl\Downloads\ahk\RWRBetty2"
+    SendText "C:\ahk\RWRBetty2"
     Sleep 100
     Send "{Enter}"
 }

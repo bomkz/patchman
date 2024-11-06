@@ -2,6 +2,7 @@
 #include OCR.ahk
 
 Replace(){
+    dashTexture("C:\ahk\RWRBetty2\dashSprites")
     rwrTexture("C:\ahk\RWRBetty2\rwrTexture")
     SoundReplace("ttsw_shoot","C:\ahk\RWRBetty2\ttsw_shoot" )
     SoundReplace("ttsw_flareLow","C:\ahk\RWRBetty2\ttsw_flareLow" )
@@ -31,112 +32,116 @@ Replace(){
     SoundReplace("ttsw_rightEngineFailure","C:\ahk\RWRBetty2\ttsw_rightEngineFailure" )
     SoundReplace("ttsw_engineFailure","C:\ahk\RWRBetty2\ttsw_engineFailure" )
     SoundReplace("ttsw_autopilotOff","C:\ahk\RWRBetty2\ttsw_autopilotOff" )
-
 }
 
+dashTexture(assetPath){
+    Find("dashSprites")
+    Sleep 600
+    LeftClickOnText("Data")
+    Sleep 200
+    Send "{Right}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{AppsKey}{Down}{Down}{Enter}"
+    Sleep 400
+    SendText assetPath
+    Sleep 600
+    ClickOpen()
+    Sleep 1100
+    MiddleClickOnText("View Asset")
+    Sleep 200
+    Send "{Left}{Left}{Enter}"
+    Sleep 200
+}
 
 ReplaceWarningBeep(){
     Find("warningBeep")
-    Sleep 500
+    Sleep 600
     Send "{F3} {F3} {F3}"
-    Sleep 1000
+    Sleep 1100
     LeftClickOnText("Data")
-    Sleep 100
+    Sleep 200
     Send "{Right}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{AppsKey}{Down}{Down}{Enter}"
-    Sleep 300
+    Sleep 400
     SendText "C:\ahk\RWRBetty2\warningBeep"
-    Sleep 500
+    Sleep 600
     ClickOpen()
-    Sleep 100
+    Sleep 200
     MiddleClickOnText("View Asset")
-    Sleep 100
+    Sleep 200
     Send "{Left}{Left}{Enter}"
-    Sleep 100
+    Sleep 200
 }
 
 
 ReplaceNormal(assetName,assetPath){
-
     Find(assetName)
-    Sleep 500
+    Sleep 600
     Send "{F3} {F3}"
-    Sleep 1000
+    Sleep 1100
     LeftClickOnText("Data")
-    Sleep 100
+    Sleep 200
     Send "{Right}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{AppsKey}{Down}{Down}{Enter}"
-    Sleep 300
+    Sleep 400
     SendText assetPath
-    Sleep 500
+    Sleep 600
     ClickOpen()
-    Sleep 100
+    Sleep 200
     MiddleClickOnText("View Asset")
-    Sleep 100
+    Sleep 200
     Send "{Left}{Left}{Enter}"
-    Sleep 100
-
+    Sleep 200
 }
 
 ReplaceEmpty(assetName, assetPath){
-
     Find(assetName)
-    Sleep 500
-
+    Sleep 600
     Send "{F3}"
-    Sleep 1000
+    Sleep 1100
     LeftClickOnText("Data")
-    Sleep 100
+    Sleep 200
     Send "{Right}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{AppsKey}{Down}{Down}{Enter}"
-    Sleep 300
+    Sleep 400
     SendText assetPath
-    Sleep 500
+    Sleep 600
     ClickOpen()
-    Sleep 100
+    Sleep 200
     MiddleClickOnText("View Asset")
-    Sleep 100
+    Sleep 200
     Send "{Left}{Left}{Enter}"
-    Sleep 100
-
+    Sleep 200
 }
 
 ReplaceMissileLockLoop(){
-
     Find("missileLockLoop")
-    Sleep 500
+    Sleep 600
     Send "{F3}{F3}{F3}{F3}"
-    Sleep 1000
+    Sleep 1100
     LeftClickOnText("Data")
-    Sleep 100
+    Sleep 200
     Send "{Right}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{AppsKey}{Down}{Down}{Enter}"
-    Sleep 300
+    Sleep 400
     SendText "C:\ahk\RWRBetty2\missileLockLoop"
-    Sleep 500
+    Sleep 600
     ClickOpen()
-    Sleep 100
+    Sleep 200
     MiddleClickOnText("View Asset")
-    Sleep 100
+    Sleep 200
     Send "{Left}{Left}{Enter}"
-    Sleep 100
+    Sleep 200
 }
 
 NavigateToData(){
     Send "{Click 910 35}"
     SendText "C:\Program Files (x86)\Steam\steamapps\common\VTOL VR\VTOLVR_Data"
-    Sleep 100
+    Sleep 200
     Send "{Enter}"
 }
 
 OpenResources(){
     Send "{Click 527 181}"
     SendText "R"
-    Sleep 50
+    Sleep 150
     SendText "R"
-
     Send "{shift down} {Down} {Down} {shift up} {Enter}"
-
-    Sleep 100 
-  
-
-    
+    Sleep 200 
 }
 
 ClickSearchByName(){
@@ -146,18 +151,17 @@ ClickSearchByName(){
         MsgBox '"Search by name" was not found in UABE !'
         ExitApp
     }
-
     result.Click(found)
 }
 
 Find(assetName){
     Send "{Click 640 500} {Home}"
     LeftClickOnText("View")
-    Sleep 500
+    Sleep 600
     LeftClickOnText("Search by name")
-    Sleep 500
+    Sleep 600
     HighlightQuery()
-    Sleep 300
+    Sleep 400
     SendText assetName
     Send "{Enter}"
 }
@@ -171,7 +175,6 @@ ClickOpen(){
         MsgBox 'not found Any file !' 
         ExitApp
     }
-
     CoordMode "Mouse", "Screen"
     Click found.x, found.y+40 
 }
@@ -185,7 +188,6 @@ MiddleClickOnText(inputString){
         MsgBox 'not found !' inputString
         ExitApp
     }
-
     result.Click(found, "Middle")
 }
 
@@ -196,20 +198,16 @@ LeftClickOnText(inputString){
         MsgBox 'not found !' inputString
         ExitApp
     }
-
     result.Click(found)
 }
-RightClickOnText(inputString){
 
+RightClickOnText(inputString){
     result := OCR.FromDesktop()
     try found := result.FindString(inputString)
     if !IsSet(found) {
         MsgBox 'not found !' inputString
         ExitApp
     }
-
-   
-
     result.Click(found, "Right")
 }
 
@@ -218,7 +216,7 @@ RightClickOnText(inputString){
 NavigateToAssets(){
     Send "{Click 910 35}"
     SendText "C:\ahk\RWRBetty2"
-    Sleep 100
+    Sleep 200
     Send "{Enter}"
 }
 
@@ -230,56 +228,52 @@ HighlightQuery(){
         MsgBox 'not found Any file !' 
         ExitApp
     }
-
     CoordMode "Mouse", "Screen"
     Click found.x+100, found.y, "Right"
-    Sleep 100
+    Sleep 200
     result := OCR.FromDesktop()
     try found := result.FindString("Select All")
     if !IsSet(found) {
         MsgBox 'View Data not found !'
         ExitApp
     }
-
     result.Click(found)
 }
 rwrTexture(assetPath){
    
     Find("rwrTexture")
-    Sleep 500
+    Sleep 600
     Send "{F3}"
-    Sleep 500
+    Sleep 600
     LeftClickOnText("Data")
-    Sleep 100
+    Sleep 200
     Send "{Right}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{AppsKey}{Down}{Down}{Enter}"
-    Sleep 300
+    Sleep 400
     SendText assetPath
-    Sleep 500
+    Sleep 600
     ClickOpen()
-    Sleep 1000
+    Sleep 1100
     MiddleClickOnText("View Asset")
-    Sleep 100
+    Sleep 200
     Send "{Left}{Left}{Enter}"
-    Sleep 100
+    Sleep 200
 }
 
 SoundReplace(assetName,assetPath){
-
     Find(assetName)
-    Sleep 500
+    Sleep 600
     LeftClickOnText("Data")
-    Sleep 100
+    Sleep 200
     Send "{Right}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{Down}{AppsKey}{Down}{Down}{Enter}"
-    Sleep 300
+    Sleep 400
     SendText assetPath
-    Sleep 500
+    Sleep 600
     ClickOpen()
-    Sleep 100
+    Sleep 200
     MiddleClickOnText("View Asset")
-    Sleep 100
+    Sleep 200
     Send "{Left}{Left}{Enter}"
-    Sleep 100
-
+    Sleep 200
 }
 
 ClickName(){
@@ -289,7 +283,6 @@ ClickName(){
         MsgBox 'not found meow!' 
         ExitApp
     }
-
     CoordMode "Mouse", "Screen"
     Click found.x-400, found.y 
 }

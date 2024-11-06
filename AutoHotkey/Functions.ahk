@@ -32,7 +32,6 @@ Replace(){
     SoundReplace("ttsw_rightEngineFailure","C:\ahk\RWRBetty2\ttsw_rightEngineFailure" )
     SoundReplace("ttsw_engineFailure","C:\ahk\RWRBetty2\ttsw_engineFailure" )
     SoundReplace("ttsw_autopilotOff","C:\ahk\RWRBetty2\ttsw_autopilotOff" )
-
 }
 
 
@@ -57,7 +56,6 @@ ReplaceWarningBeep(){
 
 
 ReplaceNormal(assetName,assetPath){
-
     Find(assetName)
     Sleep 600
     Send "{F3} {F3}"
@@ -74,11 +72,9 @@ ReplaceNormal(assetName,assetPath){
     Sleep 200
     Send "{Left}{Left}{Enter}"
     Sleep 200
-
 }
 
 ReplaceEmpty(assetName, assetPath){
-
     Find(assetName)
     Sleep 600
     Send "{F3}"
@@ -95,11 +91,9 @@ ReplaceEmpty(assetName, assetPath){
     Sleep 200
     Send "{Left}{Left}{Enter}"
     Sleep 200
-
 }
 
 ReplaceMissileLockLoop(){
-
     Find("missileLockLoop")
     Sleep 600
     Send "{F3}{F3}{F3}{F3}"
@@ -130,13 +124,8 @@ OpenResources(){
     SendText "R"
     Sleep 150
     SendText "R"
-
     Send "{shift down} {Down} {Down} {shift up} {Enter}"
-
     Sleep 200 
-  
-
-    
 }
 
 ClickSearchByName(){
@@ -146,7 +135,6 @@ ClickSearchByName(){
         MsgBox '"Search by name" was not found in UABE !'
         ExitApp
     }
-
     result.Click(found)
 }
 
@@ -171,7 +159,6 @@ ClickOpen(){
         MsgBox 'not found Any file !' 
         ExitApp
     }
-
     CoordMode "Mouse", "Screen"
     Click found.x, found.y+40 
 }
@@ -185,7 +172,6 @@ MiddleClickOnText(inputString){
         MsgBox 'not found !' inputString
         ExitApp
     }
-
     result.Click(found, "Middle")
 }
 
@@ -196,20 +182,15 @@ LeftClickOnText(inputString){
         MsgBox 'not found !' inputString
         ExitApp
     }
-
     result.Click(found)
 }
 RightClickOnText(inputString){
-
     result := OCR.FromDesktop()
     try found := result.FindString(inputString)
     if !IsSet(found) {
         MsgBox 'not found !' inputString
         ExitApp
     }
-
-   
-
     result.Click(found, "Right")
 }
 
@@ -230,7 +211,6 @@ HighlightQuery(){
         MsgBox 'not found Any file !' 
         ExitApp
     }
-
     CoordMode "Mouse", "Screen"
     Click found.x+100, found.y, "Right"
     Sleep 200
@@ -240,12 +220,10 @@ HighlightQuery(){
         MsgBox 'View Data not found !'
         ExitApp
     }
-
     result.Click(found)
 }
 
 dashTexture(assetPath){
-   
     Find("dashSprites")
     Sleep 600
     LeftClickOnText("Data")
@@ -263,7 +241,6 @@ dashTexture(assetPath){
 }
 
 rwrTexture(assetPath){
-   
     Find("rwrTexture")
     Sleep 600
     LeftClickOnText("Data")
@@ -281,7 +258,6 @@ rwrTexture(assetPath){
 }
 
 SoundReplace(assetName,assetPath){
-
     Find(assetName)
     Sleep 600
     LeftClickOnText("Data")
@@ -296,7 +272,6 @@ SoundReplace(assetName,assetPath){
     Sleep 200
     Send "{Left}{Left}{Enter}"
     Sleep 200
-
 }
 
 ClickName(){
@@ -306,7 +281,6 @@ ClickName(){
         MsgBox 'not found meow!' 
         ExitApp
     }
-
     CoordMode "Mouse", "Screen"
     Click found.x-400, found.y 
 }

@@ -2,17 +2,17 @@
 
 #Include utils/resources.ahk
 
-ResourceFile1   := "C:\Users\Administrator\Desktop\vtolvr\VTOLVR_Data\resources.assets"
-ResourceFile2   := "C:\Users\Administrator\Desktop\vtolvr\VTOLVR_Data\resources.resource"
-ResourceFile3   := "C:\Users\Administrator\Desktop\vtolvr\VTOLVR_Data\resources.assets.resS"
-AssetsPath      := "C:\Users\Administrator\Desktop\resources.assets"
-ResourcePath    := "C:\Users\Administrator\Desktop\resources.resource"
-ResSPath        := "C:\Users\Administrator\Desktop\resources.assets.resS"
+BAResourceFile1   := "C:\Users\Administrator\Desktop\vtolvr\VTOLVR_Data\resources.assets"
+BAResourceFile2   := "C:\Users\Administrator\Desktop\vtolvr\VTOLVR_Data\resources.resource"
+BAResourceFile3   := "C:\Users\Administrator\Desktop\vtolvr\VTOLVR_Data\resources.assets.resS"
+BAAssetsPath      := "C:\Users\Administrator\Desktop\resources.assets"
+BAResourcePath    := "C:\Users\Administrator\Desktop\resources.resource"
+BAResSPath        := "C:\Users\Administrator\Desktop\resources.assets.resS"
 
 Sleep 5000
-OpenResourceFiles(ResourceFile1,ResourceFile2,ResourceFile3)
+OpenResourceFiles(BAResourceFile1,BAResourceFile2,BAResourceFile3)
 ReplaceBaseResources
-SaveMod(AssetsPath, ResourcePath, ResSPath)
+SaveMod(BAAssetsPath, BAResourcePath, BAResSPath)
 CleanupUABE
 
 ReplaceBaseResources(){

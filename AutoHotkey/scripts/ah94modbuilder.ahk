@@ -1,21 +1,23 @@
 #Requires AutoHotkey v2.0
 #Include utils/resources.ahk
 
-BundlePath      := "C:\Users\Administrator\Desktop\vtolvr\DLC\1770480\1770480"
-ResourceFile1   := "C:\Users\Administrator\Desktop\CAB-609a7bd01976702a18d81971aebebeea"
-ResourceFile2   := "C:\Users\Administrator\Desktop\CAB-609a7bd01976702a18d81971aebebeea.resource"
-ResourceFile3   := "C:\Users\Administrator\Desktop\CAB-609a7bd01976702a18d81971aebebeea.resS"
-AssetsPath      := "C:\Users\Administrator\Desktop\CAB-609a7bd01976702a18d81971aebebeea-mod"
-ResourcePath    := "C:\Users\Administrator\Desktop\CAB-609a7bd01976702a18d81971aebebeea.resource-mod"
-ResSPath        := "C:\Users\Administrator\Desktop\CAB-609a7bd01976702a18d81971aebebeea.resS-mod"
-ExportPath      := "C:\Users\Administrator\Desktop\"
+AHPBundleTmpPath       := "C:\Users\Administrator\Desktop\1770480-tmp"
+AHPBundleExportPath    := "C:\Users\Administrator\Desktop\1770480"
+AHPBundlePath          := "C:\Users\Administrator\Desktop\vtolvr\DLC\1770480\1770480"
+AHPResourceFile1       := "C:\Users\Administrator\Desktop\CAB-609a7bd01976702a18d81971aebebeea"
+AHPResourceFile2       := "C:\Users\Administrator\Desktop\CAB-609a7bd01976702a18d81971aebebeea.resource"
+AHPResourceFile3       := "C:\Users\Administrator\Desktop\CAB-609a7bd01976702a18d81971aebebeea.resS"
+AHPAssetsPath          := "C:\Users\Administrator\Desktop\CAB-609a7bd01976702a18d81971aebebeea-mod"
+AHPResourcePath        := "C:\Users\Administrator\Desktop\CAB-609a7bd01976702a18d81971aebebeea.resource-mod"
+AHPResSPath            := "C:\Users\Administrator\Desktop\CAB-609a7bd01976702a18d81971aebebeea.resS-mod"
+AHPExportPath          := "C:\Users\Administrator\Desktop\"
 
 
 Sleep 5000
-UnpackBundle(BundlePath, ExportPath)
-OpenResourceFiles(ResourceFile1,ResourceFile2,ResourceFile3)
+UnpackBundle(AHPBundlePath, AHPExportPath)
+OpenResourceFiles(AHPResourceFile1,AHPResourceFile2,AHPResourceFile3)
 ReplaceAHResources
-SaveMod(AssetsPath, ResourcePath, ResSPath)
+SaveMod(AHPAssetsPath, AHPResourcePath, AHPResSPath)
 CleanupUABE
 CleanupAva
 

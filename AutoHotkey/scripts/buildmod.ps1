@@ -1,16 +1,15 @@
 Start-Sleep 15
 
-steamcmd.exe +login st0306 +app_update 667970 +quit
+steamcmd.exe +force_install_dir "C:\Users\Administrator\Desktop\vtolvr\" +login st0306 +app_update 667970 +quit
 
-cd C:\
+Invoke-WebRequest -o C:\betty.zip https://codeload.github.com/bomkz/rwrbettyassets/zip/refs/tags/betty2
+Expand-Archive C:\betty.zip C:\ 
+Move-Item C:\rwrbettyassets-betty2\resources C:\
+Remove-Item C:\rwrbettyassets-betty2
 
-git clone https://github.com/bomkz/rwrbettyassets.git
-
-Move-Item C:\rwrbettyassets\resources C:\resources
-
-Start-Process -FilePath C:\Users\Administrator\Desktop\ahk\basemodbuilder.ahk -Wait 
-Start-Process -FilePath C:\Users\Administrator\Desktop\ahk\ef24modbuildar.ahk -Wait
-Start-Process -FilePath C:\Users\Administrator\Desktop\ahk\ah94modbuilder.ahk -Wait 
+Start-Process -FilePath C:\Users\Administrator\Desktop\scripts\basemodbuilder.ahk -Wait 
+Start-Process -FilePath C:\Users\Administrator\Desktop\scripts\ef24modbuildar.ahk -Wait
+Start-Process -FilePath C:\Users\Administrator\Desktop\scripts\ah94modbuilder.ahk -Wait 
 
 Remove-Item C:\Users\Administrator\Desktop\CAB-609a7bd01976702a18d81971aebebeea
 Remove-Item C:\Users\Administrator\Desktop\CAB-609a7bd01976702a18d81971aebebeea.resS
@@ -28,8 +27,8 @@ Move-Item C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061-mo
 Move-Item C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061.resS-mod C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061.resS
 Move-Item C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061.resource-mod C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061.resource
 
-Start-Process -FilePath C:\Users\Administrator\Desktop\ahk\ah94modbuilder.ahk -Wait
-Start-Process -FilePath C:\Users\Administrator\Desktop\ahk\ef24modbuilder.ahk -Wait
+Start-Process -FilePath C:\Users\Administrator\Desktop\scripts\ah94modbuilder.ahk -Wait
+Start-Process -FilePath C:\Users\Administrator\Desktop\scripts\ef24modbuilder.ahk -Wait
 
 Remove-Item C:\Users\Administrator\Desktop\CAB-609a7bd01976702a18d81971aebebeea
 Remove-Item C:\Users\Administrator\Desktop\CAB-609a7bd01976702a18d81971aebebeea.resS

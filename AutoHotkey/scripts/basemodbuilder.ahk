@@ -2,12 +2,12 @@
 
 #Include utils/resources.ahk
 
-ResourceFile1 := "C:\Program Files (x86)\Steam\steamapps\common\VTOL VR\VTOLVR_Data\resources.assets"
-ResourceFile2 := "C:\Program Files (x86)\Steam\steamapps\common\VTOL VR\VTOLVR_Data\resources.resource"
-ResourceFile3 := "C:\Program Files (x86)\Steam\steamapps\common\VTOL VR\VTOLVR_Data\resources.assets.resS"
-AssetsPath := "C:\Users\Administrator\Desktop\resources.assets"
-ResourcePath := "C:\Users\Administrator\Desktop\resources.resource"
-ResSPath := "C:\Users\Administrator\Desktop\resources.assets.resS"
+ResourceFile1   := "C:\Users\Administrator\Desktop\vtolvr\VTOLVR_Data\resources.assets"
+ResourceFile2   := "C:\Users\Administrator\Desktop\vtolvr\VTOLVR_Data\resources.resource"
+ResourceFile3   := "C:\Users\Administrator\Desktop\vtolvr\VTOLVR_Data\resources.assets.resS"
+AssetsPath      := "C:\Users\Administrator\Desktop\resources.assets"
+ResourcePath    := "C:\Users\Administrator\Desktop\resources.resource"
+ResSPath        := "C:\Users\Administrator\Desktop\resources.assets.resS"
 
 Sleep 5000
 OpenResourceFiles(ResourceFile1,ResourceFile2,ResourceFile3)

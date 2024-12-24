@@ -1,14 +1,14 @@
 #Requires AutoHotkey v2.0
 #Include utils/resources.ahk
 
-BundlePath := "C:\Program Files (x86)\Steam\steamapps\common\VTOL VR\DLC\2531290\2531290"
-ResourceFile1 := "C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061"
-ResourceFile2 := "C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061.resource"
-ResourceFile3 := "C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061.resS"
-AssetsPath := "C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061-mod"
-ResourcePath := "C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061.resource-mod"
-ResSPath := "C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061.resS-mod"
-ExportPath:= "C:\Users\Administrator\Desktop\"
+BundlePath      := "C:\Users\Administrator\Desktop\vtolvr\DLC\2531290\2531290"
+ResourceFile1   := "C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061"
+ResourceFile2   := "C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061.resource"
+ResourceFile3   := "C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061.resS"
+AssetsPath      := "C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061-mod"
+ResourcePath    := "C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061.resource-mod"
+ResSPath        := "C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061.resS-mod"
+ExportPath      := "C:\Users\Administrator\Desktop\"
 
 
 Sleep 5000

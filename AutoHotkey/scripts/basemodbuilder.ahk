@@ -2,12 +2,12 @@
 
 #Include utils/resources.ahk
 
-BAResourceFile1   := "C:\Users\Administrator\Desktop\vtolvr\VTOLVR_Data\resources.assets"
-BAResourceFile2   := "C:\Users\Administrator\Desktop\vtolvr\VTOLVR_Data\resources.resource"
-BAResourceFile3   := "C:\Users\Administrator\Desktop\vtolvr\VTOLVR_Data\resources.assets.resS"
-BAAssetsPath      := "C:\Users\Administrator\Desktop\resources.assets"
-BAResourcePath    := "C:\Users\Administrator\Desktop\resources.resource"
-BAResSPath        := "C:\Users\Administrator\Desktop\resources.assets.resS"
+BAResourceFile1   := "C:\Users\Public\Desktop\vtolvr\VTOLVR_Data\resources.assets"
+BAResourceFile2   := "C:\Users\Public\Desktop\vtolvr\VTOLVR_Data\resources.resource"
+BAResourceFile3   := "C:\Users\Public\Desktop\vtolvr\VTOLVR_Data\resources.assets.resS"
+BAAssetsPath      := "C:\Users\Public\Desktop\resources.assets"
+BAResourcePath    := "C:\Users\Public\Desktop\resources.resource"
+BAResSPath        := "C:\Users\Public\Desktop\resources.assets.resS"
 
 Sleep 5000
 OpenResourceFiles(BAResourceFile1,BAResourceFile2,BAResourceFile3)

@@ -1,14 +1,14 @@
 #Requires AutoHotkey v2.0
 #Include utils/resources.ahk
 
-EFBundlePath      := "C:\Users\Administrator\Desktop\vtolvr\DLC\2531290\2531290"
-EFResourceFile1   := "C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061"
-EFResourceFile2   := "C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061.resource"
-EFResourceFile3   := "C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061.resS"
-EFAssetsPath      := "C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061-mod"
-EFResourcePath    := "C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061.resource-mod"
-EFResSPath        := "C:\Users\Administrator\Desktop\CAB-db515831ae078197daa2fd6af388d061.resS-mod"
-EFExportPath      := "C:\Users\Administrator\Desktop\"
+EFBundlePath      := "C:\Users\Public\Desktop\vtolvr\DLC\2531290\2531290"
+EFResourceFile1   := "C:\Users\Public\Desktop\CAB-db515831ae078197daa2fd6af388d061"
+EFResourceFile2   := "C:\Users\Public\Desktop\CAB-db515831ae078197daa2fd6af388d061.resource"
+EFResourceFile3   := "C:\Users\Public\Desktop\CAB-db515831ae078197daa2fd6af388d061.resS"
+EFAssetsPath      := "C:\Users\Public\Desktop\CAB-db515831ae078197daa2fd6af388d061-mod"
+EFResourcePath    := "C:\Users\Public\Desktop\CAB-db515831ae078197daa2fd6af388d061.resource-mod"
+EFResSPath        := "C:\Users\Public\Desktop\CAB-db515831ae078197daa2fd6af388d061.resS-mod"
+EFExportPath      := "C:\Users\Public\Desktop\"
 
 
 Sleep 5000

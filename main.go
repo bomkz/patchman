@@ -1,3 +1,4 @@
+//go:generate goversioninfo -icon=aircraft.ico -manifest=modinstaller.exe.manifest
 package main
 
 import (

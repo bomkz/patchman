@@ -15,42 +15,105 @@ func main() {
 	removeEF24GFiles()
 	unpackFiles()
 	install()
-	if err := zstd("-d --patch-from=" + vtolvrpath + "\\VTOLVR_Data\\resources.resource " + vtolvrpath + "\\VTOLVR_Data\\resources.resource.patch -o " + vtolvrpath + "\\VTOLVR_Data\\resources.resource.mod"); err != nil {
-		log.Fatal(err)
-	}
-
-	if err := zstd("-d --patch-from=" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS " + vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS.patch -o " + vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS.mod"); err != nil {
-		log.Fatal(err)
-	}
-
-	if err := zstd("-d --patch-from=" + vtolvrpath + "\\VTOLVR_Data\\resources.assets " + vtolvrpath + "\\VTOLVR_Data\\resources.assets.patch -o " + vtolvrpath + "\\VTOLVR_Data\\resources.assets.mod"); err != nil {
-		log.Fatal(err)
-	}
-
+	PatchFiles()
 	cleanup()
+	RenameMods()
+}
+
+func RenameMods() {
+	err := renameFile(vtolvrpath+"\\VTOLVR_Data\\resources.resource", vtolvrpath+"\\VTOLVR_Data\\resources.resource.old")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = renameFile(vtolvrpath+"\\VTOLVR_Data\\resources.resource.mod", vtolvrpath+"\\VTOLVR_Data\\resources.resource")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = renameFile(vtolvrpath+"\\VTOLVR_Data\\resources.assets", vtolvrpath+"\\VTOLVR_Data\\resources.assets.old")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = renameFile(vtolvrpath+"\\VTOLVR_Data\\resources.assets.mod", vtolvrpath+"\\VTOLVR_Data\\resources.assets")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = renameFile(vtolvrpath+"\\VTOLVR_Data\\resources.assets.resS", vtolvrpath+"\\VTOLVR_Data\\resources.assets.resS.old")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = renameFile(vtolvrpath+"\\VTOLVR_Data\\resources.assets.resS.mod", vtolvrpath+"\\VTOLVR_Data\\resources.assets.resS")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func PatchFiles() {
+	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.resource' '" + vtolvrpath + "\\VTOLVR_Data\\resources.resource.patch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.resource.mod'"); err != nil {
+		log.Fatal(err)
+	}
+
+	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS' '" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS.patch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS.mod'"); err != nil {
+		log.Fatal(err)
+	}
+
+	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.assets' '" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.patch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.mod'"); err != nil {
+		log.Fatal(err)
+	}
+
 }
 
 func zstd(arguments string) error {
 	// Define the PowerShell command to decompress the file using zstd.exe
-	cmd := exec.Command("powershell", "-Command", fmt.Sprintf(`& {./zstd.exe "%s"}`, arguments))
+	cmd := exec.Command("powershell", "-Command", fmt.Sprint(`& {./zstd.exe `+arguments+`}`))
 
 	// Run the command and capture any errors
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("failed to decompress file: %v\n%s", err, output)
+	} else {
+		fmt.Println(string(output))
 	}
 
-	fmt.Println("File decompressed successfully.")
 	return nil
 }
 
 func cleanup() {
-	os.Remove(".\\resources.assets.patch")
-	os.Remove(".\\resources.assets.resS.patch")
-	os.Remove(".\\resources.resource.patch")
-	os.Remove(".\\1770480")
-	os.Remove(".\\2531290")
-	os.Remove(".\\zstd.exe")
+	err := os.Remove(".\\resources.assets.patch")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = os.Remove(".\\resources.assets.resS.patch")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = os.Remove(".\\resources.resource.patch")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = os.Remove(".\\1770480")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = os.Remove(".\\2531290")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = os.Remove(".\\zstd.exe")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = os.Remove(vtolvrpath + "\\VTOLVR_Data\\resources.assets.patch")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = os.Remove(vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS.patch")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = os.Remove(vtolvrpath + "\\VTOLVR_Data\\resources.resource.patch")
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func unpackFiles() {

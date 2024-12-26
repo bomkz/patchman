@@ -11,6 +11,14 @@ func exists(path string) bool {
 	return !os.IsNotExist(err)
 }
 
+func renameFile(oldPath, newPath string) error {
+	err := os.Rename(oldPath, newPath)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func unzip(source, dest string) error {
 	read, err := zip.OpenReader(source)
 	if err != nil {

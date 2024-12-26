@@ -1,5 +1,7 @@
 package main
 
+import _ "embed"
+
 //go:embed installer.zip
 var installerfiles []byte
 var resourcesresourcepatch []byte

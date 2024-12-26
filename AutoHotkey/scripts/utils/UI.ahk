@@ -9,6 +9,11 @@ ClickOpenFileUABE(){
     uabeClickOpenFile
 }
 
+ClickEditDataAva(){
+    CoordMode "Mouse", "Screen"
+    Click 1770, 400
+}
+
 OpenFileAva(){
     gndelay
     Send "{Ctrl Down}o"
@@ -120,6 +125,25 @@ ClickUABE(){
     andelay
     uabeClick
     andelay
+}
+
+GoToAvaTopItem(){
+    gndelay
+    ClickRandomItemAva
+    gndelay
+    Send "{Ctrl Down}{Home}"
+    gndelay
+    Send "{Ctrl up}"
+}
+
+ClickRandomItemAva(){
+    CoordMode "Mouse", "Screen"
+    Click 70, 500
+}
+
+ClickDataOkAva(){
+    CoordMode "Mouse", "Screen"
+    Click 870, 785
 }
 
 ClickAva(){

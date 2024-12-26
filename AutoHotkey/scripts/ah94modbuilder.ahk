@@ -1,23 +1,20 @@
 #Requires AutoHotkey v2.0
 #Include utils/resources.ahk
 
-AHPBundleTmpPath       := "C:\Users\Public\Desktop\1770480-tmp"
-AHPBundleExportPath    := "C:\Users\Public\Desktop\1770480"
-AHPBundlePath          := "C:\Users\Public\Desktop\vtolvr\DLC\1770480\1770480"
-AHPResourceFile1       := "C:\Users\Public\Desktop\CAB-609a7bd01976702a18d81971aebebeea"
-AHPResourceFile2       := "C:\Users\Public\Desktop\CAB-609a7bd01976702a18d81971aebebeea.resource"
-AHPResourceFile3       := "C:\Users\Public\Desktop\CAB-609a7bd01976702a18d81971aebebeea.resS"
-AHPAssetsPath          := "C:\Users\Public\Desktop\CAB-609a7bd01976702a18d81971aebebeea-mod"
-AHPResourcePath        := "C:\Users\Public\Desktop\CAB-609a7bd01976702a18d81971aebebeea.resource-mod"
-AHPResSPath            := "C:\Users\Public\Desktop\CAB-609a7bd01976702a18d81971aebebeea.resS-mod"
-AHPExportPath          := "C:\Users\Public\Desktop\"
-
+AHExportPath    := "C:\Users\Public\Desktop\"
+AHBundlePath    := "C:\Users\Public\Desktop\vtolvr\DLC\1770480\1770480"
+AHResourceFile1 := "C:\Users\Public\Desktop\CAB-609a7bd01976702a18d81971aebebeea"
+AHResourceFile2 := "C:\Users\Public\Desktop\CAB-609a7bd01976702a18d81971aebebeea.resource"
+AHResourceFile3 := "C:\Users\Public\Desktop\CAB-609a7bd01976702a18d81971aebebeea.resS"
+AHAssetsPath    := "C:\Users\Public\Desktop\CAB-609a7bd01976702a18d81971aebebeea-mod"
+AHResourcePath  := "C:\Users\Public\Desktop\CAB-609a7bd01976702a18d81971aebebeea.resource-mod"
+AHResSPath      := "C:\Users\Public\Desktop\CAB-609a7bd01976702a18d81971aebebeea.resS-mod"
 
 Sleep 5000
-UnpackBundle(AHPBundlePath, AHPExportPath)
-OpenResourceFiles(AHPResourceFile1,AHPResourceFile2,AHPResourceFile3)
+UnpackBundle(AHBundlePath,AHExportPath)
+OpenResourceFiles(AHResourceFile1,AHResourceFile2,AHResourceFile3)
 ReplaceAHResources
-SaveMod(AHPAssetsPath, AHPResourcePath, AHPResSPath)
+SaveMod(AHAssetsPath,AHResourcePath,AHResSPath)
 CleanupUABE
 CleanupAva
 

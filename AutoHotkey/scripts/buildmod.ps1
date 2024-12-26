@@ -30,6 +30,9 @@ Move-Item C:\Users\Public\Desktop\CAB-db515831ae078197daa2fd6af388d061-mod C:\Us
 Move-Item C:\Users\Public\Desktop\CAB-db515831ae078197daa2fd6af388d061.resS-mod C:\Users\Public\Desktop\CAB-db515831ae078197daa2fd6af388d061.resS
 Move-Item C:\Users\Public\Desktop\CAB-db515831ae078197daa2fd6af388d061.resource-mod C:\Users\Public\Desktop\CAB-db515831ae078197daa2fd6af388d061.resource
 
+Start-Process -FilePath C:\Users\Public\Desktop\scripts\ef24modfixer.ahk -Wait
+Start-Process -FilePath C:\Users\Public\Desktop\scripts\ah94modfixer.ahk -Wait
+
 Start-Process -FilePath C:\Users\Public\Desktop\scripts\ah94modpacker.ahk -Wait
 Start-Process -FilePath C:\Users\Public\Desktop\scripts\ef24modpacker.ahk -Wait
 
@@ -46,10 +49,21 @@ Remove-Item C:\Users\Public\Desktop\2531290-tmp
 
 Remove-Item C:\resources
 
-C:\Users\dazzl\Desktop\zstd.exe --patch-from="C:\Users\Public\Desktop\vtolvr\VTOLVR_Data\resources.resource" "C:\Users\Public\Desktop\resources.resource" -o "C:\Users\Public\Desktop\resources.resource.patch"
-C:\Users\dazzl\Desktop\zstd.exe --patch-from="C:\Users\Public\Desktop\vtolvr\VTOLVR_Data\resources.assets" "C:\Users\Public\Desktop\resources.assets" -o "C:\Users\Public\Desktop\resources.assets.patch"
-C:\Users\dazzl\Desktop\zstd.exe --patch-from="C:\Users\Public\Desktop\vtolvr\VTOLVR_Data\resources.assets.resS" "C:\Users\Public\Desktop\resources.assets.resS" -o "C:\Users\Public\Desktop\resources.assets.resS.patch"
+C:\Users\Public\Desktop\zstd.exe --patch-from="C:\Users\Public\Desktop\vtolvr\VTOLVR_Data\resources.resource" "C:\Users\Public\Desktop\resources.resource" -o "C:\Users\Public\Desktop\resources.resource.patch"
+C:\Users\Public\Desktop\zstd.exe --patch-from="C:\Users\Public\Desktop\vtolvr\VTOLVR_Data\resources.assets" "C:\Users\Public\Desktop\resources.assets" -o "C:\Users\Public\Desktop\resources.assets.patch"
+C:\Users\Public\Desktop\zstd.exe --patch-from="C:\Users\Public\Desktop\vtolvr\VTOLVR_Data\resources.assets.resS" "C:\Users\Public\Desktop\resources.assets.resS" -o "C:\Users\Public\Desktop\resources.assets.resS.patch"
 
+Remove-Item  C:\Users\Public\Desktop\resources.assets
+Remove-Item  C:\Users\Public\Desktop\resources.assets.resS
+Remove-Item  C:\Users\Public\Desktop\resources.resource
+
+$compress = @{
+    Path = "C:\Users\Public\Desktop\resources.assets.patch", "C:\Users\Public\Desktop\resources.assets.resS.patch", "C:\Users\Public\Desktop\resources.resource.patch", "C:\Users\Public\Desktop\zstd.exe"
+    CompressionLevel = "Optimal"
+    DestinationPath = "C:\Archives\f16-mod.zip"
+}
+
+Compress-Archive @compress
 
 [Console]::Beep()
 Start-Sleep 5

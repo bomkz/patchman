@@ -407,7 +407,7 @@ type SteamLibraryFolder struct {
 	Path string `json:"path,omitempty"`
 }
 
-//go:embed installer.zip
+//go:embed diffs.zip
 var installerfiles []byte
 
 var resourcesresource []byte

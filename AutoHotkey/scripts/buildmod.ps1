@@ -47,7 +47,7 @@ Remove-Item C:\Users\Public\Desktop\CAB-db515831ae078197daa2fd6af388d061.resourc
 Remove-Item C:\Users\Public\Desktop\1770480-tmp
 Remove-Item C:\Users\Public\Desktop\2531290-tmp
 
-Remove-Item C:\resources
+Remove-Item -Confirm C:\resources
 
 C:\Users\Public\Desktop\zstd.exe --patch-from="C:\Users\Public\Desktop\vtolvr\VTOLVR_Data\resources.resource" "C:\Users\Public\Desktop\resources.resource" -o "C:\Users\Public\Desktop\resources.resource.patch"
 C:\Users\Public\Desktop\zstd.exe --patch-from="C:\Users\Public\Desktop\vtolvr\VTOLVR_Data\resources.assets" "C:\Users\Public\Desktop\resources.assets" -o "C:\Users\Public\Desktop\resources.assets.patch"
@@ -58,9 +58,9 @@ Remove-Item  C:\Users\Public\Desktop\resources.assets.resS
 Remove-Item  C:\Users\Public\Desktop\resources.resource
 
 $compress = @{
-    Path = "C:\Users\Public\Desktop\resources.assets.patch", "C:\Users\Public\Desktop\resources.assets.resS.patch", "C:\Users\Public\Desktop\resources.resource.patch", "C:\Users\Public\Desktop\zstd.exe"
+    Path = "C:\Users\Public\Desktop\resources.assets.patch", "C:\Users\Public\Desktop\resources.assets.resS.patch", "C:\Users\Public\Desktop\resources.resource.patch", "C:\Users\Public\Desktop\zstd.exe", "C:\Users\Public\Desktop\2531290", "C:\Users\Public\Desktop\1770480"
     CompressionLevel = "Optimal"
-    DestinationPath = "C:\Archives\f16-mod.zip"
+    DestinationPath = "C:\Users\Public\Desktop\installer.zip"
 }
 
 Compress-Archive @compress

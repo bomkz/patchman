@@ -19,16 +19,16 @@
         "FileSubType": "00"
     },
     "StringFileInfo": {
-        "Comments": "RWRTSD Installer",
+        "Comments": "Patch Manager",
         "CompanyName": "Bomkz",
         "FileDescription": "Insert cash or select payment type.",
         "FileVersion": "1.14.1.0",
         "InternalName": "breeze",
         "LegalCopyright": "The Unlicense",
         "LegalTrademarks": "Nuh Uh",
-        "OriginalFilename": "modinstaller.exe",
+        "OriginalFilename": "patchman.exe",
         "PrivateBuild": "false",
-        "ProductName": "",
+        "ProductName": "Patchman",
         "ProductVersion": "1.4.1.0",
         "SpecialBuild": "false"
     },
@@ -39,5 +39,5 @@
         }
     },
     "IconPath": "aircraft.ico",
-    "ManifestPath": "modinstaller.exe.manifest"
+    "ManifestPath": "patchman.exe.manifest"
 }

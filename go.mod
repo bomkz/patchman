@@ -1,8 +1,19 @@
-module github.com/bomkz/modinstaller
+module github.com/bomkz/patchman
 
-go 1.23.2
+go 1.24.1
 
 require (
-	github.com/andygrunwald/vdf v1.1.0
-	golang.org/x/sys v0.28.0
+	github.com/iancoleman/orderedmap v0.3.0
+	github.com/rivo/tview v0.0.0-20250501113434-0c592cd31026
+	golang.org/x/sys v0.33.0
+)
+
+require (
+	github.com/gdamore/encoding v1.0.0 // indirect
+	github.com/gdamore/tcell/v2 v2.7.1 // indirect
+	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
+	github.com/mattn/go-runewidth v0.0.15 // indirect
+	github.com/rivo/uniseg v0.4.7 // indirect
+	golang.org/x/term v0.17.0 // indirect
+	golang.org/x/text v0.14.0 // indirect
 )

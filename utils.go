@@ -1,9 +1,13 @@
 package main
 
 import (
-	"archive/zip"
+	"fmt"
+	"log"
 	"os"
-	"path"
+	"strings"
+	"syscall"
+
+	"golang.org/x/sys/windows"
 )
 
 func exists(path string) bool {
@@ -11,36 +15,37 @@ func exists(path string) bool {
 	return !os.IsNotExist(err)
 }
 
-func renameFile(oldPath, newPath string) error {
-	err := os.Rename(oldPath, newPath)
-	if err != nil {
-		return err
-	}
-	return nil
+func cancel() {
+	log.Fatal("User Quit Installer")
+
 }
 
-func unzip(source, dest string) error {
-	read, err := zip.OpenReader(source)
+func promptElevate() {
+	verb := "runas"
+	exe, _ := os.Executable()
+	cwd, _ := os.Getwd()
+	args := strings.Join(os.Args[1:], " ")
+
+	verbPtr, _ := syscall.UTF16PtrFromString(verb)
+	exePtr, _ := syscall.UTF16PtrFromString(exe)
+	cwdPtr, _ := syscall.UTF16PtrFromString(cwd)
+	argPtr, _ := syscall.UTF16PtrFromString(args)
+
+	var showCmd int32 = 1 //SW_NORMAL
+
+	err := windows.ShellExecute(0, verbPtr, exePtr, argPtr, cwdPtr, showCmd)
 	if err != nil {
-		return err
+		fmt.Println(err)
 	}
-	defer read.Close()
-	for _, file := range read.File {
-		if file.Mode().IsDir() {
-			continue
-		}
-		open, err := file.Open()
-		if err != nil {
-			return err
-		}
-		name := path.Join(dest, file.Name)
-		os.MkdirAll(path.Dir(name), os.ModeDir)
-		create, err := os.Create(name)
-		if err != nil {
-			return err
-		}
-		defer create.Close()
-		create.ReadFrom(open)
+}
+
+func checkAdmin() bool {
+	_, err := os.Open("\\\\.\\PHYSICALDRIVE0")
+	isadmin := false
+	if err != nil {
+		isadmin = false
+	} else {
+		isadmin = true
 	}
-	return nil
+	return isadmin
 }

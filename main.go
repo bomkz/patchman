@@ -1,250 +1,228 @@
-//go:generate goversioninfo -icon=aircraft.ico -manifest=modinstaller.exe.manifest
+//go:generate goversioninfo -icon=aircraft.ico -manifest=patchman.exe.manifest
 package main
 
 import (
-	_ "embed"
 	"fmt"
 	"log"
 	"os"
-	"os/exec"
+	"os/signal"
+	"syscall"
+	"time"
+
+	"github.com/rivo/tview"
 )
 
+var help string = `Valid arguments: patchman.exe
+	help    		- Displays this help message
+	alias:
+		h
+		-h
+		--help
+		/h
+		/help
+	version 		- Displays patchman's version
+	alias:
+		v
+		-v
+		--version
+		/v
+		/version
+	status  		- Displays the current status
+	alias:
+		s
+		-s
+		--status
+		/s
+		/status
+
+If VTOL VR receives a new update and patches are yet to be marked as compatible, you could override the Build ID version by looking up a Build ID from https://github.com/bomkz/patchman-index and using it as follows:
+	patchman.exe <buildid>
+	patchman.exe 18407725`
+var patchmanversion string = "Patchman " + timestamp
+var timestamp string = "1748349190"
+
 func main() {
-	checkAH94Installed()
-	checkEF24GInstalled()
-	removeAH94Files()
-	removeEF24GFiles()
-	unpackFiles()
-	install()
-	PatchFiles()
-	cleanup()
-	RenameMods()
-}
 
-func RenameMods() {
-	err := renameFile(vtolvrpath+"\\VTOLVR_Data\\resources.resource", vtolvrpath+"\\VTOLVR_Data\\resources.resource.old")
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = renameFile(vtolvrpath+"\\VTOLVR_Data\\resources.resource.mod", vtolvrpath+"\\VTOLVR_Data\\resources.resource")
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = renameFile(vtolvrpath+"\\VTOLVR_Data\\resources.assets", vtolvrpath+"\\VTOLVR_Data\\resources.assets.old")
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = renameFile(vtolvrpath+"\\VTOLVR_Data\\resources.assets.mod", vtolvrpath+"\\VTOLVR_Data\\resources.assets")
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = renameFile(vtolvrpath+"\\VTOLVR_Data\\resources.assets.resS", vtolvrpath+"\\VTOLVR_Data\\resources.assets.resS.old")
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = renameFile(vtolvrpath+"\\VTOLVR_Data\\resources.assets.resS.mod", vtolvrpath+"\\VTOLVR_Data\\resources.assets.resS")
-	if err != nil {
-		log.Fatal(err)
-	}
-}
+	admin := checkAdmin()
 
-func PatchFiles() {
-	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.resource' '" + vtolvrpath + "\\VTOLVR_Data\\resources.resource.patch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.resource.mod'"); err != nil {
-		log.Fatal(err)
+	if !admin {
+		promptElevate()
+		os.Exit(0)
 	}
 
-	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS' '" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS.patch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS.mod'"); err != nil {
-		log.Fatal(err)
-	}
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 
-	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.assets' '" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.patch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.mod'"); err != nil {
-		log.Fatal(err)
-	}
+	go func() {
+		<-c
+		CleanDir()
+		os.Exit(1)
+	}()
 
-}
-
-func zstd(arguments string) error {
-	// Define the PowerShell command to decompress the file using zstd.exe
-	cmd := exec.Command("powershell", "-Command", fmt.Sprint(`& {./zstd.exe `+arguments+`}`))
-
-	// Run the command and capture any errors
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		return fmt.Errorf("failed to decompress file: %v\n%s", err, output)
-	} else {
-		fmt.Println(string(output))
-	}
-
-	return nil
-}
-
-func cleanup() {
-	err := os.Remove(".\\resources.assets.patch")
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = os.Remove(".\\resources.assets.resS.patch")
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = os.Remove(".\\resources.resource.patch")
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = os.Remove(".\\1770480")
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = os.Remove(".\\2531290")
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = os.Remove(".\\zstd.exe")
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = os.Remove(vtolvrpath + "\\VTOLVR_Data\\resources.assets.patch")
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = os.Remove(vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS.patch")
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = os.Remove(vtolvrpath + "\\VTOLVR_Data\\resources.resource.patch")
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func unpackFiles() {
-	if err := os.WriteFile(".\\installer.zip", installerfiles, 0644); err != nil {
-		fmt.Println("Error writing file:", err)
-		return
-	}
-
-	err := unzip(".\\installer.zip", ".\\")
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	ah94, err = os.ReadFile(".\\1770480")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	ef24g, err = os.ReadFile(".\\2531290")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	resourcesassetspatch, err = os.ReadFile(".\\resources.assets.patch")
-	if err != nil {
-		log.Fatal(err)
-	}
-	resourcesassetsresspatch, err = os.ReadFile(".\\resources.assets.resS.patch")
-	if err != nil {
-		log.Fatal(err)
-	}
-	resourcesresourcepatch, err = os.ReadFile(".\\resources.resource.patch")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-}
-
-func install() {
 	var err error
-	vtolvrpath, err = readLibraryPaths()
+	vtolversion, err = getVtolVersion()
 	if err != nil {
 		log.Fatal(err)
 	}
-	vtolvrpath += "\\steamapps\\common\\VTOL VR"
 
-	if err := os.WriteFile(vtolvrpath+"\\VTOLVR_Data\\resources.resource.patch", resourcesresourcepatch, 0644); err != nil {
-		fmt.Println("Error writing file:", err)
-		return
+	err = createDir()
+	if err != nil {
+		log.Fatal(err)
 	}
-	if err := os.WriteFile(vtolvrpath+"\\VTOLVR_Data\\resources.assets.patch", resourcesassetspatch, 0644); err != nil {
-		fmt.Println("Error writing file:", err)
-		return
-	}
-	if err := os.WriteFile(vtolvrpath+"\\VTOLVR_Data\\resources.assets.resS.patch", resourcesassetsresspatch, 0644); err != nil {
-		fmt.Println("Error writing file:", err)
-		return
-	}
-	if AH94Installed {
-		if err := os.WriteFile(vtolvrpath+"\\DLC\\1770480\\1770480", ah94, 0644); err != nil {
-			fmt.Println("Error writing file:", err)
-			return
-		}
 
-	}
-	if EF24GInstalled {
-		if err := os.WriteFile(vtolvrpath+"\\DLC\\2531290\\2531290", ef24g, 0644); err != nil {
-			fmt.Println("Error writing file:", err)
-			return
+	err = downloadIndex(indexURL)
+	if err != nil {
+		internet = false
+		exists := checkLocalDbNoInternet()
+		if !exists {
+			fmt.Println(err, nointernetinstruct)
+			os.RemoveAll(directory)
+			fmt.Scanln()
+			os.Exit(1)
+		} else {
+
+			fmt.Println(nointernet)
+			fmt.Scanln()
 		}
 	}
-}
 
-func removeAH94Files() {
-	libraryPath, err := readLibraryPaths()
+	err = parseIndex()
 	if err != nil {
+		os.RemoveAll(directory)
 		log.Fatal(err)
 	}
-	err = os.Remove(libraryPath + "\\steamapps\\common\\VTOL VR\\DLC\\1770480\\1770480")
-	if err != nil {
-		fmt.Println(err)
+	vtolvrpath := findVtolPath()
+
+	if exists(vtolvrpath + "\\patchman.json") {
+		readTaint()
 	}
+	if len(os.Args) == 2 {
+		switch os.Args[1] {
+		case "help":
+			fmt.Println(help)
+			os.Exit(0)
+		case "h":
+			fmt.Println(help)
+			os.Exit(0)
+		case "--help":
+			fmt.Println(help)
+			os.Exit(0)
+		case "-h":
+			fmt.Println(help)
+			os.Exit(0)
+		case "/h":
+			fmt.Println(help)
+			os.Exit(0)
+		case "/help":
+			fmt.Println(help)
+			os.Exit(0)
+		case "?":
+			fmt.Println(help)
+			os.Exit(0)
+		case "-?":
+			fmt.Println(help)
+			os.Exit(0)
+		case "/?":
+			fmt.Println(help)
+			os.Exit(0)
+		case "version":
+			fmt.Println(patchmanversion)
+			os.Exit(0)
+		case "v":
+			fmt.Println(patchmanversion)
+			os.Exit(0)
+		case "-v":
+			fmt.Println(patchmanversion)
+			os.Exit(0)
+		case "--version":
+			fmt.Println(patchmanversion)
+			os.Exit(0)
+		case "/v":
+			fmt.Println(patchmanversion)
+			os.Exit(0)
+		case "/version":
+			fmt.Println(patchmanversion)
+			os.Exit(0)
+		case "status":
+			if exists(vtolvrpath + "\\patchman.json") {
+				fmt.Println("Current Variant " + Status.InstalledName + " Object ID " + Status.InstalledObjectId + " Variant ID " + Status.InstalledVariantId + " Version ID " + Status.InstalledVersionId)
+			} else {
+				fmt.Println("patchman.json does not exist, game is likely unpatched, or user removed patchman.json")
+			}
+			os.Exit(0)
+		case "s":
+			if exists(vtolvrpath + "\\patchman.json") {
+				fmt.Println("Current Variant " + Status.InstalledName + " Object ID " + Status.InstalledObjectId + " Variant ID " + Status.InstalledVariantId + " Version ID " + Status.InstalledVersionId)
+			} else {
+				fmt.Println("patchman.json does not exist, game is likely unpatched, or user removed patchman.json")
+			}
+			os.Exit(0)
+		case "--status":
+			if exists(vtolvrpath + "\\patchman.json") {
+				fmt.Println("Current Variant " + Status.InstalledName + " Object ID " + Status.InstalledObjectId + " Variant ID " + Status.InstalledVariantId + " Version ID " + Status.InstalledVersionId)
+			} else {
+				fmt.Println("patchman.json does not exist, game is likely unpatched, or user removed patchman.json")
+			}
+			os.Exit(0)
+		case "-s":
+			if exists(vtolvrpath + "\\patchman.json") {
+				fmt.Println("Current Variant " + Status.InstalledName + " Object ID " + Status.InstalledObjectId + " Variant ID " + Status.InstalledVariantId + " Version ID " + Status.InstalledVersionId)
+			} else {
+				fmt.Println("patchman.json does not exist, game is likely unpatched, or user removed patchman.json")
+			}
+			os.Exit(0)
+		case "/s":
+			if exists(vtolvrpath + "\\patchman.json") {
+				fmt.Println("Current Variant " + Status.InstalledName + " Object ID " + Status.InstalledObjectId + " Variant ID " + Status.InstalledVariantId + " Version ID " + Status.InstalledVersionId)
+			} else {
+				fmt.Println("patchman.json does not exist, game is likely unpatched, or user removed patchman.json")
+			}
+			os.Exit(0)
+		case "/status":
+			if exists(vtolvrpath + "\\patchman.json") {
+				fmt.Println("Current Variant " + Status.InstalledName + " Object ID " + Status.InstalledObjectId + " Variant ID " + Status.InstalledVariantId + " Version ID " + Status.InstalledVersionId)
+			} else {
+				fmt.Println("patchman.json does not exist, game is likely unpatched, or user removed patchman.json")
+			}
+			os.Exit(0)
+		default:
+			vtolversion = os.Args[1]
+		}
+	} else if len(os.Args) > 2 {
+		log.Fatal("Unrecognized argument: " + os.Args[1] + "\nValid examples:\npatchman.exe [game buildid override] \npatchman.exe 18407725\npatchman.exe version\n patchman.exe help\npatchman.exe patchstatus")
+	}
+
+	app = tview.NewApplication()
+	app.EnableMouse(true)
+
+	root = tview.NewPages()
+
+	root.SetBorder(false).SetTitle("VTOL VR Patch Manager")
+
+	buildInitialSelection()
+
+	buildForm()
+
+	runApp()
 }
 
-func removeEF24GFiles() {
-	libraryPath, err := readLibraryPaths()
-	if err != nil {
-		log.Fatal(err)
+func runApp() {
+	go keepAlive()
+
+	if err := app.SetRoot(root, true).Run(); err != nil {
+		log.Panic(err)
 	}
-	err = os.Remove(libraryPath + "\\steamapps\\common\\VTOL VR\\DLC\\2531290\\2531290")
-	if err != nil {
-		fmt.Println(err)
-	}
+
 }
 
-func checkAH94Installed() {
-	libraryPath, err := readLibraryPaths()
-	if err != nil {
-		log.Fatal(err)
-	}
-	exist := exists(libraryPath + "\\steamapps\\common\\VTOL VR\\DLC\\1770480")
-	if !exist {
-		AH94Installed = false
-	} else {
-		AH94Installed = true
-	}
-	exist = exists(libraryPath + "\\steamapps\\common\\VTOL VR\\DLC\\1770480\\1770480.manifest")
-	if !exist {
-		AH94Installed = false
-	} else {
-		AH94Installed = true
-	}
-}
-
-func checkEF24GInstalled() {
-	libraryPath, err := readLibraryPaths()
-	if err != nil {
-		log.Fatal(err)
-	}
-	exist := exists(libraryPath + "\\steamapps\\common\\VTOL VR\\DLC\\2531290")
-	if !exist {
-		EF24GInstalled = false
-	} else {
-		EF24GInstalled = true
-	}
-	exist = exists(libraryPath + "\\steamapps\\common\\VTOL VR\\DLC\\2531290\\2531290.manifest")
-	if !exist {
-		EF24GInstalled = false
-	} else {
-		EF24GInstalled = true
+func keepAlive() {
+	for {
+		select {
+		case <-stop:
+			return // Exits the goroutine
+		default:
+			time.Sleep(50 * time.Millisecond)
+			app.Draw()
+		}
 	}
 }

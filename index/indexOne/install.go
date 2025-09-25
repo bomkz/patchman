@@ -1,4 +1,4 @@
-package main
+package indexOne
 
 import (
 	"archive/zip"
@@ -11,12 +11,12 @@ import (
 	"path"
 	"time"
 
-	"github.com/bomkz/patchman/steamutils"
+	"github.com/bomkz/patchman/global"
 )
 
 func install() {
-	defer CleanDir()
-	app.Stop()
+	defer global.CleanDir()
+	global.StopApp <- true
 	assertTargets()
 	patched := true
 	if Status.InstalledName == "Unpatched" {
@@ -26,43 +26,43 @@ func install() {
 		patched = false
 	}
 	if patched {
-		SilentUninstall()
+		silentUninstall()
 	}
-	if !internet {
+	if !global.Internet {
 
-		if !exists("C:\\patchman\\" + StatusTarget.TargetUUID + "\\patch.zip") {
-			CleanDir()
+		if !global.Exists("C:\\patchman\\" + StatusTarget.TargetUUID + "\\patch.zip") {
+			global.CleanDir()
 			log.Fatal("Error: C:\\patchman\\" + StatusTarget.TargetUUID + "\\patch.zip does not exist.\nPlease download the zip from " + StatusTarget.TargetVariantPatchURL + " on another device, and save it to C:\\patchman\\" + StatusTarget.TargetUUID + "\\patch.zip\nCreate any missing folders if necessary.")
 		}
-		if !exists("C:\\patchman\\zstd.exe") {
-			CleanDir()
+		if !global.Exists("C:\\patchman\\zstd.exe") {
+			global.CleanDir()
 			log.Fatal("Error: C:\\patchman\\zstd.exe does not exist.\nPlease download the file from " + zstdURL + " on another device, and save it to C:\\patchman\\zstd.exe\nCreate any missing folders if necessary.")
 		}
-		err := copyFile(directory+"\\patch.zip", "C:\\patchman\\"+StatusTarget.TargetUUID+"\\patch.zip")
+		err := copyFile(global.Directory+"\\patch.zip", "C:\\patchman\\"+StatusTarget.TargetUUID+"\\patch.zip")
 		if err != nil {
-			CleanDir()
+			global.CleanDir()
 			log.Fatal(err)
 		}
-		err = copyFile(directory+"\\zstd.exe", "C:\\patchman\\zstd.exe")
+		err = copyFile(global.Directory+"\\zstd.exe", "C:\\patchman\\zstd.exe")
 		if err != nil {
-			CleanDir()
+			global.CleanDir()
 			log.Fatal(err)
 		}
-		unzip(directory+"\\patch.zip", directory+"\\")
-		PatchFiles()
+		unzip(global.Directory+"\\patch.zip", global.Directory+"\\")
+		patchFiles()
 		enablePatch()
 		taintDirectory()
-		InstallDone()
+		installDone()
 		return
 	}
 
-	downloadFile(directory+"\\patch.zip", StatusTarget.TargetVariantPatchURL)
-	downloadFile(directory+"\\zstd.exe", zstdURL)
-	unzip(directory+"\\patch.zip", directory+"\\")
-	PatchFiles()
+	downloadFile(global.Directory+"\\patch.zip", StatusTarget.TargetVariantPatchURL)
+	downloadFile(global.Directory+"\\zstd.exe", zstdURL)
+	unzip(global.Directory+"\\patch.zip", global.Directory+"\\")
+	patchFiles()
 	enablePatch()
 	taintDirectory()
-	InstallDone()
+	installDone()
 
 }
 
@@ -82,53 +82,53 @@ func copyFile(dst string, src string) error {
 	return err
 }
 
-func SilentUninstall() {
-	if !internet {
-		if !exists("C:\\patchman\\" + Status.InstalledUUID + "\\unpatch.zip") {
-			CleanDir()
+func silentUninstall() {
+	if !global.Internet {
+		if !global.Exists("C:\\patchman\\" + Status.InstalledUUID + "\\unpatch.zip") {
+			global.CleanDir()
 			log.Fatal("Error: C:\\patchman\\" + Status.InstalledUUID + "\\unpatch.zip does not exist.\nPlease download the zip from " + Status.InstalledVariantUnpatchURL + " on another device, and save it to C:\\patchman\\" + StatusTarget.TargetUUID + "\\unpatch.zip\nCreate any missing folders if necessary.")
 		}
-		if !exists("C:\\patchman\\zstd.exe") {
-			CleanDir()
+		if !global.Exists("C:\\patchman\\zstd.exe") {
+			global.CleanDir()
 			log.Fatal("Error: C:\\patchman\\zstd.exe does not exist.\nPlease download the file from " + zstdURL + " on another device, and save it to C:\\patchman\\zstd.exe\nCreate any missing folders if necessary.")
 		}
-		err := copyFile(directory+"\\unpatch.zip", "C:\\patchman\\"+Status.InstalledUUID+"\\unpatch.zip")
+		err := copyFile(global.Directory+"\\unpatch.zip", "C:\\patchman\\"+Status.InstalledUUID+"\\unpatch.zip")
 		if err != nil {
-			CleanDir()
+			global.CleanDir()
 			log.Fatal(err)
 		}
-		err = copyFile(directory+"\\zstd.exe", "C:\\patchman\\zstd.exe")
+		err = copyFile(global.Directory+"\\zstd.exe", "C:\\patchman\\zstd.exe")
 		if err != nil {
-			CleanDir()
+			global.CleanDir()
 			log.Fatal(err)
 		}
-		unzip(directory+"\\unpatch.zip", directory+"\\")
-		UnpatchFiles()
+		unzip(global.Directory+"\\unpatch.zip", global.Directory+"\\")
+		unpatchFiles()
 		enablePatch()
 		untaintDirectory()
-		os.RemoveAll(directory)
-		directory, err = os.MkdirTemp(".\\", "patchman-")
+		os.RemoveAll(global.Directory)
+		global.Directory, err = os.MkdirTemp(".\\", "patchman-")
 		if err != nil {
 			log.Fatal(err)
 		}
 		return
 	}
-	downloadFile(directory+"\\unpatch.zip", Status.InstalledVariantUnpatchURL)
-	downloadFile(directory+"\\zstd.exe", zstdURL)
-	unzip(directory+"\\unpatch.zip", directory+"\\")
-	UnpatchFiles()
+	downloadFile(global.Directory+"\\unpatch.zip", Status.InstalledVariantUnpatchURL)
+	downloadFile(global.Directory+"\\zstd.exe", zstdURL)
+	unzip(global.Directory+"\\unpatch.zip", global.Directory+"\\")
+	unpatchFiles()
 	enablePatch()
 	untaintDirectory()
-	os.RemoveAll(directory)
+	os.RemoveAll(global.Directory)
 	var err error
-	directory, err = os.MkdirTemp(".\\", "patchman-")
+	global.Directory, err = os.MkdirTemp(".\\", "patchman-")
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func Uninstall() {
-	app.Stop()
+func uninstall() {
+	global.StopApp <- true
 	time.Sleep(500 * time.Millisecond)
 	patched := true
 	if Status.InstalledName == "Unpatched" {
@@ -141,76 +141,62 @@ func Uninstall() {
 		fmt.Println("VTOL VR is not marked as patched. However, if it still is, please verify game files on Steam to fully uninstall.")
 		os.Exit(1)
 	}
-	if !internet {
-		if !exists("C:\\patchman\\" + Status.InstalledUUID + "\\unpatch.zip") {
-			CleanDir()
+	if !global.Internet {
+		if !global.Exists("C:\\patchman\\" + Status.InstalledUUID + "\\unpatch.zip") {
+			global.CleanDir()
 			log.Fatal("Error: C:\\patchman\\" + Status.InstalledUUID + "\\unpatch.zip does not exist.\nPlease download the zip from " + Status.InstalledVariantUnpatchURL + " on another device, and save it to C:\\patchman\\" + StatusTarget.TargetUUID + "\\unpatch.zip\nCreate any missing folders if necessary.")
 		}
-		if !exists("C:\\patchman\\zstd.exe") {
-			CleanDir()
+		if !global.Exists("C:\\patchman\\zstd.exe") {
+			global.CleanDir()
 			log.Fatal("Error: C:\\patchman\\zstd.exe does not exist.\nPlease download the file from " + zstdURL + " on another device, and save it to C:\\patchman\\zstd.exe\nCreate any missing folders if necessary.")
 		}
-		err := copyFile(directory+"\\unpatch.zip", "C:\\patchman\\"+Status.InstalledUUID+"\\unpatch.zip")
+		err := copyFile(global.Directory+"\\unpatch.zip", "C:\\patchman\\"+Status.InstalledUUID+"\\unpatch.zip")
 		if err != nil {
-			CleanDir()
+			global.CleanDir()
 			log.Fatal(err)
 		}
-		err = copyFile(directory+"\\zstd.exe", "C:\\patchman\\zstd.exe")
+		err = copyFile(global.Directory+"\\zstd.exe", "C:\\patchman\\zstd.exe")
 		if err != nil {
-			CleanDir()
+			global.CleanDir()
 			log.Fatal(err)
 		}
-		unzip(directory+"\\unpatch.zip", directory+"\\")
-		UnpatchFiles()
+		unzip(global.Directory+"\\unpatch.zip", global.Directory+"\\")
+		unpatchFiles()
 		enablePatch()
 		untaintDirectory()
-		InstallDone()
+		uninstallDone()
 		return
 	}
-	downloadFile(directory+"\\unpatch.zip", Status.InstalledVariantUnpatchURL)
-	downloadFile(directory+"\\zstd.exe", zstdURL)
-	unzip(directory+"\\unpatch.zip", directory+"\\")
-	UnpatchFiles()
+	downloadFile(global.Directory+"\\unpatch.zip", Status.InstalledVariantUnpatchURL)
+	downloadFile(global.Directory+"\\zstd.exe", zstdURL)
+	unzip(global.Directory+"\\unpatch.zip", global.Directory+"\\")
+	unpatchFiles()
 	enablePatch()
 	untaintDirectory()
-	InstallDone()
+	uninstallDone()
 }
 
-func InstallDone() {
+func installDone() {
 	fmt.Println("VTOL VR patch attempted, please read the log for any uncaught error, and verify functionality in game.\n\n\nPress enter to continue...")
 	fmt.Scanln()
 }
 
-func UninstallDone() {
+func uninstallDone() {
 	fmt.Println("VTOL VR unpatch attempted, please read the log for any uncaught error, and verify functionality in game.\nIf game is broken, verify game files on Steam to fix VTOL VR.\n\n\nPress enter to continue...")
 	fmt.Scanln()
 }
 
-func readTaint() {
-	vtolvrpath := findVtolPath()
-
-	taint, err := os.ReadFile(vtolvrpath + "\\patchman.json")
-	if err != nil {
-		app.Stop()
-		log.Fatal("Error Reading patchman.json. Please verify game files and delete the following file: " + vtolvrpath + "\\patchman.json then rerun patchman.")
-	}
-	err = json.Unmarshal(taint, &Status)
-	if err != nil {
-		log.Fatal("Error Reading patchman.json. Please verify game files and delete the following file: " + vtolvrpath + "\\patchman.json then rerun patchman.")
-	}
-}
-
 func enablePatch() {
-	vtolvrpath := findVtolPath()
-	if exists(vtolvrpath + "\\VTOLVR_Data\\resources.resource.mod") {
+	vtolvrpath := global.FindVtolPath()
+	if global.Exists(vtolvrpath + "\\VTOLVR_Data\\resources.resource.mod") {
 		os.Remove(vtolvrpath + "\\VTOLVR_Data\\resources.resource")
 		os.Rename(vtolvrpath+"\\VTOLVR_Data\\resources.resource.mod", vtolvrpath+"\\VTOLVR_Data\\resources.resource")
 	}
-	if exists(vtolvrpath + "\\VTOLVR_Data\\resources.assets.mod") {
+	if global.Exists(vtolvrpath + "\\VTOLVR_Data\\resources.assets.mod") {
 		os.Remove(vtolvrpath + "\\VTOLVR_Data\\resources.assets")
 		os.Rename(vtolvrpath+"\\VTOLVR_Data\\resources.assets.mod", vtolvrpath+"\\VTOLVR_Data\\resources.assets")
 	}
-	if exists(vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS.mod") {
+	if global.Exists(vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS.mod") {
 		os.Remove(vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS")
 		os.Rename(vtolvrpath+"\\VTOLVR_Data\\resources.assets.resS.mod", vtolvrpath+"\\VTOLVR_Data\\resources.assets.resS")
 	}
@@ -219,18 +205,19 @@ func enablePatch() {
 func untaintDirectory() {
 	Status.InstalledName = "Unpatched"
 	Status.InstalledObjectId = "N/A"
-	Status.InstalledVersionId = vtolversion
+	Status.InstalledVersionId = "N/A"
 	Status.InstalledVariantId = "N/A"
 	Status.InstalledVariantPatchURL = "N/A"
 	Status.InstalledVariantUnpatchURL = "N/A"
 	Status.InstalledUUID = ""
+	Status.InstalledVersion = 0
 
 	patchmanstatus, err := json.Marshal(Status)
-	vtolvrpath := findVtolPath()
+	vtolvrpath := global.FindVtolPath()
 	if err != nil {
 		log.Fatal(err)
 	}
-	if exists(vtolvrpath + "\\patchman.json") {
+	if global.Exists(vtolvrpath + "\\patchman.json") {
 		os.Remove(vtolvrpath + "\\patchman.json")
 	}
 	os.WriteFile(vtolvrpath+"\\patchman.json", patchmanstatus, os.ModeAppend)
@@ -239,77 +226,53 @@ func untaintDirectory() {
 func taintDirectory() {
 	Status.InstalledName = selection.Name
 	Status.InstalledObjectId = StatusTarget.TargetObjectId
-	Status.InstalledVersionId = vtolversion
+	Status.InstalledVersionId = global.VtolVersion
 	Status.InstalledVariantId = StatusTarget.TargetVariantId
 	Status.InstalledVariantPatchURL = StatusTarget.TargetVariantPatchURL
 	Status.InstalledVariantUnpatchURL = StatusTarget.TargetVariantUnpatchURL
 	Status.InstalledUUID = StatusTarget.TargetUUID
+	Status.InstalledVersion = 0
 
 	patchmanstatus, err := json.Marshal(Status)
-	vtolvrpath := findVtolPath()
+	vtolvrpath := global.FindVtolPath()
 	if err != nil {
 		log.Fatal(err)
 	}
-	if exists(vtolvrpath + "\\patchman.json") {
+	if global.Exists(vtolvrpath + "\\patchman.json") {
 		os.Remove(vtolvrpath + "\\patchman.json")
 	}
 	os.WriteFile(vtolvrpath+"\\patchman.json", patchmanstatus, os.ModeAppend)
 }
-func CleanDir() {
-	os.RemoveAll(directory)
-}
 
-func findVtolPath() string {
+func patchFiles() {
+	vtolvrpath := global.FindVtolPath()
 
-	steamPath, err := steamutils.GetSteamPath()
-	if err != nil {
-		log.Fatal(err)
-	}
-	f, err := os.ReadFile(steamPath + "\\steamapps\\libraryfolders.vdf")
-	if err != nil {
-		log.Fatal(err)
-	}
-	steamMap, err := steamutils.Unmarshal(f)
-	if err != nil {
-		log.Fatal(err)
-	}
-	dir, err := steamutils.FindGameLibraryPath(steamMap, "667970")
-	if err != nil {
-		log.Fatal(err)
-	}
-	return dir + "\\VTOL VR\\"
-
-}
-
-func PatchFiles() {
-	vtolvrpath := findVtolPath()
-
-	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.resource' '" + directory + "\\resources.resource.patch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.resource.mod'"); err != nil {
+	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.resource' '" + global.Directory + "\\resources.resource.patch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.resource.mod'"); err != nil {
 		log.Fatal(err)
 	}
 
-	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS' '" + directory + "\\resources.assets.resS.patch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS.mod'"); err != nil {
+	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS' '" + global.Directory + "\\resources.assets.resS.patch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS.mod'"); err != nil {
 		log.Fatal(err)
 	}
 
-	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.assets' '" + directory + "\\resources.assets.patch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.mod'"); err != nil {
+	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.assets' '" + global.Directory + "\\resources.assets.patch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.mod'"); err != nil {
 		log.Fatal(err)
 	}
 
 }
 
-func UnpatchFiles() {
-	vtolvrpath := findVtolPath()
+func unpatchFiles() {
+	vtolvrpath := global.FindVtolPath()
 
-	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.resource' '" + directory + "\\resources.resource.unpatch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.resource.mod'"); err != nil {
+	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.resource' '" + global.Directory + "\\resources.resource.unpatch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.resource.mod'"); err != nil {
 		log.Fatal(err)
 	}
 
-	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS' '" + directory + "\\resources.assets.resS.unpatch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS.mod'"); err != nil {
+	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS' '" + global.Directory + "\\resources.assets.resS.unpatch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS.mod'"); err != nil {
 		log.Fatal(err)
 	}
 
-	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.assets' '" + directory + "\\resources.assets.unpatch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.mod'"); err != nil {
+	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.assets' '" + global.Directory + "\\resources.assets.unpatch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.mod'"); err != nil {
 		log.Fatal(err)
 	}
 
@@ -317,7 +280,7 @@ func UnpatchFiles() {
 
 func zstd(arguments string) error {
 	// Define the PowerShell command to decompress the file using zstd.exe
-	cmd := exec.Command("powershell", "-Command", fmt.Sprint(`& {`+directory+`\zstd.exe `+arguments+`}`))
+	cmd := exec.Command("powershell", "-Command", fmt.Sprint(`& {`+global.Directory+`\zstd.exe `+arguments+`}`))
 
 	// Run the command and capture any errors
 	output, err := cmd.CombinedOutput()
@@ -360,7 +323,7 @@ func assertTargets() {
 	for _, x := range index {
 		if x.ObjectID == selection.ObjectID {
 			for _, y := range x.Versions {
-				if y.Version == vtolversion {
+				if y.Version == global.VtolVersion {
 					if selection.Combination != nil {
 						for _, z := range y.Content {
 							shouldcontinue := false
@@ -377,7 +340,7 @@ func assertTargets() {
 							}
 							StatusTarget.TargetVariantId = z.ObjectID
 							StatusTarget.TargetObjectId = selection.ObjectID
-							StatusTarget.TargetVersionId = vtolversion
+							StatusTarget.TargetVersionId = global.VtolVersion
 							StatusTarget.TargetVariantPatchURL = z.PatchURL
 							StatusTarget.TargetVariantUnpatchURL = z.UnpatchURL
 							selection.VariantID = z.ObjectID
@@ -396,7 +359,7 @@ func assertTargets() {
 							}
 							StatusTarget.TargetVariantId = z.ObjectID
 							StatusTarget.TargetObjectId = selection.ObjectID
-							StatusTarget.TargetVersionId = vtolversion
+							StatusTarget.TargetVersionId = global.VtolVersion
 							StatusTarget.TargetVariantPatchURL = z.PatchURL
 							StatusTarget.TargetVariantUnpatchURL = z.UnpatchURL
 							selection.VariantID = z.ObjectID

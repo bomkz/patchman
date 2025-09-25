@@ -9,6 +9,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/bomkz/patchman/global"
+	"github.com/bomkz/patchman/index"
 	"github.com/rivo/tview"
 )
 
@@ -55,12 +57,12 @@ func main() {
 
 	go func() {
 		<-c
-		CleanDir()
+		global.CleanDir()
 		os.Exit(1)
 	}()
 
 	var err error
-	vtolversion, err = getVtolVersion()
+	global.VtolVersion, err = getVtolVersion()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -70,31 +72,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	err = downloadIndex(indexURL)
-	if err != nil {
-		internet = false
-		exists := checkLocalDbNoInternet()
-		if !exists {
-			fmt.Println(err, nointernetinstruct)
-			os.RemoveAll(directory)
-			fmt.Scanln()
-			os.Exit(1)
-		} else {
+	vtolvrpath := global.FindVtolPath()
 
-			fmt.Println(nointernet)
-			fmt.Scanln()
-		}
-	}
-
-	err = parseIndex()
-	if err != nil {
-		os.RemoveAll(directory)
-		log.Fatal(err)
-	}
-	vtolvrpath := findVtolPath()
-
-	if exists(vtolvrpath + "\\patchman.json") {
-		readTaint()
+	if global.Exists(vtolvrpath + "\\patchman.json") {
+		index.ReadTaint()
 	}
 	if len(os.Args) == 2 {
 		switch os.Args[1] {
@@ -144,53 +125,55 @@ func main() {
 			fmt.Println(patchmanversion)
 			os.Exit(0)
 		case "status":
-			if exists(vtolvrpath + "\\patchman.json") {
-				fmt.Println("Current Variant " + Status.InstalledName + " Object ID " + Status.InstalledObjectId + " Variant ID " + Status.InstalledVariantId + " Version ID " + Status.InstalledVersionId)
+			if global.Exists(vtolvrpath + "\\patchman.json") {
+				fmt.Println(index.TaintInfo())
 			} else {
 				fmt.Println("patchman.json does not exist, game is likely unpatched, or user removed patchman.json")
 			}
 			os.Exit(0)
 		case "s":
-			if exists(vtolvrpath + "\\patchman.json") {
-				fmt.Println("Current Variant " + Status.InstalledName + " Object ID " + Status.InstalledObjectId + " Variant ID " + Status.InstalledVariantId + " Version ID " + Status.InstalledVersionId)
+			if global.Exists(vtolvrpath + "\\patchman.json") {
+				fmt.Println(index.TaintInfo())
 			} else {
 				fmt.Println("patchman.json does not exist, game is likely unpatched, or user removed patchman.json")
 			}
 			os.Exit(0)
 		case "--status":
-			if exists(vtolvrpath + "\\patchman.json") {
-				fmt.Println("Current Variant " + Status.InstalledName + " Object ID " + Status.InstalledObjectId + " Variant ID " + Status.InstalledVariantId + " Version ID " + Status.InstalledVersionId)
+			if global.Exists(vtolvrpath + "\\patchman.json") {
+				fmt.Println(index.TaintInfo())
 			} else {
 				fmt.Println("patchman.json does not exist, game is likely unpatched, or user removed patchman.json")
 			}
 			os.Exit(0)
 		case "-s":
-			if exists(vtolvrpath + "\\patchman.json") {
-				fmt.Println("Current Variant " + Status.InstalledName + " Object ID " + Status.InstalledObjectId + " Variant ID " + Status.InstalledVariantId + " Version ID " + Status.InstalledVersionId)
+			if global.Exists(vtolvrpath + "\\patchman.json") {
+				fmt.Println(index.TaintInfo())
 			} else {
 				fmt.Println("patchman.json does not exist, game is likely unpatched, or user removed patchman.json")
 			}
 			os.Exit(0)
 		case "/s":
-			if exists(vtolvrpath + "\\patchman.json") {
-				fmt.Println("Current Variant " + Status.InstalledName + " Object ID " + Status.InstalledObjectId + " Variant ID " + Status.InstalledVariantId + " Version ID " + Status.InstalledVersionId)
+			if global.Exists(vtolvrpath + "\\patchman.json") {
+				fmt.Println(index.TaintInfo())
 			} else {
 				fmt.Println("patchman.json does not exist, game is likely unpatched, or user removed patchman.json")
 			}
 			os.Exit(0)
 		case "/status":
-			if exists(vtolvrpath + "\\patchman.json") {
-				fmt.Println("Current Variant " + Status.InstalledName + " Object ID " + Status.InstalledObjectId + " Variant ID " + Status.InstalledVariantId + " Version ID " + Status.InstalledVersionId)
+			if global.Exists(vtolvrpath + "\\patchman.json") {
+				fmt.Println(index.TaintInfo())
 			} else {
 				fmt.Println("patchman.json does not exist, game is likely unpatched, or user removed patchman.json")
 			}
 			os.Exit(0)
 		default:
-			vtolversion = os.Args[1]
+			global.VtolVersion = os.Args[1]
 		}
 	} else if len(os.Args) > 2 {
 		log.Fatal("Unrecognized argument: " + os.Args[1] + "\nValid examples:\npatchman.exe [game buildid override] \npatchman.exe 18407725\npatchman.exe version\n patchman.exe help\npatchman.exe patchstatus")
 	}
+
+	go killApp()
 
 	app = tview.NewApplication()
 	app.EnableMouse(true)
@@ -198,8 +181,6 @@ func main() {
 	root = tview.NewPages()
 
 	root.SetBorder(false).SetTitle("VTOL VR Patch Manager")
-
-	buildInitialSelection()
 
 	buildForm()
 
@@ -219,10 +200,18 @@ func keepAlive() {
 	for {
 		select {
 		case <-stop:
+			if global.Directory != "" {
+				global.CleanDir()
+			}
 			return // Exits the goroutine
 		default:
 			time.Sleep(50 * time.Millisecond)
 			app.Draw()
 		}
 	}
+}
+
+func killApp() {
+	<-global.StopApp
+	app.Stop()
 }

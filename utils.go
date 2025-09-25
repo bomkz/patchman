@@ -2,23 +2,12 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strings"
 	"syscall"
 
 	"golang.org/x/sys/windows"
 )
-
-func exists(path string) bool {
-	_, err := os.Stat(path)
-	return !os.IsNotExist(err)
-}
-
-func cancel() {
-	log.Fatal("User Quit Installer")
-
-}
 
 func promptElevate() {
 	verb := "runas"

@@ -57,7 +57,8 @@ func parseVDFOrdered(s string, i int) (*orderedmap.OrderedMap, int, error) {
 
 		var value interface{}
 		// If the next character is an opening brace, parse a nested object.
-		if s[i] == '{' {
+		switch s[i] {
+		case '{':
 			i++ // skip '{'
 			nestedMap, newIdx, err := parseVDFOrdered(s, i)
 			if err != nil {
@@ -65,7 +66,7 @@ func parseVDFOrdered(s string, i int) (*orderedmap.OrderedMap, int, error) {
 			}
 			value = nestedMap
 			i = newIdx
-		} else if s[i] == '"' {
+		case '"':
 			// Otherwise expect a string value.
 			strVal, newIdx, err := parseString(s, i)
 			if err != nil {
@@ -73,7 +74,7 @@ func parseVDFOrdered(s string, i int) (*orderedmap.OrderedMap, int, error) {
 			}
 			value = strVal
 			i = newIdx
-		} else {
+		default:
 			return nil, i, fmt.Errorf("unexpected character '%c' at position %d", s[i], i)
 		}
 		ordMap.Set(key, value)
@@ -122,3 +123,5 @@ func Marshal(m *orderedmap.OrderedMap) ([]byte, error) {
 	out, err := marshalOrderedVDF(m, 0)
 	return []byte(out), err
 }
+
+// The code in this file was made by ChatGPT, use in production is highly discouraged as unexpected results may occur. The code in this file is not vetted for stability or edge cases.

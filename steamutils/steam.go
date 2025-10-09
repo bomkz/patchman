@@ -50,8 +50,8 @@ func FindGameLibraryPath(m *orderedmap.OrderedMap, targetAppID string) (string, 
 				if !ok {
 					return "", fmt.Errorf("library path for library %s is not a string", libKey)
 				}
-				finalPath := fmt.Sprintf("%s\\steamapps\\common\\", pathStr)
-				return finalPath, nil
+
+				return pathStr, nil
 			}
 		}
 	}
@@ -87,3 +87,5 @@ func readStringValueWithDefault(root registry.Key, keyPath, valueName, defaultVa
 
 	return value, nil
 }
+
+// The code in this file was made by ChatGPT, use in production is highly discouraged as unexpected results may occur. The code in this file is not vetted for stability or edge cases.

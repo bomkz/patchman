@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 
 	"github.com/bomkz/patchman/steamutils"
@@ -8,13 +9,28 @@ import (
 )
 
 func getVtolVersion() (string, error) {
+
 	steamPath, err := steamutils.GetSteamPath()
 	if err != nil {
-		return "", err
-
+		log.Fatal(err)
 	}
 
-	f, err := os.ReadFile(steamPath + "\\steamapps\\appmanifest_667970.acf")
+	libraryVDF, err := os.ReadFile(steamPath + "\\steamapps\\libraryfolders.vdf")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	steamMap, err := steamutils.Unmarshal(libraryVDF)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	dir, err := steamutils.FindGameLibraryPath(steamMap, "667970")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	f, err := os.ReadFile(dir + "\\steamapps\\appmanifest_667970.acf")
 	if err != nil {
 		return "", err
 	}

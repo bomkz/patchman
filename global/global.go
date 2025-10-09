@@ -34,6 +34,6 @@ func FindVtolPath() string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return dir + "\\VTOL VR\\"
+	return dir + "\\steamapps\\common\\VTOL VR\\"
 
 }

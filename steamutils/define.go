@@ -46,3 +46,5 @@ type DepotInfo struct {
 	// dlcappid is optional and only appears for some depots.
 	DLCAppid string `json:"dlcappid,omitempty"`
 }
+
+// The code in this file was made by ChatGPT, use in production is highly discouraged as unexpected results may occur. The code in this file is not vetted for stability or edge cases.

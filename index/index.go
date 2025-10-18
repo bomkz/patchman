@@ -33,6 +33,10 @@ func BuildIndex() (*tview.Form, error) {
 			}
 		}
 
+		if indexData == nil {
+			return nil, errors.New("form content is nil")
+		}
+
 		form, err := izero.HandleForm(indexData)
 
 		if err != nil {
@@ -50,19 +54,18 @@ func BuildIndex() (*tview.Form, error) {
 			if version == useIndexVersion {
 				indexData = x.Content
 			}
-
-			if indexData == nil {
-				return nil, errors.New("Form content is nil.")
-			}
-
-			form, err := ione.HandleForm(indexData)
-
-			if err != nil {
-				return nil, err
-			}
-
-			return form, nil
 		}
+
+		if indexData == nil {
+			return nil, errors.New("form content is nil")
+		}
+		form, err := ione.HandleForm(indexData)
+
+		if err != nil {
+			return nil, err
+		}
+
+		return form, nil
 	}
 
 	return nil, errors.New("could not handle index idk why. good luk")

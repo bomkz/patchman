@@ -11,3 +11,4 @@ resources.*
 *.crt
 *.syso
 patchman-
+example.json

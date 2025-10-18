@@ -3,6 +3,7 @@ package izero
 var index []IndexStruct
 
 type IndexStruct struct {
+	MOTD        string
 	Version     string                              `json:"version"`
 	ObjectID    string                              `json:"id"`
 	Name        string                              `json:"name"`

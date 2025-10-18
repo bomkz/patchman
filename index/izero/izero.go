@@ -126,9 +126,8 @@ Press enter to continue...`)
 		}
 	})
 	selection.Combinations = combined
-	version := global.VtolVersion
 	form := tview.NewForm()
-	form.AddTextView("VTOL VR Version", version, 0, 0, false, false).
+	form.AddTextView("VTOL VR Version", global.VtolVersion, 0, 0, false, false).
 		AddTextView("Current Variant ", Status.InstalledName+" Object ID "+Status.InstalledObjectId+" Variant ID "+Status.InstalledVariantId+" Version ID "+Status.InstalledVersionId, 0, 0, false, false).
 		AddDropDown("Select variant", VariantName, selection.IndexID, func(option string, optionIndex int) {
 			for _, x := range index {

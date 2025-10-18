@@ -1,3 +1,0 @@
-package indextwo
-
-func HandleForm() {}

@@ -1,4 +1,4 @@
-package indexOne
+package izero
 
 import (
 	"fmt"

@@ -11,7 +11,8 @@ import (
 	"strconv"
 
 	"github.com/bomkz/patchman/global"
-	"github.com/bomkz/patchman/index/indexOne"
+	"github.com/bomkz/patchman/index/ione"
+	"github.com/bomkz/patchman/index/izero"
 	"github.com/rivo/tview"
 )
 
@@ -19,7 +20,8 @@ func BuildIndex() (*tview.Form, error) {
 
 	handleIndex()
 
-	if useIndexVersion == 0 {
+	switch useIndexVersion {
+	case 0:
 		var indexData []byte
 		for _, x := range preindex.Content {
 			version, err := strconv.Atoi(x.Version)
@@ -31,13 +33,36 @@ func BuildIndex() (*tview.Form, error) {
 			}
 		}
 
-		form, err := indexOne.HandleForm(indexData)
+		form, err := izero.HandleForm(indexData)
 
 		if err != nil {
 			return nil, err
 		}
 
 		return form, nil
+	case 1:
+		var indexData []byte
+		for _, x := range preindex.Content {
+			version, err := strconv.Atoi(x.Version)
+			if err != nil {
+				log.Panic(err)
+			}
+			if version == useIndexVersion {
+				indexData = x.Content
+			}
+
+			if indexData == nil {
+				return nil, errors.New("Form content is nil.")
+			}
+
+			form, err := ione.HandleForm(indexData)
+
+			if err != nil {
+				return nil, err
+			}
+
+			return form, nil
+		}
 	}
 
 	return nil, errors.New("could not handle index idk why. good luk")
@@ -145,7 +170,7 @@ func ReadTaint() {
 
 func TaintInfo() string {
 	if global.InstalledVersion == 0 {
-		return indexOne.BuildTaintInfo()
+		return izero.BuildTaintInfo()
 	}
 	return ""
 }

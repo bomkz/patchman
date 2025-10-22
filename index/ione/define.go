@@ -18,3 +18,5 @@ type IndexContentPatchVariantsStruct struct {
 	Variant      string `json:"variant"`
 	DownloadLink string `json:"downloadLink"`
 }
+
+var Index IndexStruct

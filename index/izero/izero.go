@@ -76,7 +76,7 @@ func generatePossibleCombinations(forms []IndexContentContentVersionsFormsStruct
 	return results
 }
 
-func BuildForm() *tview.Form {
+func buildForm() *tview.Form {
 
 	VariantName := []string{}
 	for _, x := range index {
@@ -198,7 +198,7 @@ func HandleForm(indexbyte []byte) (*tview.Form, error) {
 	}
 
 	buildInitialSelection()
-	return BuildForm(), nil
+	return buildForm(), nil
 }
 
 func BuildTaintInfo() string {

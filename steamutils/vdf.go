@@ -110,15 +110,11 @@ func marshalOrderedVDF(m *orderedmap.OrderedMap, indent int) (string, error) {
 	return sb.String(), nil
 }
 
-// VDFUnmarshalOrdered parses a VDF/ACF file using an ordered map.
-// The raw string is parsed into an ordered structure (which could then be converted
-// to JSON and decoded into a strict type if desired).
 func Unmarshal(data []byte) (*orderedmap.OrderedMap, error) {
 	ordMap, _, err := parseVDFOrdered(string(data), 0)
 	return ordMap, err
 }
 
-// VDFMarshalOrdered takes an ordered map and returns a VDF-formatted []byte.
 func Marshal(m *orderedmap.OrderedMap) ([]byte, error) {
 	out, err := marshalOrderedVDF(m, 0)
 	return []byte(out), err

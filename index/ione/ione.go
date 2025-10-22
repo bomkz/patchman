@@ -5,11 +5,11 @@ import (
 	"github.com/rivo/tview"
 )
 
-func HandleForm(indexbyte []byte) (*tview.Form, error) {
-	return nil, nil
+func HandleForm(indexbyte []byte, motd string) (*tview.Form, error) {
+	return buildForm(), nil
 }
 
-func BuildForm() *tview.Form {
+func buildForm() *tview.Form {
 
 	form := tview.NewForm()
 	form.AddTextView("VTOL VR Version", global.VtolVersion, 0, 0, false, false).

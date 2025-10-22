@@ -59,7 +59,7 @@ func BuildIndex() (*tview.Form, error) {
 		if indexData == nil {
 			return nil, errors.New("form content is nil")
 		}
-		form, err := ione.HandleForm(indexData)
+		form, err := ione.HandleForm(indexData, preindex.Content[1].Motd)
 
 		if err != nil {
 			return nil, err

@@ -1,6 +1,8 @@
 package ione
 
 import (
+	"log"
+
 	"github.com/bomkz/patchman/global"
 	"github.com/rivo/tview"
 )
@@ -17,8 +19,18 @@ func buildForm() *tview.Form {
 		AddButton("Patch", nil).
 		AddButton("Unpatch", nil).
 		AddButton("DevTools", nil).
-		AddButton("Quit", nil)
+		AddButton("Quit", cancel)
 
 	form.SetBorder(false)
 	return form
+}
+
+func devForm(indexbyte []byte, motd string) (*tview.Form, error) {
+
+	return nil, nil
+}
+
+func cancel() {
+	log.Fatal("User Quit Installer")
+
 }

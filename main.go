@@ -50,91 +50,19 @@ func main() {
 	}
 	if len(os.Args) == 2 {
 		switch os.Args[1] {
-		case "help":
-			fmt.Println(help)
+		case "/?", "-?", "?", "/help", "/h", "-h", "--help", "h", "help":
+			fmt.Println(helpArgument)
 			os.Exit(0)
-		case "h":
-			fmt.Println(help)
+
+		case "/version", "/v", "--version", "-v", "v", "version":
+			fmt.Println(versionArgument)
 			os.Exit(0)
-		case "--help":
-			fmt.Println(help)
-			os.Exit(0)
-		case "-h":
-			fmt.Println(help)
-			os.Exit(0)
-		case "/h":
-			fmt.Println(help)
-			os.Exit(0)
-		case "/help":
-			fmt.Println(help)
-			os.Exit(0)
-		case "?":
-			fmt.Println(help)
-			os.Exit(0)
-		case "-?":
-			fmt.Println(help)
-			os.Exit(0)
-		case "/?":
-			fmt.Println(help)
-			os.Exit(0)
-		case "version":
-			fmt.Println(patchmanversion)
-			os.Exit(0)
-		case "v":
-			fmt.Println(patchmanversion)
-			os.Exit(0)
-		case "-v":
-			fmt.Println(patchmanversion)
-			os.Exit(0)
-		case "--version":
-			fmt.Println(patchmanversion)
-			os.Exit(0)
-		case "/v":
-			fmt.Println(patchmanversion)
-			os.Exit(0)
-		case "/version":
-			fmt.Println(patchmanversion)
-			os.Exit(0)
-		case "status":
+
+		case "/status", "/s", "-s", "--status", "s", "status":
 			if global.Exists(vtolvrpath + "\\patchman.json") {
 				fmt.Println(index.TaintInfo())
 			} else {
-				fmt.Println("patchman.json does not exist, game is likely unpatched, or user removed patchman.json")
-			}
-			os.Exit(0)
-		case "s":
-			if global.Exists(vtolvrpath + "\\patchman.json") {
-				fmt.Println(index.TaintInfo())
-			} else {
-				fmt.Println("patchman.json does not exist, game is likely unpatched, or user removed patchman.json")
-			}
-			os.Exit(0)
-		case "--status":
-			if global.Exists(vtolvrpath + "\\patchman.json") {
-				fmt.Println(index.TaintInfo())
-			} else {
-				fmt.Println("patchman.json does not exist, game is likely unpatched, or user removed patchman.json")
-			}
-			os.Exit(0)
-		case "-s":
-			if global.Exists(vtolvrpath + "\\patchman.json") {
-				fmt.Println(index.TaintInfo())
-			} else {
-				fmt.Println("patchman.json does not exist, game is likely unpatched, or user removed patchman.json")
-			}
-			os.Exit(0)
-		case "/s":
-			if global.Exists(vtolvrpath + "\\patchman.json") {
-				fmt.Println(index.TaintInfo())
-			} else {
-				fmt.Println("patchman.json does not exist, game is likely unpatched, or user removed patchman.json")
-			}
-			os.Exit(0)
-		case "/status":
-			if global.Exists(vtolvrpath + "\\patchman.json") {
-				fmt.Println(index.TaintInfo())
-			} else {
-				fmt.Println("patchman.json does not exist, game is likely unpatched, or user removed patchman.json")
+				fmt.Println(statusArgument)
 			}
 			os.Exit(0)
 		default:

@@ -40,6 +40,7 @@ func batchBundleImport(patchmanJson []byte) {
 	createOperationsFile(patchmanData)
 	runPatchmanUnityBundles()
 	renameModifiedFiles()
+	renameQueue = []string{}
 }
 
 func batchAssetImport(patchmanJson []byte) {
@@ -57,6 +58,8 @@ func batchAssetImport(patchmanJson []byte) {
 	createOperationsFile(patchmanData)
 	runPatchmanUnityAssets()
 	renameModifiedFiles()
+	renameQueue = []string{}
+
 }
 
 func renameModifiedFiles() {

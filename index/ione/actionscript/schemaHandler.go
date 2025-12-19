@@ -2,9 +2,9 @@ package actionScript
 
 import (
 	"encoding/json"
-	"log"
 	"os"
 
+	"github.com/bomkz/patchman/global"
 	"github.com/bomkz/patchman/index/ione/actionscript/actionScriptOne"
 )
 
@@ -13,7 +13,7 @@ func HandleActionScript(actionscript []byte) {
 
 	err := json.Unmarshal(actionscript, &actionScript)
 	if err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
 	}
 
 	if actionScript.Patchscriptversion == 1 {
@@ -24,7 +24,7 @@ func HandleActionScript(actionscript []byte) {
 func BeginTestJson() {
 	jsonFile, err := os.ReadFile(".\\patchscript.json")
 	if err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
 	}
 	HandleActionScript(jsonFile)
 }

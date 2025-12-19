@@ -92,7 +92,8 @@ func handleIndex() {
 
 	if err != nil {
 		os.RemoveAll(global.Directory)
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 }
 

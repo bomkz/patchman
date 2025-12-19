@@ -6,6 +6,8 @@ import (
 	"log"
 	"os"
 	"os/exec"
+
+	"github.com/bomkz/patchman/global"
 )
 
 // patcher.exe exportfrombundle --bundle "C:\BundlePath\unity.assets" --assetName "exampleAsset" --exportPath "C:\ExportPath\ExportName"
@@ -16,7 +18,8 @@ func runPatchmanUnityBundles() {
 	cmd.Stdout = &out
 
 	if err := cmd.Run(); err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 
 	if out.String() == "Done!" {
@@ -31,7 +34,8 @@ func runPatchmanUnityAssets() {
 	cmd.Stdout = &out
 
 	if err := cmd.Run(); err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 
 	if out.String() == "Done!" {
@@ -45,7 +49,8 @@ func runPatchmanUnityAssets() {
 func createOperationsFile(opData PatchmanUnityStruct) {
 	file, err := os.Create("operations.json")
 	if err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 
 	defer file.Close()
@@ -54,11 +59,13 @@ func createOperationsFile(opData PatchmanUnityStruct) {
 
 	jsonData, err := json.Marshal(opData)
 	if err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 
 	_, err = file.Write(jsonData)
 	if err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 }

@@ -7,6 +7,11 @@ import (
 	"github.com/bomkz/patchman/steamutils"
 )
 
+func FatalError(err error) {
+	StopApp <- true
+	log.Fatal(err)
+}
+
 func Exists(path string) bool {
 	_, err := os.Stat(path)
 	return !os.IsNotExist(err)

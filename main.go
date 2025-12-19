@@ -83,6 +83,8 @@ func main() {
 
 	buildForm()
 
+	defer os.RemoveAll(global.Directory)
+
 	runApp()
 }
 

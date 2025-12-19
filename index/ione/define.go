@@ -19,7 +19,7 @@ type IndexContentPatchVariantsStruct struct {
 	DownloadLink string `json:"downloadLink"`
 }
 
-var assetPath string
-var scriptPath string
+var modPath string
 
 var Index IndexStruct
+var cleanupQueue = []string{}

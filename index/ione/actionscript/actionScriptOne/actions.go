@@ -2,7 +2,6 @@ package actionScriptOne
 
 import (
 	"encoding/json"
-	"log"
 	"os"
 
 	"github.com/bomkz/patchman/global"
@@ -17,7 +16,8 @@ func Uninstall() {
 
 	err := os.Remove(vtolvrpath + "\\patchman.json")
 	if err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 }
 
@@ -27,12 +27,14 @@ func readTaint() TaintInfoStruct {
 	vtolvrpath := global.FindVtolPath()
 	taintfile, err := os.ReadFile(vtolvrpath + ".\\patchman.json")
 	if err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 
 	err = json.Unmarshal(taintfile, &taintInfo)
 	if err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 	return taintInfo
 
@@ -42,12 +44,14 @@ func revertPatch(filePath string) {
 
 	err := os.Remove(filePath)
 	if err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 
 	err = os.Rename(filePath+".orig", filePath)
 	if err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 
 }
@@ -57,7 +61,8 @@ func HandleActions(actionData []byte) {
 
 	err := json.Unmarshal(actionData, &actionScript)
 	if err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 
 	for _, x := range actionScript {
@@ -80,9 +85,15 @@ func handleCopy(actionData []byte) {
 
 	err := json.Unmarshal(actionData, &copyData)
 	if err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
-	os.Rename(".\\", "")
+
+	err = os.Rename(global.Directory+"\\"+copyData.FileName, copyData.Destination)
+	if err != nil {
+		global.FatalError(err)
+
+	}
 }
 
 func batchBundleImport(patchmanJson []byte) {
@@ -90,7 +101,8 @@ func batchBundleImport(patchmanJson []byte) {
 
 	err := json.Unmarshal(patchmanJson, &patchmanData)
 	if err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 
 	patchmanData.ModifiedFilePath = patchmanData.OriginalFilePath + ".mod"
@@ -108,7 +120,8 @@ func batchAssetImport(patchmanJson []byte) {
 
 	err := json.Unmarshal(patchmanJson, &patchmanData)
 	if err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 
 	patchmanData.ModifiedFilePath = patchmanData.OriginalFilePath + ".mod"
@@ -130,7 +143,8 @@ func buildTaintInfo() {
 
 	taintInfoJson, err := json.Marshal(taintInfo)
 	if err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 
 	vtolvrpath := global.FindVtolPath()
@@ -141,14 +155,16 @@ func buildTaintInfo() {
 
 	file, err := os.Create(vtolvrpath + "\\patchman.json")
 	if err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 
 	defer file.Close()
 
 	_, err = file.Write(taintInfoJson)
 	if err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 }
 
@@ -156,11 +172,13 @@ func renameModifiedFiles() {
 	for _, x := range renameQueue {
 		err := os.Rename(x, x+".orig")
 		if err != nil {
-			log.Fatal(err)
+			global.FatalError(err)
+
 		}
 		err = os.Rename(x+".mod", x)
 		if err != nil {
-			log.Fatal(err)
+			global.FatalError(err)
+
 		}
 	}
 }

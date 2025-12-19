@@ -41,12 +41,14 @@ func install() {
 		err := copyFile(global.Directory+"\\patch.zip", "C:\\patchman\\"+StatusTarget.TargetUUID+"\\patch.zip")
 		if err != nil {
 			global.CleanDir()
-			log.Fatal(err)
+			global.FatalError(err)
+
 		}
 		err = copyFile(global.Directory+"\\zstd.exe", "C:\\patchman\\zstd.exe")
 		if err != nil {
 			global.CleanDir()
-			log.Fatal(err)
+			global.FatalError(err)
+
 		}
 		unzip(global.Directory+"\\patch.zip", global.Directory+"\\")
 		patchFiles()
@@ -95,12 +97,14 @@ func SilentUninstall() {
 		err := copyFile(global.Directory+"\\unpatch.zip", "C:\\patchman\\"+Status.InstalledUUID+"\\unpatch.zip")
 		if err != nil {
 			global.CleanDir()
-			log.Fatal(err)
+			global.FatalError(err)
+
 		}
 		err = copyFile(global.Directory+"\\zstd.exe", "C:\\patchman\\zstd.exe")
 		if err != nil {
 			global.CleanDir()
-			log.Fatal(err)
+			global.FatalError(err)
+
 		}
 		unzip(global.Directory+"\\unpatch.zip", global.Directory+"\\")
 		unpatchFiles()
@@ -109,7 +113,8 @@ func SilentUninstall() {
 		os.RemoveAll(global.Directory)
 		global.Directory, err = os.MkdirTemp(".\\", "patchman-")
 		if err != nil {
-			log.Fatal(err)
+			global.FatalError(err)
+
 		}
 		return
 	}
@@ -123,7 +128,8 @@ func SilentUninstall() {
 	var err error
 	global.Directory, err = os.MkdirTemp(".\\", "patchman-")
 	if err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 }
 
@@ -153,12 +159,14 @@ func uninstall() {
 		err := copyFile(global.Directory+"\\unpatch.zip", "C:\\patchman\\"+Status.InstalledUUID+"\\unpatch.zip")
 		if err != nil {
 			global.CleanDir()
-			log.Fatal(err)
+			global.FatalError(err)
+
 		}
 		err = copyFile(global.Directory+"\\zstd.exe", "C:\\patchman\\zstd.exe")
 		if err != nil {
 			global.CleanDir()
-			log.Fatal(err)
+			global.FatalError(err)
+
 		}
 		unzip(global.Directory+"\\unpatch.zip", global.Directory+"\\")
 		unpatchFiles()
@@ -215,7 +223,8 @@ func untaintDirectory() {
 	patchmanstatus, err := json.Marshal(Status)
 	vtolvrpath := global.FindVtolPath()
 	if err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 	if global.Exists(vtolvrpath + "\\patchman.json") {
 		os.Remove(vtolvrpath + "\\patchman.json")
@@ -236,7 +245,8 @@ func taintDirectory() {
 	patchmanstatus, err := json.Marshal(Status)
 	vtolvrpath := global.FindVtolPath()
 	if err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 	if global.Exists(vtolvrpath + "\\patchman.json") {
 		os.Remove(vtolvrpath + "\\patchman.json")
@@ -248,15 +258,18 @@ func patchFiles() {
 	vtolvrpath := global.FindVtolPath()
 
 	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.resource' '" + global.Directory + "\\resources.resource.patch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.resource.mod'"); err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 
 	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS' '" + global.Directory + "\\resources.assets.resS.patch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS.mod'"); err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 
 	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.assets' '" + global.Directory + "\\resources.assets.patch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.mod'"); err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 
 }
@@ -265,15 +278,18 @@ func unpatchFiles() {
 	vtolvrpath := global.FindVtolPath()
 
 	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.resource' '" + global.Directory + "\\resources.resource.unpatch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.resource.mod'"); err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 
 	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS' '" + global.Directory + "\\resources.assets.resS.unpatch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.resS.mod'"); err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 
 	if err := zstd("-d -f --long=31 --patch-from='" + vtolvrpath + "\\VTOLVR_Data\\resources.assets' '" + global.Directory + "\\resources.assets.unpatch' -o '" + vtolvrpath + "\\VTOLVR_Data\\resources.assets.mod'"); err != nil {
-		log.Fatal(err)
+		global.FatalError(err)
+
 	}
 
 }

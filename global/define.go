@@ -32,7 +32,9 @@ type StatusStruct struct {
 	InstalledVersion int `json:"installedVersion"`
 }
 
-var Status StatusStruct
+var Status = StatusStruct{
+	InstalledVersion: 99,
+}
 
 var App *tview.Application
 var Root *tview.Pages

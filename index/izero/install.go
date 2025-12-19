@@ -26,7 +26,7 @@ func install() {
 		patched = false
 	}
 	if patched {
-		silentUninstall()
+		SilentUninstall()
 	}
 	if !global.Internet {
 
@@ -82,7 +82,7 @@ func copyFile(dst string, src string) error {
 	return err
 }
 
-func silentUninstall() {
+func SilentUninstall() {
 	if !global.Internet {
 		if !global.Exists("C:\\patchman\\" + Status.InstalledUUID + "\\unpatch.zip") {
 			global.CleanDir()

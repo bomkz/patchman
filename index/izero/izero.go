@@ -202,11 +202,11 @@ func HandleForm(indexbyte []byte) error {
 }
 
 func BuildTaintInfo() string {
-	readTaint()
+	ReadTaint()
 	return "Current Variant " + Status.InstalledName + " Object ID " + Status.InstalledObjectId + " Variant ID " + Status.InstalledVariantId + " Version ID " + Status.InstalledVersionId
 }
 
-func readTaint() {
+func ReadTaint() {
 	vtolvrpath := global.FindVtolPath()
 
 	taint, err := os.ReadFile(vtolvrpath + "\\patchman.json")

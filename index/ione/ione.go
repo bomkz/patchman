@@ -19,7 +19,7 @@ func buildForm() {
 		AddTextView("MOTD", "", 0, 0, false, false).
 		AddButton("Patch", nil).
 		AddButton("Unpatch", nil).
-		AddButton("DevTools", buildDeveloperForm).
+		AddButton("Custom", buildDeveloperForm).
 		AddButton("Quit", cancel)
 
 	form.SetBorder(false)

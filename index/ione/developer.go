@@ -10,10 +10,8 @@ func buildDeveloperForm() {
 	form := tview.NewForm()
 
 	form.AddTextView("VTOL VR Version", global.VtolVersion, 0, 0, false, false).
-		AddInputField("Custom assets path", "", 10, nil, pathField).
-		AddInputField("Patch script path", "", 10, nil, scriptField).
-		AddButton("Build Patch", nil).
-		AddButton("Build & Install Patch", nil).
+		AddInputField("Custom mod path", "", 10, nil, pathField).
+		AddButton("Install Patch", nil).
 		AddButton("Quit", cancel)
 
 	form.SetBorder(false)

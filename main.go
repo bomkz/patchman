@@ -9,7 +9,6 @@ import (
 	"syscall"
 	"time"
 
-	actionScript "github.com/bomkz/patchman/actionscript"
 	"github.com/bomkz/patchman/global"
 	"github.com/bomkz/patchman/index"
 	"github.com/rivo/tview"
@@ -17,7 +16,6 @@ import (
 
 func main() {
 
-	actionScript.BeginTestJson()
 	admin := checkAdmin()
 
 	if !admin {

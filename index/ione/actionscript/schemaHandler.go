@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	actionScriptOne "github.com/bomkz/patchman/actionscript/one"
+	"github.com/bomkz/patchman/index/ione/actionscript/actionScriptOne"
 )
 
 func HandleActionScript(actionscript []byte) {

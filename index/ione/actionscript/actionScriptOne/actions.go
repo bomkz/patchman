@@ -4,7 +4,53 @@ import (
 	"encoding/json"
 	"log"
 	"os"
+
+	"github.com/bomkz/patchman/global"
 )
+
+func Uninstall() {
+	taintInfo := readTaint()
+	for _, x := range taintInfo.ModifiedFiles {
+		revertPatch(x)
+	}
+	vtolvrpath := global.FindVtolPath()
+
+	err := os.Remove(vtolvrpath + "\\patchman.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func readTaint() TaintInfoStruct {
+	var taintInfo TaintInfoStruct
+
+	vtolvrpath := global.FindVtolPath()
+	taintfile, err := os.ReadFile(vtolvrpath + ".\\patchman.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = json.Unmarshal(taintfile, &taintInfo)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return taintInfo
+
+}
+
+func revertPatch(filePath string) {
+
+	err := os.Remove(filePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = os.Rename(filePath+".orig", filePath)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+}
 
 func HandleActions(actionData []byte) {
 	var actionScript []ActionScriptStruct
@@ -20,9 +66,23 @@ func HandleActions(actionData []byte) {
 			batchBundleImport(x.ActionData)
 		case "importasset":
 			batchAssetImport(x.ActionData)
+		case "copy":
+			handleCopy(x.ActionData)
 		}
 	}
 
+	buildTaintInfo()
+
+}
+
+func handleCopy(actionData []byte) {
+	var copyData CopyStruct
+
+	err := json.Unmarshal(actionData, &copyData)
+	if err != nil {
+		log.Fatal(err)
+	}
+	os.Rename(".\\", "")
 }
 
 func batchBundleImport(patchmanJson []byte) {
@@ -53,6 +113,7 @@ func batchAssetImport(patchmanJson []byte) {
 
 	patchmanData.ModifiedFilePath = patchmanData.OriginalFilePath + ".mod"
 	renameQueue = append(renameQueue, patchmanData.OriginalFilePath)
+	taintQueue = append(taintQueue, patchmanData.OriginalFilePath)
 
 	defer cleanup()
 	createOperationsFile(patchmanData)
@@ -60,6 +121,35 @@ func batchAssetImport(patchmanJson []byte) {
 	renameModifiedFiles()
 	renameQueue = []string{}
 
+}
+
+func buildTaintInfo() {
+	var taintInfo TaintInfoStruct
+	taintInfo.ModifiedFiles = taintQueue
+	taintInfo.InstalledVersion = 1
+
+	taintInfoJson, err := json.Marshal(taintInfo)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	vtolvrpath := global.FindVtolPath()
+
+	if global.Exists(vtolvrpath + "\\patchman.json") {
+		os.Remove(vtolvrpath + "\\patchman.json")
+	}
+
+	file, err := os.Create(vtolvrpath + "\\patchman.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer file.Close()
+
+	_, err = file.Write(taintInfoJson)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func renameModifiedFiles() {
@@ -74,9 +164,6 @@ func renameModifiedFiles() {
 		}
 	}
 }
-
-var renameQueue []string
-var cleanupQueue []string
 
 func cleanup() {
 	for _, x := range cleanupQueue {

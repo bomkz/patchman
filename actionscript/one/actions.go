@@ -82,4 +82,5 @@ func cleanup() {
 	for _, x := range cleanupQueue {
 		os.Remove(x)
 	}
+	cleanupQueue = []string{}
 }

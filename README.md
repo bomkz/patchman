@@ -1,32 +1,142 @@
-PatchManager for VTOL VR Mods, mostly sound asset replacements and some texture replacements.
+# PatchManager 
+
+Is a utility to quickly replace sound and texture assets in VTOL VR with the goal of being simple to use both as a user and a patch maker.
+
+## Creating your own patch
+
+PatchManager uses its own JSON-based patch"script", where you define the actions needed to patch the game once, with the ability to work across future versions of the game provided the asset names have not changed.
+
+To start, you should have your own assets compiled in unity, as the resource file unity produces will be needed.
+
+#### How it works
 
 When loading resources, Unity looks in the VTOLVR_Data folder, even if reading a DLC file, so we can point VTOL VR to a resource file 'assets1.resources' that we copied to VTOLVR_Data from anywhere and it'll be able to find and load our custom resources from there.
 
-Currently, only AudioClip and Texture2D is supported for replacement in Asset files and Bundle files. 
+This is where your resource file comes in handy. In your patchscript.json file, you will need to tell PatchMan the name of your resource file, as well as where to copy it, the name can be anything, however, unless you have a niche situation, you should copy your resource file to your VTOLVR_Data folder.
 
-DLCs are bundle files, which you can modify with the importbundle action, within this action, you can do a batch of modifications at the same time on a single DLC, you'll have to define these for each DLC.
+Do note, you only need to tell PatchMan where the assets and bundle files in relation to the root of VTOL VR path, PatchMan automatically find where a user has VTOL VR installed and fills the rest of the path.
 
-To replace stuff in the non DLC aircraft, you need to use importasset and point it to VTOL VR's resource file. 
+This is valid: `VTOLVR_Data\resources.assets`
 
-You use Unity to import your custom audios and textures, then compile it to extract your custom resource file that you can then copy into VTOLVR_Data, or in this case, you will save it along the patchscript.json into a ZIP file. You can then use the copy action that the program will use to copy the resource file when patching the game.
+This is not valid: `C:\Program Files(x86)\steam\steamapps\common\VTOL VR\VTOLVR_Data\resources.assets`
 
-Once you have your ZIP file ready, you can click the custom button, and point PatchManager to your zip file (e.g. "C:\Users\bomkz\file.zip") and click on patch to install it.
 
-This implementation is game version agnostic, so long asset names do not change, however, periodically it is expected for the game to break when updating, so you should Verify game files and repatch the game after new VTOL VR updates.
+### Defining patches
+
+A valid patchscript file needs patchScriptVersion, motd, and data. 
+Patchscript is the version of patchscript your patch is written in, mainly to maintain backwards compatibility with future releases. Currently only patchScriptVersion 1 is valid. motd is a message or description you may want to display when installing your patch, and data contains the actions needed to patch the game.
+```
+{
+    "patchScriptVersion":1,
+    "motd": "Example Message",
+    "data": []
+}
+```
+
+### Patching Assets
+
+Patchscript currently only has two valid patch types: `AudioClip` and `Texture2D`.
+To define a patch you need to know the following: the name of the asset, the asset type (found above), and the resource asset file that contains it. The following is an example of this:
+
+```
+{
+    "action": "importasset",
+    "actionData": {
+        "originalFilePath": "VTOLVR_Data\\resources.assets",
+        "operations": [
+            {
+                "type": "import",
+                "assetType": "AudioClip",
+                "assetName": "ttsw_autopilotOff",
+                "assetPath": "assets2.resources"
+            },
+            {
+                "type": "import",
+                "assetType": "AudioClip",
+                "assetName": "ttsw_pullUp",
+                "assetPath": "assets3.resources"
+            }
+        ]
+    }
+}
+        
+```
+
+
+#### Patching bundles
+
+Due to DLCs being packaged into compressed bundle files, you need to modify them with a separate action called `importbundle`, within this action, you can do a batch of modifications at the same time on a single DLC as you would with a normal asset file like resources.assets.
+
+```
+{
+    "action": "importbundle",
+    "actionData": {
+        "originalFilePath": "DLC\\1770480\1770480",
+        "operations": [
+            {
+                "type": "import",
+                "assetType": "AudioClip",
+                "assetName": "ttsw_autopilotOff",
+                "assetPath": "assets2.resources"
+            },
+            {
+                "type": "import",
+                "assetType": "AudioClip",
+                "assetName": "ttsw_pullUp",
+                "assetPath": "assets3.resources"
+            }
+        ]
+    }
+}
+        
+```
+
+### Copying resource files
+
+Since resource files need to be copied to VTOLVR_Data folder, we need to define a copy action to do this for us, for each resource file we plan to use, we need to define a copy action so it resembles as follows:
+
+```
+{
+    "action": "copy",
+    "actionData": {
+        "fileName": "examplemodified.resources",
+        "destination": "VTOLVR_Data\\examplemodified.resources"
+    }
+}
+```
+
+### Packaging your patch
+
+Once you have created your own patchscript.json, you can then package it and test it. 
+To package it properly, you need to put it in a ZIP file along with your custom resource files so that the ZIP file structure resembles the following:
+
+### Installing your patch
+
+Once you are ready to test your patch, you can open PatchMan, and click on the custom button in the lower area, there, you will input the path to your zip file, as an example: `C:\Users\bomkz\Documents\example.zip`, and then click on install. Assuming your patchscript is valid, it should finish without error.
+
+```
+ patch.zip___
+             |- assets1.resources
+             |- assets2.resources
+             |- assets3.resources
+              \- patchscript.json 
+```
+
+PatchManager is game version agnostic, so long asset names do not change, however, periodically it is expected for the game to break when updating, so you should Verify game files and repatch the game after new VTOL VR updates.
 
 You can contact me in Discord @f45a to get your patch vetted and added to the integrated patch index.
 
-Example patchscript.json implementation:
+## Example patchscript.json implementation:
 
 ```
 {
     "patchScriptVersion":1,
-    "motd": "Null",
+    "motd": "Example Message",
     "data": [
         {
             "action": "importbundle",
             "actionData": {
-                "originalFilePath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\VTOL VR\\DLC\\1770480\\1770480",
+                "originalFilePath": "DLC\\1770480\\1770480",
                 "operations": [
                     {
                         "type": "import",
@@ -46,7 +156,7 @@ Example patchscript.json implementation:
         {
             "action": "importasset",
             "actionData": {
-                "originalFilePath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\VTOL VR\\VTOLVR_Data\\resources.assets",
+                "originalFilePath": "VTOLVR_Data\\resources.assets",
                 "operations": [
                     {
                         "type": "import",
@@ -67,42 +177,33 @@ Example patchscript.json implementation:
             "action": "copy",
             "actionData": {
                 "fileName": "assets1.resources",
-                "destination": "assets1.resources"
+                "destination": "VTOLVR_Data\\assets1.resources"
             }
         },
-                {
+        {
             "action": "copy",
             "actionData": {
                 "fileName": "assets2.resources",
-                "destination": "assets2.resources"
+                "destination": "VTOLVR_Data\\assets2.resources"
             }
         },
-                {
+        {
             "action": "copy",
             "actionData": {
                 "fileName": "assets3.resources",
-                "destination": "assets3.resources"
+                "destination": "VTOLVR_Data\\assets3.resources"
             }
         }
     ]
 }
 ```
 
-Example ZIP File Structure:
+# Compiling 
+
+Modify information in: versioninfo.json && modinstaller.exe.manifest 
 
 ```
- patch.zip___
-             |- assets1.resources
-             |- assets2.resources
-             |- assets3.resources
-              \- patchscript.json 
-```
 
-For self reference on how to set up for compilation:
-
-Modify versioning on: versioninfo.json modinstaller.exe.manifest 
-
-```
 go install github.com/josephspurrier/goversioninfo/cmd/goversioninfo
 go generate
 go build

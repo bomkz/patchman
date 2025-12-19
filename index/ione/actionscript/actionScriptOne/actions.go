@@ -89,6 +89,9 @@ func handleCopy(actionData []byte) {
 
 	}
 
+	vtolvrpath := global.FindVtolPath()
+	copyData.Destination = vtolvrpath + "\\" + copyData.Destination
+
 	err = os.Rename(global.Directory+"\\"+copyData.FileName, copyData.Destination)
 	if err != nil {
 		global.FatalError(err)
@@ -105,8 +108,12 @@ func batchBundleImport(patchmanJson []byte) {
 
 	}
 
-	patchmanData.ModifiedFilePath = patchmanData.OriginalFilePath + ".mod"
+	vtolvrpath := global.FindVtolPath()
+
+	patchmanData.OriginalFilePath = vtolvrpath + "\\" + patchmanData.OriginalFilePath
+	patchmanData.ModifiedFilePath = vtolvrpath + patchmanData.OriginalFilePath + ".mod"
 	renameQueue = append(renameQueue, patchmanData.OriginalFilePath)
+	taintQueue = append(taintQueue, patchmanData.OriginalFilePath)
 
 	defer cleanup()
 	createOperationsFile(patchmanData)
@@ -124,7 +131,10 @@ func batchAssetImport(patchmanJson []byte) {
 
 	}
 
-	patchmanData.ModifiedFilePath = patchmanData.OriginalFilePath + ".mod"
+	vtolvrpath := global.FindVtolPath()
+
+	patchmanData.OriginalFilePath = vtolvrpath + "\\" + patchmanData.OriginalFilePath
+	patchmanData.ModifiedFilePath = vtolvrpath + patchmanData.OriginalFilePath + ".mod"
 	renameQueue = append(renameQueue, patchmanData.OriginalFilePath)
 	taintQueue = append(taintQueue, patchmanData.OriginalFilePath)
 

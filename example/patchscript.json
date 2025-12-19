@@ -5,7 +5,7 @@
         {
             "action": "importbundle",
             "actionData": {
-                "originalFilePath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\VTOL VR\\DLC\\1770480\\1770480",
+                "originalFilePath": "DLC\\1770480\\1770480",
                 "operations": [
                     {
                         "type": "import",
@@ -25,7 +25,7 @@
         {
             "action": "importasset",
             "actionData": {
-                "originalFilePath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\VTOL VR\\VTOLVR_Data\\resources.assets",
+                "originalFilePath": "VTOLVR_Data\\resources.assets",
                 "operations": [
                     {
                         "type": "import",
@@ -46,21 +46,21 @@
             "action": "copy",
             "actionData": {
                 "fileName": "assets1.resources",
-                "destination": "assets1.resources"
+                "destination": "VTOLVR_Data\\assets1.resources"
             }
         },
                 {
             "action": "copy",
             "actionData": {
                 "fileName": "assets2.resources",
-                "destination": "assets2.resources"
+                "destination": "VTOLVR_Data\\assets2.resources"
             }
         },
                 {
             "action": "copy",
             "actionData": {
                 "fileName": "assets3.resources",
-                "destination": "assets3.resources"
+                "destination": "VTOLVR_Data\\assets3.resources"
             }
         }
     ]

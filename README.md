@@ -125,8 +125,6 @@ Once you are ready to test your patch, you can open PatchMan, and click on the c
 
 PatchManager is game version agnostic, so long asset names do not change, however, periodically it is expected for the game to break when updating, so you should Verify game files and repatch the game after new VTOL VR updates.
 
-You can contact me in Discord @f45a to get your patch vetted and added to the integrated patch index.
-
 ## Example patchscript.json implementation:
 
 ```

@@ -90,11 +90,13 @@ Example patchscript.json implementation:
 
 Example ZIP File Structure:
 
+```
 patch.zip/
     |- assets1.resources
     |- assets2.resources
     |- assets3.resources
     \- patchscript.json 
+```
 
 For self reference on how to set up for compilation:
 

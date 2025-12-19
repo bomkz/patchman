@@ -1,12 +1,13 @@
 package actionScriptOne
 
+import "encoding/json"
+
 type ActionScriptStruct struct {
-	Action     string `json:"action"`
-	ActionData []byte `json:"actionData"`
+	Action     string          `json:"action"`
+	ActionData json.RawMessage `json:"actionData"`
 }
 
 type PatchmanUnityStruct struct {
-	Version          int                             `json:"version"`
 	OriginalFilePath string                          `json:"originalFilePath"`
 	ModifiedFilePath string                          `json:"modifiedFilePath"`
 	Operations       []PatchmanUnityOperationsStruct `json:"operations"`

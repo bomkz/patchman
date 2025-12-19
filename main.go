@@ -17,6 +17,7 @@ import (
 
 func main() {
 
+	actionScript.BeginTestJson()
 	admin := checkAdmin()
 
 	if !admin {
@@ -32,8 +33,6 @@ func main() {
 		global.CleanDir()
 		os.Exit(1)
 	}()
-
-	actionScript.HandleActionScript()
 
 	var err error
 	global.VtolVersion, err = getVtolVersion()

@@ -182,7 +182,6 @@ Press enter to continue...`)
 		AddFormItem(dynamicDropbox).
 		AddButton("Patch", install).
 		AddButton("Unpatch", uninstall).
-		AddButton("DevTools", nil).
 		AddButton("Quit", cancel)
 
 	form.SetBorder(false)

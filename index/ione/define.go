@@ -19,4 +19,7 @@ type IndexContentPatchVariantsStruct struct {
 	DownloadLink string `json:"downloadLink"`
 }
 
+var assetPath string
+var scriptPath string
+
 var Index IndexStruct

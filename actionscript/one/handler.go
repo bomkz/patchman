@@ -9,11 +9,7 @@ import (
 )
 
 // patcher.exe exportfrombundle --bundle "C:\BundlePath\unity.assets" --assetName "exampleAsset" --exportPath "C:\ExportPath\ExportName"
-func batchAssetImportHandler() {
-	createOperationsFile()
-	runPatchmanUnity()
 
-}
 
 func runPatchmanUnity() {
 	cmd := exec.Command(".\\patchman-unity.exe", "batchimportbundle", ".\\operations.json")

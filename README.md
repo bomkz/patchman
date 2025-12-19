@@ -8,7 +8,7 @@ PatchManager uses its own JSON-based patch"script", where you define the actions
 
 To start, you should have your own assets compiled in unity, as the resource file unity produces will be needed.
 
-#### How it works
+### How it works
 
 When loading resources, Unity looks in the VTOLVR_Data folder, even if reading a DLC file, so we can point VTOL VR to a resource file 'assets1.resources' that we copied to VTOLVR_Data from anywhere and it'll be able to find and load our custom resources from there.
 
@@ -25,6 +25,7 @@ This is not valid: `C:\Program Files(x86)\steam\steamapps\common\VTOL VR\VTOLVR_
 
 A valid patchscript file needs patchScriptVersion, motd, and data. 
 Patchscript is the version of patchscript your patch is written in, mainly to maintain backwards compatibility with future releases. Currently only patchScriptVersion 1 is valid. motd is a message or description you may want to display when installing your patch, and data contains the actions needed to patch the game.
+
 ```
 {
     "patchScriptVersion":1,
@@ -63,7 +64,7 @@ To define a patch you need to know the following: the name of the asset, the ass
 ```
 
 
-#### Patching bundles
+### Patching bundles
 
 Due to DLCs being packaged into compressed bundle files, you need to modify them with a separate action called `importbundle`, within this action, you can do a batch of modifications at the same time on a single DLC as you would with a normal asset file like resources.assets.
 
@@ -110,10 +111,6 @@ Since resource files need to be copied to VTOLVR_Data folder, we need to define 
 Once you have created your own patchscript.json, you can then package it and test it. 
 To package it properly, you need to put it in a ZIP file along with your custom resource files so that the ZIP file structure resembles the following:
 
-### Installing your patch
-
-Once you are ready to test your patch, you can open PatchMan, and click on the custom button in the lower area, there, you will input the path to your zip file, as an example: `C:\Users\bomkz\Documents\example.zip`, and then click on install. Assuming your patchscript is valid, it should finish without error.
-
 ```
  patch.zip___
              |- assets1.resources
@@ -121,6 +118,10 @@ Once you are ready to test your patch, you can open PatchMan, and click on the c
              |- assets3.resources
               \- patchscript.json 
 ```
+
+### Installing your patch
+
+Once you are ready to test your patch, you can open PatchMan, and click on the custom button in the lower area, there, you will input the path to your zip file, as an example: `C:\Users\bomkz\Documents\example.zip`, and then click on install. Assuming your patchscript is valid, it should finish without error.
 
 PatchManager is game version agnostic, so long asset names do not change, however, periodically it is expected for the game to break when updating, so you should Verify game files and repatch the game after new VTOL VR updates.
 
@@ -198,7 +199,11 @@ You can contact me in Discord @f45a to get your patch vetted and added to the in
 }
 ```
 
-# Compiling 
+## Adding your patch to the index
+
+You can contact me on Discord @f45a to vet your patch and add it into the index.
+
+## Compiling 
 
 Modify information in: versioninfo.json && modinstaller.exe.manifest 
 

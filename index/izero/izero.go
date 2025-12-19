@@ -182,7 +182,7 @@ Press enter to continue...`)
 		AddFormItem(dynamicDropbox).
 		AddButton("Patch", install).
 		AddButton("Unpatch", uninstall).
-		AddButton("Quit", cancel)
+		AddButton("Quit", global.Exit)
 
 	form.SetBorder(false)
 	global.Root.AddAndSwitchToPage("installform", form, true)

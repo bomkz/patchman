@@ -32,6 +32,7 @@ type StatusStruct struct {
 	InstalledVersion int `json:"installedVersion"`
 }
 
+var PatchmanUnityDir string
 var Status = StatusStruct{
 	InstalledVersion: 99,
 }

@@ -25,6 +25,12 @@ func install(filePath string) {
 		}
 	}
 
+	if !global.Exists(".\\patchman-unity.exe") {
+		os.WriteFile(".\\patchman-unity.exe", PatchmanUnityExe, os.ModeAppend)
+	}
+	if !global.Exists(".\\classdata.tpk") {
+		os.WriteFile(".\\classdata.tpk", ClassDataTpk, os.ModeAppend)
+	}
 	err := unzip(filePath, global.Directory)
 	if err != nil {
 		global.FatalError(err)

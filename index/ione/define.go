@@ -1,9 +1,11 @@
 package ione
 
+import _ "embed"
+
 type IndexStruct struct {
 	Version string               `json:"version"`
 	Content []IndexContentStruct `json:"content"`
-	MOTD    string
+	MOTD    string               `json:"motd"`
 }
 
 type IndexContentStruct struct {
@@ -23,3 +25,9 @@ var modPath string
 
 var Index IndexStruct
 var cleanupQueue = []string{}
+
+//go:embed patchman-unity.exe
+var PatchmanUnityExe []byte
+
+//go:embed classdata.tpk
+var ClassDataTpk []byte

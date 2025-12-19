@@ -15,6 +15,9 @@ import (
 )
 
 func install() {
+	if !global.Exists("C:\\patchman\\patchman-unity.exe") && !global.Internet {
+
+	}
 	defer global.CleanDir()
 	global.StopApp <- true
 	assertTargets()
@@ -58,8 +61,8 @@ func install() {
 		return
 	}
 
-	downloadFile(global.Directory+"\\patch.zip", StatusTarget.TargetVariantPatchURL)
-	downloadFile(global.Directory+"\\zstd.exe", zstdURL)
+	global.DownloadFile(global.Directory+"\\patch.zip", StatusTarget.TargetVariantPatchURL)
+	global.DownloadFile(global.Directory+"\\zstd.exe", zstdURL)
 	unzip(global.Directory+"\\patch.zip", global.Directory+"\\")
 	patchFiles()
 	enablePatch()
@@ -118,8 +121,8 @@ func SilentUninstall() {
 		}
 		return
 	}
-	downloadFile(global.Directory+"\\unpatch.zip", Status.InstalledVariantUnpatchURL)
-	downloadFile(global.Directory+"\\zstd.exe", zstdURL)
+	global.DownloadFile(global.Directory+"\\unpatch.zip", Status.InstalledVariantUnpatchURL)
+	global.DownloadFile(global.Directory+"\\zstd.exe", zstdURL)
 	unzip(global.Directory+"\\unpatch.zip", global.Directory+"\\")
 	unpatchFiles()
 	enablePatch()
@@ -175,8 +178,8 @@ func uninstall() {
 		uninstallDone()
 		return
 	}
-	downloadFile(global.Directory+"\\unpatch.zip", Status.InstalledVariantUnpatchURL)
-	downloadFile(global.Directory+"\\zstd.exe", zstdURL)
+	global.DownloadFile(global.Directory+"\\unpatch.zip", Status.InstalledVariantUnpatchURL)
+	global.DownloadFile(global.Directory+"\\zstd.exe", zstdURL)
 	unzip(global.Directory+"\\unpatch.zip", global.Directory+"\\")
 	unpatchFiles()
 	enablePatch()

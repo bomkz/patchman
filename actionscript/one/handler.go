@@ -1,15 +1,34 @@
 package actionScriptOne
 
 import (
+	"bytes"
 	"encoding/json"
 	"log"
 	"os"
+	"os/exec"
 )
 
 // patcher.exe exportfrombundle --bundle "C:\BundlePath\unity.assets" --assetName "exampleAsset" --exportPath "C:\ExportPath\ExportName"
 func batchAssetImportHandler() {
 	createOperationsFile()
+	runPatchmanUnity()
 
+}
+
+func runPatchmanUnity() {
+	cmd := exec.Command(".\\patchman-unity.exe", "batchimportbundle", ".\\operations.json")
+	var out bytes.Buffer
+	cmd.Stdout = &out
+
+	if err := cmd.Run(); err != nil {
+		log.Fatal(err)
+	}
+
+	if out.String() == "Done!" {
+		return
+	} else {
+		log.Panic("Uh oh...")
+	}
 }
 
 func createOperationsFile() {
@@ -31,9 +50,9 @@ func createOperationsFile() {
 	}
 }
 
-var testData ImportIntoBundleStruct = ImportIntoBundleStruct{
-	BundlePath: "C:\\Program Files (x86)\\Steam\\steamapps\\common\\VTOL VR\\DLC\\1770480\\1770480",
-	ImportSelection: []ImportIntoBundleSelectionStruct{
+var testData PatchmanUnityStruct = PatchmanUnityStruct{
+	OriginalFilePath: "C:\\Program Files (x86)\\Steam\\steamapps\\common\\VTOL VR\\DLC\\1770480\\1770480",
+	Operations: []PatchmanUnityOperationsStruct{
 		{
 			AssetName: "ttsw_pullUp",
 			AssetType: "AudioClip",
@@ -47,5 +66,5 @@ var testData ImportIntoBundleStruct = ImportIntoBundleStruct{
 			Type:      "import",
 		},
 	},
-	SavePath: ".\\1770480.mod",
+	ModifiedFilePath: ".\\1770480.mod",
 }

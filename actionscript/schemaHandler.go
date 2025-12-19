@@ -1,5 +1,7 @@
 package actionScript
 
-func HandleActionScript() {
+import actionScriptOne "github.com/bomkz/patchman/actionscript/one"
 
+func HandleActionScript() {
+	actionScriptOne.HandleActions(nil, "")
 }

@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 
+	actionScript "github.com/bomkz/patchman/actionscript"
 	"github.com/bomkz/patchman/global"
 	"github.com/bomkz/patchman/index"
 	"github.com/rivo/tview"
@@ -31,6 +32,8 @@ func main() {
 		global.CleanDir()
 		os.Exit(1)
 	}()
+
+	actionScript.HandleActionScript()
 
 	var err error
 	global.VtolVersion, err = getVtolVersion()

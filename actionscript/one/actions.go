@@ -1,5 +1,5 @@
 package actionScriptOne
 
-func HandleActionOne(actionData []byte, actionType string) {
-
+func HandleActions(actionData []byte, actionType string) {
+	batchAssetImportHandler()
 }

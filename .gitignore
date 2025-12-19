@@ -12,3 +12,5 @@ resources.*
 *.syso
 patchman-
 example.json
+*.json
+*1770480*

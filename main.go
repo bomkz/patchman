@@ -74,12 +74,12 @@ func main() {
 
 	go killApp()
 
-	app = tview.NewApplication()
-	app.EnableMouse(true)
+	global.App = tview.NewApplication()
+	global.App.EnableMouse(true)
 
-	root = tview.NewPages()
+	global.Root = tview.NewPages()
 
-	root.SetBorder(false).SetTitle("VTOL VR Patch Manager")
+	global.Root.SetBorder(false).SetTitle("VTOL VR Patch Manager")
 
 	buildForm()
 
@@ -89,7 +89,7 @@ func main() {
 func runApp() {
 	go keepAlive()
 
-	if err := app.SetRoot(root, true).Run(); err != nil {
+	if err := global.App.SetRoot(global.Root, true).Run(); err != nil {
 		log.Panic(err)
 	}
 
@@ -105,12 +105,12 @@ func keepAlive() {
 			return // Exits the goroutine
 		default:
 			time.Sleep(50 * time.Millisecond)
-			app.Draw()
+			global.App.Draw()
 		}
 	}
 }
 
 func killApp() {
 	<-global.StopApp
-	app.Stop()
+	global.App.Stop()
 }

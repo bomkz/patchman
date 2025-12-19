@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/bomkz/patchman/global"
 	"github.com/bomkz/patchman/index"
 )
 
@@ -12,5 +13,5 @@ func buildForm() {
 	if err != nil {
 		log.Panic()
 	}
-	root.AddAndSwitchToPage("installform", form, true)
+	global.Root.AddAndSwitchToPage("installform", form, true)
 }

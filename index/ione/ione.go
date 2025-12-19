@@ -18,16 +18,11 @@ func buildForm() *tview.Form {
 		AddTextView("MOTD", "", 0, 0, false, false).
 		AddButton("Patch", nil).
 		AddButton("Unpatch", nil).
-		AddButton("DevTools", nil).
+		AddButton("DevTools", buildDeveloperForm).
 		AddButton("Quit", cancel)
 
 	form.SetBorder(false)
 	return form
-}
-
-func devForm(indexbyte []byte, motd string) (*tview.Form, error) {
-
-	return nil, nil
 }
 
 func cancel() {

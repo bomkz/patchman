@@ -1,5 +1,7 @@
 package global
 
+import "github.com/rivo/tview"
+
 var VtolVersion string
 
 var Internet bool = true
@@ -31,3 +33,6 @@ type StatusStruct struct {
 }
 
 var Status StatusStruct
+
+var App *tview.Application
+var Root *tview.Pages

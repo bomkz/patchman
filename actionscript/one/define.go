@@ -5,31 +5,17 @@ type ActionScriptStruct struct {
 	ActionData []byte `json:"actionData"`
 }
 
-type ExportFromBundleStruct struct {
-	BundlePath      string                            `json:"bundlePath"`
-	ExportSelection []ExportFromBundleSelectionStruct `json:"exportSelection"`
-}
-
-type ExportFromBundleSelectionStruct struct {
-	SelectionName string `json:"selectionName"`
-	ExportName    string `json:"exportName"`
-	ExportPath    string `json:"exportPath"`
-}
-
-type ExportAllFromBundleStruct struct {
-	BundlePath string `json:"bundlePath"`
-	ExportPath string `json:"exportPath"`
-}
-
 type ImportIntoBundleStruct struct {
-	BundlePath      string                            `json:"bundlePath"`
+	BundlePath      string                            `json:"originalFilePath"`
 	ImportSelection []ImportIntoBundleSelectionStruct `json:"importSelection"`
+	SavePath        string                            `json:"ModifiedFilePath"`
 }
 
 type ImportIntoBundleSelectionStruct struct {
-	SelectionName string `json:"selectionName"`
-	ImportName    string `json:"importName"`
-	ImportPath    string `json:"importPath"`
+	AssetName string `json:"assetName"`
+	AssetType string `json:"assetType"`
+	AssetPath string `json:"assetPath"`
+	Type      string `json:"type"`
 }
 
 type ImportIntoAssetStruct struct {
@@ -44,12 +30,16 @@ type ImportIntoAssetSelectionStruct struct {
 	ImportedAssetHash string `json:"importedAssetHash"`
 }
 
-type GenerateHashStruct struct {
-	HashPath string   `json:"hashPath"`
-	FilePath []string `json:"filePath"`
+type PatchmanUnityStruct struct {
+	Version          int                             `json:"version"`
+	OriginalFilePath string                          `json:"originalFilePath"`
+	ModifiedFilePath string                          `json:"modifiedFilePath"`
+	Operations       []PatchmanUnityOperationsStruct `json:"operations"`
 }
 
-type GenerateHashBatch struct {
-	HashPath   string `json:"hashPath"`
-	FolderPath string `json:"folderPath"`
+type PatchmanUnityOperationsStruct struct {
+	Type      string `json:"type"`
+	AssetType string `json:"assetType"`
+	AssetName string `json:"assetName"`
+	AssetPath string `json:"assetPath"`
 }

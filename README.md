@@ -102,8 +102,10 @@ For self reference on how to set up for compilation:
 
 Modify versioning on: versioninfo.json modinstaller.exe.manifest 
 
-go get github.com/josephspurrier/goversioninfo/cmd/goversioninfo
+```
+go install github.com/josephspurrier/goversioninfo/cmd/goversioninfo
 go generate
 go build
 
 signtool sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /f <certificate> "modinstaller.exe"
+```

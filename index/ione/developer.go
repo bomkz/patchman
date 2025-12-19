@@ -17,6 +17,8 @@ func buildDeveloperForm() {
 
 	form.SetBorder(false)
 
+	global.Root.AddAndSwitchToPage("DevForm", form, true)
+
 }
 
 func pathField(path string) {

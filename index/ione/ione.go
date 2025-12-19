@@ -7,11 +7,12 @@ import (
 	"github.com/rivo/tview"
 )
 
-func HandleForm(indexbyte []byte, motd string) (*tview.Form, error) {
-	return buildForm(), nil
+func HandleForm(indexbyte []byte, motd string) error {
+	buildForm()
+	return nil
 }
 
-func buildForm() *tview.Form {
+func buildForm() {
 
 	form := tview.NewForm()
 	form.AddTextView("VTOL VR Version", global.VtolVersion, 0, 0, false, false).
@@ -22,7 +23,8 @@ func buildForm() *tview.Form {
 		AddButton("Quit", cancel)
 
 	form.SetBorder(false)
-	return form
+	global.Root.AddAndSwitchToPage("installform", form, true)
+
 }
 
 func cancel() {

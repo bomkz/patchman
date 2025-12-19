@@ -76,7 +76,7 @@ func generatePossibleCombinations(forms []IndexContentContentVersionsFormsStruct
 	return results
 }
 
-func buildForm() *tview.Form {
+func buildForm() {
 
 	VariantName := []string{}
 	for _, x := range index {
@@ -186,19 +186,20 @@ Press enter to continue...`)
 		AddButton("Quit", cancel)
 
 	form.SetBorder(false)
-	return form
+	global.Root.AddAndSwitchToPage("installform", form, true)
 }
 
-func HandleForm(indexbyte []byte) (*tview.Form, error) {
+func HandleForm(indexbyte []byte) error {
 
 	readTaintNoFail()
 
 	if err := json.Unmarshal(indexbyte, &index); err != nil {
-		return nil, err
+		return err
 	}
 
 	buildInitialSelection()
-	return buildForm(), nil
+	buildForm()
+	return nil
 }
 
 func BuildTaintInfo() string {

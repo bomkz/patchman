@@ -13,10 +13,9 @@ import (
 	"github.com/bomkz/patchman/global"
 	"github.com/bomkz/patchman/index/ione"
 	"github.com/bomkz/patchman/index/izero"
-	"github.com/rivo/tview"
 )
 
-func BuildIndex() (*tview.Form, error) {
+func BuildIndex() error {
 
 	handleIndex()
 
@@ -34,16 +33,16 @@ func BuildIndex() (*tview.Form, error) {
 		}
 
 		if indexData == nil {
-			return nil, errors.New("form content is nil")
+			return errors.New("form content is nil")
 		}
 
-		form, err := izero.HandleForm(indexData)
+		err := izero.HandleForm(indexData)
 
 		if err != nil {
-			return nil, err
+			return err
 		}
 
-		return form, nil
+		return nil
 	case 1:
 		var indexData []byte
 		for _, x := range preindex.Content {
@@ -57,18 +56,18 @@ func BuildIndex() (*tview.Form, error) {
 		}
 
 		if indexData == nil {
-			return nil, errors.New("form content is nil")
+			return errors.New("form content is nil")
 		}
-		form, err := ione.HandleForm(indexData, preindex.Content[1].Motd)
+		err := ione.HandleForm(indexData, preindex.Content[1].Motd)
 
 		if err != nil {
-			return nil, err
+			return err
 		}
 
-		return form, nil
+		return nil
 	}
 
-	return nil, errors.New("could not handle index idk why. good luk")
+	return errors.New("could not handle index idk why. good luk")
 }
 
 func handleIndex() {

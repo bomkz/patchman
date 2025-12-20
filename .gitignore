@@ -10,7 +10,7 @@ resources.*
 .idea
 *.crt
 *.syso
-patchman-
+patchman-*
 example.json
 *.json
 *1770480*

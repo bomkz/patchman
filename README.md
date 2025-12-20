@@ -147,15 +147,19 @@ PatchManager is game version agnostic, so long asset names do not change, howeve
                 "operations": [
                     {
                         "type": "import",
-                        "assetType":"AudioClip",
+                        "assetType": "AudioClip",
                         "assetName": "ttsw_autopilotOff",
-                        "assetPath": "assets1.resources"
+                        "assetPath": "assets2.resources",
+                        "offset": 0,
+                        "size": 0
                     },
                     {
                         "type": "import",
-                        "assetType":"AudioClip",
+                        "assetType": "AudioClip",
                         "assetName": "ttsw_pullUp",
-                        "assetPath": "assets1.resources"
+                        "assetPath": "assets3.resources",
+                        "offset": 0,
+                        "size": 0
                     }
                 ]
             }
@@ -169,13 +173,17 @@ PatchManager is game version agnostic, so long asset names do not change, howeve
                         "type": "import",
                         "assetType": "AudioClip",
                         "assetName": "ttsw_autopilotOff",
-                        "assetPath": "assets2.resources"
+                        "assetPath": "assets2.resources",
+                        "offset": 0,
+                        "size": 0
                     },
                     {
                         "type": "import",
                         "assetType": "AudioClip",
                         "assetName": "ttsw_pullUp",
-                        "assetPath": "assets3.resources"
+                        "assetPath": "assets3.resources",
+                        "offset": 0,
+                        "size": 0
                     }
                 ]
             }

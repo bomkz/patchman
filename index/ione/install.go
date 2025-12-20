@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/bomkz/patchman/global"
 	actionScript "github.com/bomkz/patchman/index/ione/actionscript"
@@ -43,12 +44,19 @@ func install(filePath string) {
 		global.FatalError(err)
 
 	}
-
 	actionScript.HandleActionScript(patchscript)
 
 	os.RemoveAll(global.Directory)
+	global.ExitTview()
 
-	global.ExitApp()
+	time.Sleep(1000 * time.Second)
+	global.ExitAppWithMessage("Done!")
+
+}
+
+func uninstall() {
+	actionScriptOne.Uninstall()
+
 }
 
 func cleanup() {

@@ -41,15 +41,15 @@ func buildForm() {
 
 	descTextView := tview.NewTextView().
 		SetText(patchData[currentSelection].PatchDesc).
-		SetDynamicColors(false).SetScrollable(false)
+		SetDynamicColors(false).SetScrollable(true).SetMaxLines(4)
 
 	authTextView := tview.NewTextView().
 		SetText(patchData[currentSelection].PatchAuthor).
-		SetDynamicColors(false).SetScrollable(false)
+		SetDynamicColors(false).SetScrollable(false).SetMaxLines(2)
 
 	linkTextView := tview.NewTextView().
 		SetText(patchData[currentSelection].PatchLink).
-		SetDynamicColors(false).SetScrollable(false)
+		SetDynamicColors(false).SetScrollable(false).SetMaxLines(2)
 
 	varDropBox := tview.NewDropDown().
 		SetOptions(variants, selectedVariant)
@@ -69,14 +69,14 @@ func buildForm() {
 		AddFormItem(authTextView).
 		AddFormItem(descTextView).
 		AddFormItem(linkTextView).
+		AddDropDown("Select Compression Type...", Compression, 0, setCompression).
 		AddDropDown("Select Variant...", variants, currentVariant, selectedVariant).
 		AddButton("Patch", nil).
-		AddButton("Unpatch", nil).
+		AddButton("Unpatch", uninstall).
 		AddButton("Custom", buildDeveloperForm).
 		AddButton("Quit", global.ExitApp)
 
 	form.SetBorder(false)
-	global.Root.RemovePage("installform")
 	global.Root.AddAndSwitchToPage("installform", form, true)
 
 }

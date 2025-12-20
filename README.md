@@ -37,7 +37,7 @@ Patchscript is the version of patchscript your patch is written in, mainly to ma
 ### Patching Assets
 
 Patchscript currently only has two valid patch types: `AudioClip` and `Texture2D`.
-To define a patch you need to know the following: the name of the asset, the asset type (found above), and the resource asset file that contains it. The following is an example of this:
+To define a patch you need to know the following: the name of the asset, the asset type (found above), and the resource asset file that contains it. You also need the size and offset, you can find this in Unity Asset Bundle Extractor. The following is an example of this:
 
 ```
 {
@@ -49,13 +49,17 @@ To define a patch you need to know the following: the name of the asset, the ass
                 "type": "import",
                 "assetType": "AudioClip",
                 "assetName": "ttsw_autopilotOff",
-                "assetPath": "assets2.resources"
+                "assetPath": "assets2.resources",
+                "offset": 0,
+                "size": 0
             },
             {
                 "type": "import",
                 "assetType": "AudioClip",
                 "assetName": "ttsw_pullUp",
-                "assetPath": "assets3.resources"
+                "assetPath": "assets3.resources",
+                "offset": 0,
+                "size": 0
             }
         ]
     }
@@ -78,13 +82,17 @@ Due to DLCs being packaged into compressed bundle files, you need to modify them
                 "type": "import",
                 "assetType": "AudioClip",
                 "assetName": "ttsw_autopilotOff",
-                "assetPath": "assets2.resources"
+                "assetPath": "assets2.resources",
+                "offset": 0,
+                "size": 0
             },
             {
                 "type": "import",
                 "assetType": "AudioClip",
                 "assetName": "ttsw_pullUp",
-                "assetPath": "assets3.resources"
+                "assetPath": "assets3.resources",
+                "offset": 0,
+                "size": 0
             }
         ]
     }
@@ -206,7 +214,7 @@ You can contact me on Discord @f45a to vet your patch and add it into the index.
 Modify information in: versioninfo.json && modinstaller.exe.manifest 
 
 ```
-
+go get github.com/josephspurrier/goversioninfo/cmd/goversioninfo
 go install github.com/josephspurrier/goversioninfo/cmd/goversioninfo
 go generate
 go build

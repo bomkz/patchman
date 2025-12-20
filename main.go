@@ -84,7 +84,7 @@ func main() {
 
 	runApp()
 
-	global.ExitApp()
+	global.ExitAppWithMessage("Done!")
 }
 
 func runApp() {

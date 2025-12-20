@@ -1,3 +1,5 @@
+github.com/akavel/rsrc v0.10.2 h1:Zxm8V5eI1hW4gGaYsJQUhxpjkENuG91ki8B4zCrvEsw=
+github.com/akavel/rsrc v0.10.2/go.mod h1:uLoCtb9J+EyAqh+26kdrTgmzRBFPGOolLWKpdxkKq+c=
 github.com/gdamore/encoding v1.0.0 h1:+7OoQ1Bc6eTm5niUzBa0Ctsh6JbMW6Ra+YNuAtDBdko=
 github.com/gdamore/encoding v1.0.0/go.mod h1:alR0ol34c49FCSBLjhosxzcPHQbf2trDkoo5dl+VrEg=
 github.com/gdamore/tcell/v2 v2.7.1 h1:TiCcmpWHiAU7F0rA2I3S2Y4mmLmO9KHxJ7E1QhYzQbc=
@@ -6,6 +8,8 @@ github.com/iancoleman/orderedmap v0.3.0 h1:5cbR2grmZR/DiVt+VJopEhtVs9YGInGIxAoMJ
 github.com/iancoleman/orderedmap v0.3.0/go.mod h1:XuLcCUkdL5owUCQeF2Ue9uuw1EptkJDkXXS7VoV7XGE=
 github.com/inancgumus/screen v0.0.0-20190314163918-06e984b86ed3 h1:fO9A67/izFYFYky7l1pDP5Dr0BTCRkaQJUG6Jm5ehsk=
 github.com/inancgumus/screen v0.0.0-20190314163918-06e984b86ed3/go.mod h1:Ey4uAp+LvIl+s5jRbOHLcZpUDnkjLBROl15fZLwPlTM=
+github.com/josephspurrier/goversioninfo v1.5.0 h1:9TJtORoyf4YMoWSOo/cXFN9A/lB3PniJ91OxIH6e7Zg=
+github.com/josephspurrier/goversioninfo v1.5.0/go.mod h1:6MoTvFZ6GKJkzcdLnU5T/RGYUbHQbKpYeNP0AgQLd2o=
 github.com/lucasb-eyer/go-colorful v1.2.0 h1:1nnpGOrhyZZuNyfu1QjKiUICQ74+3FNCN69Aj6K7nkY=
 github.com/lucasb-eyer/go-colorful v1.2.0/go.mod h1:R4dSotOR9KMtayYi1e77YzuveK+i7ruzyGqttikkLy0=
 github.com/mattn/go-runewidth v0.0.15 h1:UNAjwbU9l54TA3KzvqLGxwWjHmMgBUVhBiTjelZgg3U=

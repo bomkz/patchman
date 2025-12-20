@@ -7,6 +7,28 @@ type ActionScriptStruct struct {
 	ActionData json.RawMessage `json:"actionData"`
 }
 
+var installStatus installStatusStruct
+
+type installStatusStruct struct {
+	Pending   []installStatusActionsQueueStruct
+	Current   installStatusActionsQueueStruct
+	total     int
+	completed int
+}
+
+var refreshStatus = make(chan bool)
+
+type installStatusActionsQueueStruct struct {
+	Id             string
+	Filename       string
+	ActionName     string
+	CurrentAction  string
+	TotalSteps     int
+	StepsCompleted int
+}
+
+var CompressionType string
+
 type PatchmanUnityStruct struct {
 	OriginalFilePath string                          `json:"originalFilePath"`
 	ModifiedFilePath string                          `json:"modifiedFilePath"`
@@ -27,6 +49,8 @@ type PatchmanUnityOperationsStruct struct {
 	AssetType string `json:"assetType"`
 	AssetName string `json:"assetName"`
 	AssetPath string `json:"assetPath"`
+	Offset    int64  `json:"offset"`
+	Size      int64  `json:"size"`
 }
 
 type TaintInfoStruct struct {

@@ -22,6 +22,15 @@ func ExitApp() {
 	os.Exit(0)
 }
 
+func ExitAppWithMessage(message string) {
+	ExitTview()
+	screen.Clear()
+	fmt.Println(message)
+	fmt.Println("Press Enter to exit...")
+	fmt.Scanln()
+	os.Exit(0)
+}
+
 func FatalError(err error) {
 	ExitTview()
 	fmt.Println(err)

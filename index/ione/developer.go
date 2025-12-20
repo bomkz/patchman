@@ -12,7 +12,7 @@ func buildDeveloperForm() {
 	form.AddTextView("VTOL VR Version", global.VtolVersion, 0, 0, false, false).
 		AddInputField("Custom mod path", "", 40, nil, pathField).
 		AddButton("Install Patch", installFunc).
-		AddButton("Quit", global.Exit)
+		AddButton("Quit", global.ExitApp)
 
 	form.SetBorder(false)
 

@@ -73,7 +73,7 @@ func buildForm() {
 		AddButton("Patch", nil).
 		AddButton("Unpatch", nil).
 		AddButton("Custom", buildDeveloperForm).
-		AddButton("Quit", global.Exit)
+		AddButton("Quit", global.ExitApp)
 
 	form.SetBorder(false)
 	global.Root.RemovePage("installform")

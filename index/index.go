@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -25,7 +24,7 @@ func BuildIndex() error {
 		for _, x := range preindex.Content {
 			version, err := strconv.Atoi(x.Version)
 			if err != nil {
-				log.Panic(err)
+				global.FatalError(err)
 			}
 			if version == useIndexVersion {
 				indexData = x.Content
@@ -48,7 +47,7 @@ func BuildIndex() error {
 		for _, x := range preindex.Content {
 			version, err := strconv.Atoi(x.Version)
 			if err != nil {
-				log.Panic(err)
+				global.FatalError(err)
 			}
 			if version == useIndexVersion {
 				indexData = x.Content
@@ -161,12 +160,12 @@ func ReadTaint() {
 
 	taint, err := os.ReadFile(vtolvrpath + "\\patchman.json")
 	if err != nil {
-		global.StopApp <- true
-		log.Fatal("Error Reading patchman.json. Please verify game files and delete the following file: " + vtolvrpath + "\\patchman.json then rerun patchman.")
+		global.ExitTview()
+		global.FatalError(errors.New("Error Reading patchman.json. Please verify game files and delete the following file: " + vtolvrpath + "\\patchman.json then rerun patchman."))
 	}
 	err = json.Unmarshal(taint, &global.Status)
 	if err != nil {
-		log.Fatal("Error Reading patchman.json. Please verify game files and delete the following file: " + vtolvrpath + "\\patchman.json then rerun patchman.")
+		global.FatalError(errors.New("Error Reading patchman.json. Please verify game files and delete the following file: " + vtolvrpath + "\\patchman.json then rerun patchman."))
 	}
 	global.InstalledVersion = global.Status.InstalledVersion
 }

@@ -26,8 +26,6 @@ Press enter to continue...
 
 var Directory string
 
-var StopApp = make(chan bool)
-
 type StatusStruct struct {
 	InstalledVersion int `json:"installedVersion"`
 }

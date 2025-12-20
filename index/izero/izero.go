@@ -182,7 +182,7 @@ Press enter to continue...`)
 		AddFormItem(dynamicDropbox).
 		AddButton("Patch", install).
 		AddButton("Unpatch", uninstall).
-		AddButton("Quit", global.Exit)
+		AddButton("Quit", global.ExitApp)
 
 	form.SetBorder(false)
 	global.Root.AddAndSwitchToPage("installform", form, true)
@@ -211,7 +211,7 @@ func ReadTaint() {
 
 	taint, err := os.ReadFile(vtolvrpath + "\\patchman.json")
 	if err != nil {
-		global.StopApp <- true
+		global.ExitTview()
 		log.Fatal("Error Reading patchman.json. Please verify game files and delete the following file: " + vtolvrpath + "\\patchman.json then rerun patchman.")
 	}
 	err = json.Unmarshal(taint, &Status)

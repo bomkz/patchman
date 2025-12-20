@@ -48,7 +48,7 @@ func install(filePath string) {
 
 	os.RemoveAll(global.Directory)
 
-	global.StopApp <- true
+	global.ExitApp()
 }
 
 func cleanup() {

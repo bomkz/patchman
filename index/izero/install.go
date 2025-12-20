@@ -19,7 +19,7 @@ func install() {
 
 	}
 	defer global.CleanDir()
-	global.StopApp <- true
+	global.ExitTview()
 	assertTargets()
 	patched := true
 	if Status.InstalledName == "Unpatched" {
@@ -137,7 +137,7 @@ func SilentUninstall() {
 }
 
 func uninstall() {
-	global.StopApp <- true
+	global.ExitTview()
 	time.Sleep(500 * time.Millisecond)
 	patched := true
 	if Status.InstalledName == "Unpatched" {

@@ -7,7 +7,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"github.com/bomkz/patchman/global"
 	"github.com/bomkz/patchman/index"
@@ -72,8 +71,6 @@ func main() {
 		log.Fatal("Unrecognized argument: " + os.Args[1] + "\nValid examples:\npatchman.exe [game buildid override] \npatchman.exe 18407725\npatchman.exe version\n patchman.exe help\npatchman.exe patchstatus")
 	}
 
-	go killApp()
-
 	global.App = tview.NewApplication()
 	global.App.EnableMouse(true)
 
@@ -86,33 +83,14 @@ func main() {
 	defer os.RemoveAll(global.Directory)
 
 	runApp()
+
+	global.ExitApp()
 }
 
 func runApp() {
-	go keepAlive()
 
 	if err := global.App.SetRoot(global.Root, true).Run(); err != nil {
 		log.Panic(err)
 	}
 
-}
-
-func keepAlive() {
-	for {
-		select {
-		case <-stop:
-			if global.Directory != "" {
-				global.CleanDir()
-			}
-			return // Exits the goroutine
-		default:
-			time.Sleep(50 * time.Millisecond)
-			global.App.Draw()
-		}
-	}
-}
-
-func killApp() {
-	<-global.StopApp
-	global.App.Stop()
 }

@@ -8,14 +8,28 @@ import (
 	"os"
 
 	"github.com/bomkz/patchman/steamutils"
+	"github.com/inancgumus/screen"
 )
 
-func Exit() {
-	StopApp <- true
+func ExitTview() {
+	App.Stop()
+	screen.Clear()
 }
+
+func ExitApp() {
+	ExitTview()
+	screen.Clear()
+	os.Exit(0)
+}
+
 func FatalError(err error) {
-	StopApp <- true
-	log.Fatal(err)
+	ExitTview()
+	fmt.Println(err)
+	fmt.Println("Press Enter to exit")
+	fmt.Scanln()
+
+	ExitApp()
+
 }
 
 func Exists(path string) bool {

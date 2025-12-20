@@ -90,7 +90,7 @@ func handleCopy(actionData []byte) {
 	}
 
 	vtolvrpath := global.FindVtolPath()
-	copyData.Destination = vtolvrpath + "\\" + copyData.Destination
+	copyData.Destination = vtolvrpath + copyData.Destination
 
 	err = os.Rename(global.Directory+"\\"+copyData.FileName, copyData.Destination)
 	if err != nil {

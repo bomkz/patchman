@@ -4,8 +4,6 @@ type SteamLibraryFolder struct {
 	Path string `json:"path,omitempty"`
 }
 
-var stop = make(chan bool)
-
 var helpArgument string = `Valid arguments: patchman.exe
 	help    		- Displays this help message
 	alias:

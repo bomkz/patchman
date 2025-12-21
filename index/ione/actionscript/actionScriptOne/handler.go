@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"strconv"
@@ -16,7 +15,7 @@ import (
 
 // patcher.exe exportfrombundle --bundle "C:\BundlePath\unity.assets" --assetName "exampleAsset" --exportPath "C:\ExportPath\ExportName"
 
-func runPatchmanUnityBundles() {
+func runPatchmanUnityBundles() error {
 	cmd := exec.Command(".\\patchman-unity.exe", "batchimportbundle", ".\\operations.json", CompressionType)
 	var out bytes.Buffer
 	cmd.Stdout = &out
@@ -26,11 +25,10 @@ func runPatchmanUnityBundles() {
 
 	}
 
-	if out.String() == "Done!" {
-		return
-	} else {
-		global.FatalError(errors.New(out.String()))
+	if out.String() != "Done!" {
+		return errors.New(out.String())
 	}
+	return nil
 }
 
 func StatusUpdater() {
@@ -49,30 +47,27 @@ func StatusUpdater() {
 
 }
 
-func runPatchmanUnityAssets() {
+func runPatchmanUnityAssets() error {
 	cmd := exec.Command(".\\patchman-unity.exe", "batchimportasset", ".\\operations.json")
 	var out bytes.Buffer
 	cmd.Stdout = &out
 
 	if err := cmd.Run(); err != nil {
-		global.FatalError(err)
-
+		return err
 	}
 
-	if out.String() == "Done!" {
-		return
-	} else {
-		log.Panic("Uh oh...")
+	if out.String() != "Done!" {
+		return errors.New(out.String())
 	}
 
+	return nil
 }
 
-func createOperationsFile(opData PatchmanUnityStruct) {
+func createOperationsFile(opData PatchmanUnityStruct) error {
 
 	file, err := os.Create("operations.json")
 	if err != nil {
-		global.FatalError(err)
-
+		return err
 	}
 
 	defer file.Close()
@@ -81,13 +76,12 @@ func createOperationsFile(opData PatchmanUnityStruct) {
 
 	jsonData, err := json.Marshal(opData)
 	if err != nil {
-		global.FatalError(err)
-
+		return err
 	}
 
 	_, err = file.Write(jsonData)
 	if err != nil {
-		global.FatalError(err)
-
+		return err
 	}
+	return nil
 }

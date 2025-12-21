@@ -33,6 +33,7 @@ func main() {
 
 	var err error
 	global.VtolVersion, err = getVtolVersion()
+	fmt.Println(global.VtolVersion)
 	if err != nil {
 		log.Fatal(err)
 	}

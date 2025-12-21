@@ -114,17 +114,29 @@ func HandleActions(actionData []byte) {
 	for _, x := range actionScript {
 		switch x.Action {
 		case "importbundle":
-			batchBundleImport(x.ActionData)
+			err = batchBundleImport(x.ActionData)
+			if err != nil {
+				global.FatalError(err)
+				return
+			}
 		case "importasset":
-			batchAssetImport(x.ActionData)
+			err = batchAssetImport(x.ActionData)
+			if err != nil {
+				global.FatalError(err)
+				return
+			}
 		case "copy":
-			handleCopy(x.ActionData)
+			err = handleCopy(x.ActionData)
+			if err != nil {
+				global.FatalError(err)
+				return
+			}
 		}
 	}
 
 	buildTaintInfo()
 
-	global.ExitApp()
+	global.ExitAppWithMessage("Done!")
 }
 
 func ClearScreen() {
@@ -139,13 +151,12 @@ func ClearScreen() {
 	}
 }
 
-func handleCopy(actionData []byte) {
+func handleCopy(actionData []byte) error {
 	var copyData CopyStruct
 
 	err := json.Unmarshal(actionData, &copyData)
 	if err != nil {
-		global.FatalError(err)
-
+		return err
 	}
 
 	var tmpInstallStatus []installStatusActionsQueueStruct
@@ -167,19 +178,18 @@ func handleCopy(actionData []byte) {
 
 	refreshStatus <- true
 
-	err = os.Rename(global.Directory+"\\"+copyData.FileName, copyData.Destination)
+	err = global.MoveFile(global.Directory+"\\"+copyData.FileName, copyData.Destination)
 	if err != nil {
-		global.FatalError(err)
-
+		return err
 	}
 	installStatus.Current.CurrentAction = "Done!"
 	installStatus.Current.StepsCompleted = 1
 	installStatus.completed += 1
 	refreshStatus <- true
-
+	return nil
 }
 
-func batchBundleImport(patchmanJson []byte) {
+func batchBundleImport(patchmanJson []byte) error {
 	var patchmanData PatchmanUnityStruct
 
 	err := json.Unmarshal(patchmanJson, &patchmanData)
@@ -202,7 +212,7 @@ func batchBundleImport(patchmanJson []byte) {
 	}
 
 	if !global.Exists(patchmanData.OriginalFilePath) {
-		return
+		return nil
 	}
 
 	renameQueue = append(renameQueue, patchmanData.OriginalFilePath)
@@ -213,17 +223,26 @@ func batchBundleImport(patchmanJson []byte) {
 	installStatus.Current.CurrentAction = "Creating Bundle Patch..."
 	refreshStatus <- true
 
-	createOperationsFile(patchmanData)
+	err = createOperationsFile(patchmanData)
+	if err != nil {
+		return err
+	}
 	installStatus.Current.StepsCompleted = 1
 	installStatus.Current.CurrentAction = "Installing Bundle Patch..."
 	refreshStatus <- true
 
-	runPatchmanUnityBundles()
+	err = runPatchmanUnityBundles()
+	if err != nil {
+		return err
+	}
 	installStatus.Current.StepsCompleted = 2
 	installStatus.Current.CurrentAction = "Finalizing Bundle Patch..."
 	refreshStatus <- true
 
-	renameModifiedFiles()
+	err = renameModifiedFiles()
+	if err != nil {
+		return err
+	}
 	installStatus.Current.StepsCompleted = 3
 	installStatus.Current.CurrentAction = "Cleaning up temporary files..."
 	refreshStatus <- true
@@ -236,15 +255,15 @@ func batchBundleImport(patchmanJson []byte) {
 	installStatus.completed += 1
 
 	renameQueue = []string{}
+	return nil
 }
 
-func batchAssetImport(patchmanJson []byte) {
+func batchAssetImport(patchmanJson []byte) error {
 	var patchmanData PatchmanUnityStruct
 
 	err := json.Unmarshal(patchmanJson, &patchmanData)
 	if err != nil {
-		global.FatalError(err)
-
+		return err
 	}
 
 	var tmpPending []installStatusActionsQueueStruct
@@ -269,17 +288,26 @@ func batchAssetImport(patchmanJson []byte) {
 	installStatus.Current.CurrentAction = "Creating Asset Patch..."
 	refreshStatus <- true
 
-	createOperationsFile(patchmanData)
+	err = createOperationsFile(patchmanData)
+	if err != nil {
+		return err
+	}
 	installStatus.Current.StepsCompleted = 1
 	installStatus.Current.CurrentAction = "Installing Asset Patch..."
 	refreshStatus <- true
 
-	runPatchmanUnityAssets()
+	err = runPatchmanUnityAssets()
+	if err != nil {
+		return err
+	}
 	installStatus.Current.StepsCompleted = 2
 	installStatus.Current.CurrentAction = "Finalizing Asset Patch..."
 	refreshStatus <- true
 
-	renameModifiedFiles()
+	err = renameModifiedFiles()
+	if err != nil {
+		return err
+	}
 	installStatus.Current.StepsCompleted = 3
 	installStatus.Current.CurrentAction = "Cleaning up temporary files..."
 	refreshStatus <- true
@@ -292,6 +320,7 @@ func batchAssetImport(patchmanJson []byte) {
 	installStatus.completed += 1
 
 	renameQueue = []string{}
+	return nil
 
 }
 
@@ -327,19 +356,18 @@ func buildTaintInfo() {
 	}
 }
 
-func renameModifiedFiles() {
+func renameModifiedFiles() error {
 	for _, x := range renameQueue {
 		err := os.Rename(x, x+".orig")
 		if err != nil {
-			global.FatalError(err)
-
+			return err
 		}
 		err = os.Rename(x+".mod", x)
 		if err != nil {
-			global.FatalError(err)
-
+			return err
 		}
 	}
+	return nil
 }
 
 func cleanup() {

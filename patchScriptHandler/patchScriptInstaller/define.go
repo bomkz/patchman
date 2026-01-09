@@ -1,4 +1,4 @@
-package actionScript
+package patchScript
 
 import "encoding/json"
 

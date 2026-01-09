@@ -6,9 +6,12 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/bomkz/patchman/global"
+	"github.com/rivo/tview"
 	"golang.org/x/sys/windows"
 )
 
+// Elevates self as admin
 func promptElevate() {
 	verb := "runas"
 	exe, _ := os.Executable()
@@ -28,6 +31,17 @@ func promptElevate() {
 	}
 }
 
+// Creates a temporary working directory
+func createDir() error {
+	var err error
+	global.Directory, err = os.MkdirTemp(".\\", "patchman-")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Returns whether running as admin or not.
 func checkAdmin() bool {
 	_, err := os.Open("\\\\.\\PHYSICALDRIVE0")
 	isadmin := false
@@ -37,4 +51,14 @@ func checkAdmin() bool {
 		isadmin = true
 	}
 	return isadmin
+}
+
+// Initializes Tview
+func initTview() {
+	global.App = tview.NewApplication()
+	global.App.EnableMouse(true)
+
+	global.Root = tview.NewPages()
+
+	global.Root.SetBorder(false).SetTitle("VTOL VR Patch Manager")
 }

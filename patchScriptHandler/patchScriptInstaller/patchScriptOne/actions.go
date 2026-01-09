@@ -1,4 +1,4 @@
-package actionScriptOne
+package patchScriptOne
 
 import (
 	"encoding/json"
@@ -17,9 +17,8 @@ func Uninstall() {
 	for _, x := range taintInfo.ModifiedFiles {
 		revertPatch(x)
 	}
-	vtolvrpath := global.FindVtolPath()
 
-	err := os.Remove(vtolvrpath + "\\patchman.json")
+	err := os.Remove(global.TargetPath + "\\patchman.json")
 	if err != nil {
 		global.FatalError(err)
 
@@ -29,8 +28,7 @@ func Uninstall() {
 func readTaint() TaintInfoStruct {
 	var taintInfo TaintInfoStruct
 
-	vtolvrpath := global.FindVtolPath()
-	taintfile, err := os.ReadFile(vtolvrpath + "patchman.json")
+	taintfile, err := os.ReadFile(global.TargetPath + "patchman.json")
 	if err != nil {
 		global.FatalError(err)
 
@@ -46,17 +44,16 @@ func readTaint() TaintInfoStruct {
 }
 
 func revertPatch(filePath string) {
-	vtolvrpath := global.FindVtolPath()
 
 	err := os.Remove(filePath)
 	if err != nil {
-		os.Remove(vtolvrpath + "patchman.json")
+		os.Remove(global.TargetPath + "patchman.json")
 		global.FatalError(err)
 	}
 
 	err = os.Rename(filePath+".orig", filePath)
 	if err != nil {
-		os.Remove(vtolvrpath + "patchman.json")
+		os.Remove(global.TargetPath + "patchman.json")
 		global.FatalError(err)
 	}
 
@@ -173,12 +170,11 @@ func handleCopy(actionData []byte) error {
 
 	installStatus.Pending = tmpInstallStatus
 
-	vtolvrpath := global.FindVtolPath()
-	copyData.Destination = vtolvrpath + copyData.Destination
+	copyData.Destination = global.TargetPath + copyData.Destination
 
 	refreshStatus <- true
 
-	err = global.MoveFile(global.Directory+"\\"+copyData.FileName, copyData.Destination)
+	err = global.MoveFromRoot(copyData.FileName, copyData.Destination)
 	if err != nil {
 		return err
 	}
@@ -200,7 +196,7 @@ func batchBundleImport(patchmanJson []byte) error {
 	var tmpPending []installStatusActionsQueueStruct
 	for x, y := range installStatus.Pending {
 		if y.Filename == patchmanData.OriginalFilePath {
-			vtolvrpath := global.FindVtolPath()
+			vtolvrpath := global.TargetPath
 			patchmanData.OriginalFilePath = vtolvrpath + "\\" + patchmanData.OriginalFilePath
 			patchmanData.ModifiedFilePath = patchmanData.OriginalFilePath + ".mod"
 			installStatus.Pending[x].Id = patchmanData.OriginalFilePath
@@ -269,7 +265,7 @@ func batchAssetImport(patchmanJson []byte) error {
 	var tmpPending []installStatusActionsQueueStruct
 	for x, y := range installStatus.Pending {
 		if y.Filename == patchmanData.OriginalFilePath {
-			vtolvrpath := global.FindVtolPath()
+			vtolvrpath := global.TargetPath
 			patchmanData.OriginalFilePath = vtolvrpath + "\\" + patchmanData.OriginalFilePath
 			patchmanData.ModifiedFilePath = patchmanData.OriginalFilePath + ".mod"
 			installStatus.Pending[x].Id = patchmanData.OriginalFilePath
@@ -335,13 +331,11 @@ func buildTaintInfo() {
 
 	}
 
-	vtolvrpath := global.FindVtolPath()
-
-	if global.Exists(vtolvrpath + "\\patchman.json") {
-		os.Remove(vtolvrpath + "\\patchman.json")
+	if global.Exists(global.TargetPath + "\\patchman.json") {
+		os.Remove(global.TargetPath + "\\patchman.json")
 	}
 
-	file, err := os.Create(vtolvrpath + "\\patchman.json")
+	file, err := os.Create(global.TargetPath + "\\patchman.json")
 	if err != nil {
 		global.FatalError(err)
 

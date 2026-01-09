@@ -1,4 +1,4 @@
-package ione
+package patchScriptHandler
 
 import (
 	"encoding/json"
@@ -8,7 +8,10 @@ import (
 )
 
 func HandleForm(indexbyte []byte, motds string) error {
-	patchData = handleIndexJson(indexbyte)
+	patchData, err := handleIndexJson(indexbyte)
+	if err != nil {
+		return err
+	}
 	for _, patch := range patchData {
 		patches = append(patches, patch.PatchName)
 	}
@@ -20,14 +23,14 @@ func HandleForm(indexbyte []byte, motds string) error {
 var motd string
 var patchData []IndexContentStruct
 
-func handleIndexJson(indexbyte []byte) []IndexContentStruct {
+func handleIndexJson(indexbyte []byte) ([]IndexContentStruct, error) {
 	tmp := []IndexContentStruct{}
 	err := json.Unmarshal(indexbyte, &tmp)
 	if err != nil {
-		global.FatalError(err)
+		return nil, err
 	}
 
-	return tmp
+	return tmp, nil
 }
 
 var patches = []string{}
@@ -55,7 +58,7 @@ func buildForm() {
 		SetOptions(variants, selectedVariant)
 
 	form := tview.NewForm()
-	form.AddTextView("VTOL VR Version", global.VtolVersion, 0, 0, false, false).
+	form.AddTextView("VTOL VR Version", global.TargetVersion, 0, 0, false, false).
 		AddTextView("MOTD", motd, 0, 0, false, false).
 		AddDropDown("Select Patch...", patches, 0, func(option string, optionIndex int) {
 			currentSelection = optionIndex

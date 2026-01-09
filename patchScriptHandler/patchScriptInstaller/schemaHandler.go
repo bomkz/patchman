@@ -1,11 +1,11 @@
-package actionScript
+package patchScript
 
 import (
 	"encoding/json"
 	"os"
 
 	"github.com/bomkz/patchman/global"
-	"github.com/bomkz/patchman/index/ione/actionscript/actionScriptOne"
+	"github.com/bomkz/patchman/patchScriptHandler/patchScriptInstaller/patchScriptOne"
 )
 
 func HandleActionScript(actionscript []byte) {
@@ -17,7 +17,7 @@ func HandleActionScript(actionscript []byte) {
 	}
 
 	if actionScript.Patchscriptversion == 1 {
-		actionScriptOne.HandleActions(actionScript.Data)
+		patchScriptOne.HandleActions(actionScript.Data)
 	}
 }
 

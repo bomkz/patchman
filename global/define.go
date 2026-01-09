@@ -1,8 +1,14 @@
 package global
 
-import "github.com/rivo/tview"
+import (
+	"os"
 
-var VtolVersion string
+	"github.com/rivo/tview"
+)
+
+var TargetVersion string
+var TargetPath string
+var SteamPath string
 
 var Internet bool = true
 var InstalledVersion int
@@ -37,3 +43,7 @@ var Status = StatusStruct{
 
 var App *tview.Application
 var Root *tview.Pages
+
+var patchRoot *os.Root
+
+var gameRoot *os.Root

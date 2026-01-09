@@ -1,4 +1,4 @@
-package ione
+package patchScriptHandler
 
 import _ "embed"
 
@@ -29,5 +29,5 @@ var cleanupQueue = []string{}
 //go:embed patchman-unity.exe
 var PatchmanUnityExe []byte
 
-//go:embed classdata.tpk
+//go:embed classData.tpk
 var ClassDataTpk []byte

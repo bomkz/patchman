@@ -10,68 +10,46 @@ import (
 	"strconv"
 
 	"github.com/bomkz/patchman/global"
-	"github.com/bomkz/patchman/index/ione"
-	"github.com/bomkz/patchman/index/izero"
+	"github.com/bomkz/patchman/patchScriptHandler"
 )
 
+// Builds Index by downloading and parsing, then sends to patchScriptHandler
 func BuildIndex() error {
 
+	// Download and parse Index
 	handleIndex()
 
-	switch useIndexVersion {
-	case 0:
-		var indexData []byte
-		for _, x := range preindex.Content {
-			version, err := strconv.Atoi(x.Version)
-			if err != nil {
-				global.FatalError(err)
-			}
-			if version == useIndexVersion {
-				indexData = x.Content
-			}
-		}
-
-		if indexData == nil {
-			return errors.New("form content is nil")
-		}
-
-		err := izero.HandleForm(indexData)
-
+	// Go through Preindex content to find correct version
+	var indexData []byte
+	for _, x := range preindex.Content {
+		version, err := strconv.Atoi(x.Version)
 		if err != nil {
-			return err
+			global.FatalError(err)
 		}
-
-		return nil
-	case 1:
-		var indexData []byte
-		for _, x := range preindex.Content {
-			version, err := strconv.Atoi(x.Version)
-			if err != nil {
-				global.FatalError(err)
-			}
-			if version == useIndexVersion {
-				indexData = x.Content
-			}
+		if version == useIndexVersion {
+			indexData = x.Content
 		}
-
-		if indexData == nil {
-			return errors.New("form content is nil")
-		}
-		err := ione.HandleForm(indexData, preindex.Content[1].Motd)
-
-		if err != nil {
-			return err
-		}
-
-		return nil
 	}
 
-	return errors.New("could not handle index idk why. good luk")
+	// Check if indexData is nil
+	if indexData == nil {
+		return errors.New("form content is nil")
+	}
+	// Send indexData to patchScriptHandler
+	err := patchScriptHandler.HandleForm(indexData, preindex.Content[1].Motd)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
+// Downloads Index and parses it into index struct
 func handleIndex() {
 
 	err := downloadIndex(IndexURL)
+
+	// If error exists, assume no internet connection, go offline mode.
 	if err != nil {
 		global.Internet = false
 		exists := checkLocalDbNoInternet()
@@ -83,6 +61,21 @@ func handleIndex() {
 		} else {
 
 			fmt.Println(global.NoInternet)
+			fmt.Scanln()
+		}
+	}
+
+	if useIndexVersion == 99 {
+		global.Internet = false
+		exists := checkLocalDbNoInternet()
+		if !exists {
+			fmt.Println("Could not find a compatible index version, reverting to offline mode.", global.NoInternetInstruct)
+			os.RemoveAll(global.Directory)
+			fmt.Scanln()
+			os.Exit(1)
+		} else {
+
+			fmt.Println("Could not find a compatible index version, reverting to offline mode.", global.NoInternet)
 			fmt.Scanln()
 		}
 	}
@@ -111,6 +104,7 @@ func loadPreIndex() ([]byte, error) {
 	return data, nil
 }
 
+// Downloads Patchman Index from given URL and stores in indexmem
 func downloadIndex(url string) error {
 	resp, err := http.Get(url)
 	if err != nil {
@@ -144,8 +138,10 @@ func parseIndex() error {
 		if err != nil {
 			return err
 		}
-		if preindexversion <= MaxPreIndexVersion {
+		if preindexversion == MaxPreIndexVersion {
 			useIndexVersion = preindexversion
+		} else {
+			useIndexVersion = 99
 		}
 	}
 	return nil
@@ -156,8 +152,8 @@ func checkLocalDbNoInternet() bool {
 	return !errors.Is(error, os.ErrNotExist)
 }
 func ReadTaint() {
-	vtolvrpath := global.FindVtolPath()
-
+	vtolvrpath, err := global.FindAppIDPath("667970")
+	vtolvrpath += "\\steamapps\\common\\VTOL VR\\"
 	taint, err := os.ReadFile(vtolvrpath + "\\patchman.json")
 	if err != nil {
 		global.ExitTview()
@@ -168,11 +164,4 @@ func ReadTaint() {
 		global.FatalError(errors.New("Error Reading patchman.json. Please verify game files and delete the following file: " + vtolvrpath + "\\patchman.json then rerun patchman."))
 	}
 	global.InstalledVersion = global.Status.InstalledVersion
-}
-
-func TaintInfo() string {
-	if global.InstalledVersion == 0 {
-		return izero.BuildTaintInfo()
-	}
-	return ""
 }

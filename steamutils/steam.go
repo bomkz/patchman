@@ -8,6 +8,7 @@ import (
 	"golang.org/x/sys/windows/registry"
 )
 
+// Goes through all libraries in libraryfolders.vdf to find the path of the library containing the target appid
 func FindGameLibraryPath(m *orderedmap.OrderedMap, targetAppID string) (string, error) {
 	libFoldersVal, exists := m.Get("libraryfolders")
 	if !exists {
@@ -59,6 +60,7 @@ func FindGameLibraryPath(m *orderedmap.OrderedMap, targetAppID string) (string, 
 	return "", fmt.Errorf("app with appid %s not found in any library", targetAppID)
 }
 
+// Finds Steam's Path from Windows Registry
 func GetSteamPath() (string, error) {
 	root := registry.CURRENT_USER
 	keyPath := `Software\Valve\Steam`

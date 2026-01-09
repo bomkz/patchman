@@ -1,8 +1,8 @@
-package ione
+package patchScriptHandler
 
 import (
 	"github.com/bomkz/patchman/global"
-	"github.com/bomkz/patchman/index/ione/actionscript/actionScriptOne"
+	"github.com/bomkz/patchman/patchScriptHandler/patchScriptInstaller/patchScriptOne"
 	"github.com/rivo/tview"
 )
 
@@ -19,7 +19,7 @@ func buildDeveloperForm() {
 
 	form := tview.NewForm()
 
-	form.AddTextView("VTOL VR Version", global.VtolVersion, 0, 0, false, false).
+	form.AddTextView("VTOL VR Version", global.TargetVersion, 0, 0, false, false).
 		AddInputField("Custom mod path", "", 40, nil, pathField).
 		AddDropDown("Compression", Compression, 0, setCompression).
 		AddButton("Install Patch", installFunc).
@@ -30,7 +30,7 @@ func buildDeveloperForm() {
 }
 
 func setCompression(option string, optionIndex int) {
-	actionScriptOne.CompressionType = option
+	patchScriptOne.CompressionType = option
 }
 func installFunc() {
 	install(modPath)

@@ -110,6 +110,7 @@ func marshalOrderedVDF(m *orderedmap.OrderedMap, indent int) (string, error) {
 	return sb.String(), nil
 }
 
+// Parses and unmarshals VDF file into map
 func Unmarshal(data []byte) (*orderedmap.OrderedMap, error) {
 	ordMap, _, err := parseVDFOrdered(string(data), 0)
 	return ordMap, err

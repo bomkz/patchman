@@ -31,6 +31,5 @@ If VTOL VR receives a new update and patches are yet to be marked as compatible,
 	patchman.exe <buildid>
 	patchman.exe 18407725`
 var versionArgument string = "Patchman " + timestamp
-var statusArgument string = "patchman.json does not exist, game is likely unpatched, or user removed patchman.json"
 
 var timestamp string = "1748349190"

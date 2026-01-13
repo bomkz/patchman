@@ -2,15 +2,106 @@ package steamutils
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/iancoleman/orderedmap"
 	"golang.org/x/sys/windows/registry"
 )
 
+func (steamreader *SteamReader) FindAppIDBuildID(AppID string) (buildId string, err error) {
+
+	dir, err := steamreader.FindAppIDPath(AppID)
+	if err != nil {
+		return
+	}
+
+	f, err := os.ReadFile(dir + "\\steamapps\\appmanifest_" + AppID + ".acf")
+	if err != nil {
+		return
+	}
+
+	acf, err := Unmarshal(f)
+	if err != nil {
+		return
+	}
+
+	if appStateRaw, exists := acf.Get("AppState"); exists {
+		if appState, ok := appStateRaw.(*orderedmap.OrderedMap); ok {
+			buildIdInt, found := appState.Get("buildid")
+			if found {
+				buildId = buildIdInt.(string)
+			}
+
+		}
+	}
+	return
+
+}
+
+func checkDefaultLibraryPath(steamPath string) (librarypath string, err error) {
+	_, err = os.Open(steamPath + "\\steamapps\\libraryfolders.vdf")
+	if err != nil {
+		return
+	}
+
+	librarypath = steamPath + "\\steamapps\\libraryfolders.vdf"
+	return
+}
+
+func (steamreader *SteamReader) GetLibraryVdfMap() *orderedmap.OrderedMap {
+	return steamreader.libraryVdfMap
+}
+func (steamreader *SteamReader) GetSteamPath() string {
+	return steamreader.steamPath
+}
+
+func (steamreader *SteamReader) GetLibraryVdfPath() string {
+	return steamreader.libraryVdfPath
+}
+
+func NewSteamReader(steamReaderConfig SteamReaderConfig) (steamreader SteamReader, err error) {
+
+	if steamReaderConfig.LibraryVdfPathFinder == nil {
+		steamReaderConfig.LibraryVdfPathFinder = checkDefaultLibraryPath
+	}
+
+	if steamReaderConfig.SteamPathFinder == nil {
+		steamReaderConfig.SteamPathFinder = GetSteamPath
+	}
+
+	steamreader.SteamReaderConfig = steamReaderConfig
+
+	if steamReaderConfig.CustomSteamPath == "" {
+		steamreader.steamPath, err = steamreader.SteamReaderConfig.SteamPathFinder()
+		if err != nil {
+			return
+		}
+	}
+
+	if steamReaderConfig.CustomLibraryVdfPath == "" {
+		steamreader.libraryVdfPath, err = steamreader.SteamReaderConfig.LibraryVdfPathFinder(steamreader.steamPath)
+		if err != nil {
+			return
+		}
+	}
+
+	libraryVdfByte, err := os.ReadFile(steamreader.libraryVdfPath)
+	if err != nil {
+		return
+	}
+
+	steamreader.libraryVdfMap, err = Unmarshal(libraryVdfByte)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
 // Goes through all libraries in libraryfolders.vdf to find the path of the library containing the target appid
-func FindGameLibraryPath(m *orderedmap.OrderedMap, targetAppID string) (string, error) {
-	libFoldersVal, exists := m.Get("libraryfolders")
+func (steamreader *SteamReader) FindAppIDPath(targetAppID string) (string, error) {
+	libFoldersVal, exists := steamreader.libraryVdfMap.Get("libraryfolders")
 	if !exists {
 		return "", fmt.Errorf("libraryfolders key not found in the VDF data")
 	}
@@ -90,4 +181,4 @@ func readStringValueWithDefault(root registry.Key, keyPath, valueName, defaultVa
 	return value, nil
 }
 
-// The code in this file was made by ChatGPT, use in production is highly discouraged as unexpected results may occur. The code in this file is not vetted for stability or edge cases.
+// The code in this file was made by ChatGPT, and me, use in production is highly discouraged as unexpected results may occur. The code in this file is not vetted for stability or edge cases.

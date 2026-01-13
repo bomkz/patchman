@@ -7,26 +7,6 @@ type ActionScriptStruct struct {
 	ActionData json.RawMessage `json:"actionData"`
 }
 
-var installStatus installStatusStruct
-
-type installStatusStruct struct {
-	Pending   []installStatusActionsQueueStruct
-	Current   installStatusActionsQueueStruct
-	total     int
-	completed int
-}
-
-var refreshStatus = make(chan bool)
-
-type installStatusActionsQueueStruct struct {
-	Id             string
-	Filename       string
-	ActionName     string
-	CurrentAction  string
-	TotalSteps     int
-	StepsCompleted int
-}
-
 var CompressionType string
 
 type PatchmanUnityStruct struct {
@@ -39,18 +19,14 @@ type CopyStruct struct {
 	Destination string `json:"destination"`
 }
 
-var renameQueue []string
-var cleanupQueue []string
-
-var taintQueue []string
-
 type PatchmanUnityOperationsStruct struct {
-	Type      string `json:"type"`
-	AssetType string `json:"assetType"`
-	AssetName string `json:"assetName"`
-	AssetPath string `json:"assetPath"`
-	Offset    int64  `json:"offset"`
-	Size      int64  `json:"size"`
+	Type      string  `json:"type"`
+	AssetType string  `json:"assetType"`
+	AssetName string  `json:"assetName"`
+	AssetPath string  `json:"assetPath"`
+	Length    float32 `json:"length"`
+	Offset    int64   `json:"offset"`
+	Size      int64   `json:"size"`
 }
 
 type TaintInfoStruct struct {

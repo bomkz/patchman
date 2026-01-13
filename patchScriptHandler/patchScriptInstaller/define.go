@@ -1,4 +1,4 @@
-package patchScript
+package patchScriptInstaller
 
 import "encoding/json"
 

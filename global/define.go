@@ -3,16 +3,17 @@ package global
 import (
 	"os"
 
+	"github.com/bomkz/patchman/steamutils"
 	"github.com/rivo/tview"
 )
 
-var TargetVersion string
+var TargetName string
+var TargetBuildID string
+var TargetAppID string
 var TargetPath string
-var SteamPath string
 
+var SteamReader steamutils.SteamReader
 var Internet bool = true
-var InstalledVersion int
-
 var NoInternetInstruct string = `
 
 
@@ -21,7 +22,6 @@ If running on a system without internet connection, please download https://gith
 
 Press enter to continue...
 `
-
 var NoInternet string = `
 
 
@@ -29,21 +29,12 @@ Trouble fetching index.json, possible internet-related issue, but C:\patchman\in
 
 Press enter to continue...
 `
-
 var Directory string
 
-type StatusStruct struct {
-	InstalledVersion int `json:"installedVersion"`
-}
-
 var PatchmanUnityDir string
-var Status = StatusStruct{
-	InstalledVersion: 99,
-}
 
 var App *tview.Application
 var Root *tview.Pages
 
-var patchRoot *os.Root
-
-var gameRoot *os.Root
+var pwd *os.Root
+var gwd *os.Root

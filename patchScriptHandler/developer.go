@@ -19,7 +19,7 @@ func buildDeveloperForm() {
 
 	form := tview.NewForm()
 
-	form.AddTextView("VTOL VR Version", global.TargetVersion, 0, 0, false, false).
+	form.AddTextView(global.TargetName+" BuildID", global.TargetBuildID, 0, 0, false, false).
 		AddInputField("Custom mod path", "", 40, nil, pathField).
 		AddDropDown("Compression", Compression, 0, setCompression).
 		AddButton("Install Patch", installFunc).

@@ -1,4 +1,4 @@
-package patchScript
+package patchScriptInstaller
 
 import (
 	"encoding/json"
@@ -11,10 +11,7 @@ import (
 func HandleActionScript(actionscript []byte) {
 	var actionScript ActionScriptStruct
 
-	err := json.Unmarshal(actionscript, &actionScript)
-	if err != nil {
-		global.FatalError(err)
-	}
+	global.AssureNoReturn(json.Unmarshal(actionscript, &actionScript))
 
 	if actionScript.Patchscriptversion == 1 {
 		patchScriptOne.HandleActions(actionScript.Data)
@@ -22,9 +19,6 @@ func HandleActionScript(actionscript []byte) {
 }
 
 func BeginTestJson() {
-	jsonFile, err := os.ReadFile(".\\patchscript.json")
-	if err != nil {
-		global.FatalError(err)
-	}
+	jsonFile := global.Assure(os.ReadFile(global.Directory + ".\\patchscript.json"))
 	HandleActionScript(jsonFile)
 }

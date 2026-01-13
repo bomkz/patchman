@@ -5,14 +5,14 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	"github.com/bomkz/patchman/steamutils"
-	"github.com/iancoleman/orderedmap"
 	"github.com/inancgumus/screen"
 )
 
@@ -46,230 +46,162 @@ func FatalError(err error) {
 
 }
 
-func CreateRoots(gameDirectory string) error {
-	var err error
-	Directory, err = os.MkdirTemp(".\\", "patchman-")
-	if err != nil {
-		return err
-	}
+// Creates file at target path relative to patch root and writes byte array to it.
+func CreateAndWriteProgramWorkingDirectory(fileByte []byte, target string) {
+	dst := sanitizeFilePath(target)
 
-	patchRoot, err = os.OpenRoot(Directory)
-	if err != nil {
-		return err
-	}
-
-	gameRoot, err = os.OpenRoot(gameDirectory)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func CopyFromRoot(fileName string, target string) error {
-
-	src := filepath.Clean(fileName)
-	dst := filepath.Clean(target)
-
-	if filepath.IsAbs(src) || filepath.IsAbs(dst) || strings.HasPrefix(src, "..") || strings.HasPrefix(dst, "..") {
-		return errors.New("Cannot use absolute filepaths in copy argument.")
-	}
-
-	inputFile, err := patchRoot.Open(src)
-	if err != nil {
-		return err
-	}
-	defer inputFile.Close()
-
-	outputFile, err := gameRoot.Create(dst)
-	if err != nil {
-		return err
-	}
+	// Create file, defer for close.
+	outputFile := Assure(pwd.Create(dst))
 	defer outputFile.Close()
 
-	_, err = io.Copy(outputFile, inputFile)
-	if err != nil {
-		return fmt.Errorf("Couldn't copy to dest from source: %v", err)
-	}
-
-	return nil
+	// Write file contents
+	Assure(outputFile.Write(fileByte))
 }
 
-func MoveFromRoot(fileName string, target string) error {
-	src := filepath.Clean(fileName)
-	dst := filepath.Clean(target)
+// Creates temporary directory and opens as patchRoot, opens game directory as gameRoot
+func CreateWorkingDirectories(gameDirectory string) {
 
-	if filepath.IsAbs(src) || filepath.IsAbs(dst) || strings.HasPrefix(src, "..") || strings.HasPrefix(dst, "..") {
-		return errors.New("Cannot use absolute filepaths in copy argument.")
-	}
+	// Create temporary directory for patch root
+	Directory = Assure(os.MkdirTemp(".\\", "patchman-"))
 
-	inputFile, err := patchRoot.Open(src)
-	if err != nil {
-		return err
-	}
+	// Open current working directory and game root
+	pwd = Assure(os.OpenRoot(Directory))
+	gwd = Assure(os.OpenRoot(gameDirectory))
+}
+
+// Copies file from patchRoot to gameRoot
+func CopyFromProgramWorkingDirectory(fileName string, target string) {
+	src := sanitizeFilePath(fileName)
+	dst := sanitizeFilePath(target)
+
+	// Open src file
+	inputFile := Assure(pwd.Open(src))
 	defer inputFile.Close()
 
-	outputFile, err := gameRoot.Create(dst)
-	if err != nil {
-		return err
-	}
+	// Create dst file and defer for closing
+	outputFile := Assure(gwd.Create(dst))
 	defer outputFile.Close()
 
-	_, err = io.Copy(outputFile, inputFile)
-	if err != nil {
-		return fmt.Errorf("Couldn't copy to dest from source: %v", err)
-	}
-
-	inputFile.Close()
-
-	err = os.Remove(fileName)
-	if err != nil {
-		return fmt.Errorf("Couldn't remove source file: %v", err)
-	}
-
-	return nil
+	// Copy contents from src to dst
+	Assure(io.Copy(outputFile, inputFile))
 }
 
-func DeleteFromGameDirectory(target string) error {
-
-	tgt := filepath.Clean(target)
-
-	if filepath.IsAbs(tgt) || strings.HasPrefix(tgt, "..") {
-		return errors.New("Cannot use absolute filepaths in copy argument.")
-	}
-	return gameRoot.Remove(tgt)
+// Deletes file from gwd
+func DeleteFromGameWorkingDirectory(target string) {
+	tgt := sanitizeFilePath(target)
+	AssureNoReturn(gwd.Remove(tgt))
 }
 
-func CleanRoot() error {
-	patchRoot.Close()
-	err := os.RemoveAll(Directory)
-	if err != nil {
-		return err
-	}
-	return nil
+// Cleans up temporary pwd
+func CleanProgramWorkingDirectory() {
+	pwd.Close()
+	AssureNoReturn(os.RemoveAll(Directory))
 }
 
-func Exists(path string) bool {
-	_, err := os.Stat(path)
+// Checks if file exists at given path
+func ExistsAtPwd(fileName string) bool {
+	src := sanitizeFilePath(fileName)
+	_, err := pwd.Stat(src)
 	return !os.IsNotExist(err)
 }
-func DownloadFile(filePath, url string) error {
-	out, err := os.Create(filePath)
-	if err != nil {
-		return fmt.Errorf("error creating file: %w", err)
-	}
-	defer out.Close()
 
-	resp, err := http.Get(url)
-	if err != nil {
-		return fmt.Errorf("error making HTTP GET request: %w", err)
-	}
+// Checks if file exists at given path
+func ExistsAtGwd(fileName string) bool {
+	src := sanitizeFilePath(fileName)
+	_, err := gwd.Stat(src)
+	return !os.IsNotExist(err)
+}
+
+func GetGwd() string {
+	return gwd.Name()
+}
+
+// Downloads file from URL to given path in pwd
+func DownloadFileToProgramWorkingDirectory(filePath, url string) {
+	dst := sanitizeFilePath(filePath)
+	outputFile := Assure(pwd.Create(dst))
+	defer outputFile.Close()
+
+	resp := Assure(http.Get(url))
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("bad status: %s", resp.Status)
+		panic(fmt.Errorf("bad status: %s", resp.Status))
 	}
 
-	_, err = io.Copy(out, resp.Body)
-	if err != nil {
-		return fmt.Errorf("error copying response body to file: %w", err)
-	}
-
-	return nil
+	Assure(io.Copy(outputFile, resp.Body))
 }
 
-func UnzipIntoRoot(zipfile string) error {
-	r, err := zip.OpenReader(zipfile)
-	if err != nil {
-		return err
+func ClearScreen() {
+	if runtime.GOOS == "windows" {
+		cmd := exec.Command("cmd", "/c", "cls")
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+	} else {
+		cmd := exec.Command("clear")
+		cmd.Stdout = os.Stdout
+		cmd.Run()
 	}
+}
+
+func RenameGameWorkingDirectoryFile(fileName string) {
+	tgt := sanitizeFilePath(fileName)
+
+	AssureNoReturn(gwd.Rename(tgt, tgt+".orig"))
+	AssureNoReturn(gwd.Rename(tgt+".mod", tgt))
+
+}
+
+// Unzips given zipfile into pwd root
+func UnzipIntoProgramWorkingDirectory(zipfile string) {
+	r := Assure(zip.OpenReader(pwd.Name() + "\\" + zipfile))
 	defer r.Close()
 
 	for _, f := range r.File {
-		outFile, err := patchRoot.OpenFile(f.Name, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
-		if err != nil {
-			return err
-		}
+		outFile := Assure(pwd.OpenFile(f.Name, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode()))
 
-		rc, err := f.Open()
-		if err != nil {
-			return err
-		}
+		rc := Assure(f.Open())
 
-		_, err = io.Copy(outFile, rc)
+		Assure(io.Copy(outFile, rc))
 		outFile.Close()
 		rc.Close()
-
-		if err != nil {
-			return err
-		}
 	}
-	return nil
+
 }
 
-func GetSteamPath() (steamPath string, err error) {
-	steamPath, err = steamutils.GetSteamPath()
+func InitSteamReader() (err error) {
+	SteamReader, err = steamutils.NewSteamReader(steamutils.SteamReaderConfig{})
+	if err != nil {
+		return
+	}
 	return
 }
 
-// Gets current VTOL Version
-func GetAppIDBuildIDVersion(AppID string) (buildId string, err error) {
-
-	libraryVDF, err := os.ReadFile(SteamPath + "\\steamapps\\libraryfolders.vdf")
+// Assure is a helper function to avoid boilerplate error handling.
+func Assure[T any](v T, err error) T {
 	if err != nil {
-		return
+		CleanProgramWorkingDirectory()
+
+		panic(err) // fail fast on critical fault
 	}
-
-	steamMap, err := steamutils.Unmarshal(libraryVDF)
-	if err != nil {
-		return
-	}
-
-	dir, err := steamutils.FindGameLibraryPath(steamMap, AppID)
-	if err != nil {
-		return
-	}
-
-	f, err := os.ReadFile(dir + "\\steamapps\\appmanifest_" + AppID + ".acf")
-	if err != nil {
-		return
-	}
-
-	acf, err := steamutils.Unmarshal(f)
-	if err != nil {
-		return
-	}
-
-	if appStateRaw, exists := acf.Get("AppState"); exists {
-		if appState, ok := appStateRaw.(*orderedmap.OrderedMap); ok {
-			buildIdInt, found := appState.Get("buildid")
-			if found {
-				buildId = buildIdInt.(string)
-			}
-
-		}
-	}
-	return
-
+	return v
 }
 
-// Finds Path for a given AppID.
-func FindAppIDPath(AppID string) (string, error) {
-
-	// Read library vdf
-	f, err := os.ReadFile(SteamPath + "\\steamapps\\libraryfolders.vdf")
+// AssureNoReturn is a helper function to avoid boilerplate error handling when a given functioning does not return a value.
+func AssureNoReturn(err error) {
 	if err != nil {
-		log.Fatal(err)
+		CleanProgramWorkingDirectory()
+
+		panic(err) // fail fast on critical fault
+	}
+}
+
+// Sanitizes file paths to prevent absolute paths or ../ usage.
+func sanitizeFilePath(path string) (sanitizedPath string) {
+	sanitizedPath = filepath.Clean(path)
+	if filepath.IsAbs(path) || strings.HasPrefix(path, "..") {
+		panic(errors.New("Cannot use absolute filepaths in copy argument."))
 	}
 
-	steamMap, err := steamutils.Unmarshal(f)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	dir, err := steamutils.FindGameLibraryPath(steamMap, AppID)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return dir, err
-
+	return
 }

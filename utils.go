@@ -31,16 +31,6 @@ func promptElevate() {
 	}
 }
 
-// Creates a temporary working directory
-func createDir() error {
-	var err error
-	global.Directory, err = os.MkdirTemp(".\\", "patchman-")
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 // Returns whether running as admin or not.
 func checkAdmin() bool {
 	_, err := os.Open("\\\\.\\PHYSICALDRIVE0")

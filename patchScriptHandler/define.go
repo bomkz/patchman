@@ -3,9 +3,11 @@ package patchScriptHandler
 import _ "embed"
 
 type IndexStruct struct {
-	Version string               `json:"version"`
+	AppName string               `json:"appName"`
+	AppID   string               `json:"appID"`
+	AppPath string               `json:"appPath"`
+	Motd    string               `json:"motd"`
 	Content []IndexContentStruct `json:"content"`
-	MOTD    string               `json:"motd"`
 }
 
 type IndexContentStruct struct {
@@ -21,13 +23,22 @@ type IndexContentPatchVariantsStruct struct {
 	DownloadLink string `json:"downloadLink"`
 }
 
+var games []string
+
 var modPath string
 
-var Index IndexStruct
-var cleanupQueue = []string{}
+var index []IndexStruct
 
 //go:embed patchman-unity.exe
 var PatchmanUnityExe []byte
 
 //go:embed classData.tpk
 var ClassDataTpk []byte
+
+var Motd string
+var patchData []IndexContentStruct
+var patches = []string{}
+var variants = []string{}
+var currentVariant int = 0
+var currentGame int = 0
+var currentSelection int = 0

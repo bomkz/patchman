@@ -4,7 +4,7 @@ import "encoding/json"
 
 var preindex PreIndexStruct
 
-var MaxPreIndexVersion int = 1
+var PreIndexVersion int = 2
 
 type PreIndexStruct struct {
 	Content []PreIndexContentStruct `json:"content"`

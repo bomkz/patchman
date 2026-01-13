@@ -146,11 +146,11 @@ To package it properly, you need to put it in a ZIP file along with your custom 
 
 
 ```
- patch.zip___
-             |- example1.resource
-             |- example2.resource
-             |- example3.assets.resS
-              \- patchscript.json 
+ example.zip___
+               |- example1.resource
+               |- example2.resource
+               |- example3.assets.resS
+                \- patchscript.json 
 ```
 
 ### Installing your patch

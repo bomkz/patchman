@@ -1,6 +1,9 @@
 package patchScriptHandler
 
 import (
+	"encoding/json"
+	"os"
+
 	"github.com/bomkz/patchman/global"
 	"github.com/bomkz/patchman/patchScriptHandler/patchScriptInstaller/patchScriptOne"
 	"github.com/rivo/tview"
@@ -21,42 +24,42 @@ func buildDeveloperForm() {
 	buildContentList()
 
 	assetDropBox := tview.NewDropDown().
-		SetOptions(assets, selectedAsset).SetLabel("Assets:      ").SetFieldWidth(40)
+		SetOptions(preset.Assets, selectedAsset).SetLabel("Assets:      ").SetFieldWidth(40)
 
 	contentDropBox := tview.NewDropDown().
-		SetOptions(content, selectedContent).SetLabel("Content:     ").SetFieldWidth(40)
+		SetOptions(preset.Content, selectedContent).SetLabel("Content:     ").SetFieldWidth(40)
 
 	compressionDropDown := tview.NewDropDown().SetLabel("Compression: ").SetOptions(Compression, setCompression).SetFieldWidth(40)
 
 	assetTextView := tview.NewTextView().
-		SetText(assetString).SetSize(40, 40).
+		SetText(preset.AssetString).SetSize(40, 40).
 		SetScrollable(true)
 
 	contentTextView := tview.NewTextView().
-		SetText(contentString).SetSize(40, 40).
+		SetText(preset.ContentString).SetSize(40, 40).
 		SetScrollable(true)
 
 	textView1 := tview.NewTextView().SetLabel(global.TargetName+" BuildID "+global.TargetBuildID).SetSize(1, 40)
 
 	assetButton := tview.NewButton("Toggle Asset").SetSelectedFunc(func() {
-		if patchScriptOne.Assets[currentAsset].Modify {
-			patchScriptOne.Assets[currentAsset].Modify = false
+		if patchScriptOne.Assets[preset.CurrentAsset].Modify {
+			patchScriptOne.Assets[preset.CurrentAsset].Modify = false
 		} else {
-			patchScriptOne.Assets[currentAsset].Modify = true
+			patchScriptOne.Assets[preset.CurrentAsset].Modify = true
 		}
 		buildAssetList()
-		assetTextView.SetText(assetString)
+		assetTextView.SetText(preset.AssetString)
 	})
 	assetButton.SetBorder(true)
 
 	contentButton := tview.NewButton("Toggle Content").SetSelectedFunc(func() {
-		if patchScriptOne.Content[currentContent].Modify {
-			patchScriptOne.Content[currentContent].Modify = false
+		if patchScriptOne.Content[preset.CurrentContent].Modify {
+			patchScriptOne.Content[preset.CurrentContent].Modify = false
 		} else {
-			patchScriptOne.Content[currentContent].Modify = true
+			patchScriptOne.Content[preset.CurrentContent].Modify = true
 		}
 		buildContentList()
-		contentTextView.SetText(contentString)
+		contentTextView.SetText(preset.ContentString)
 	})
 	contentButton.SetBorder(true)
 
@@ -66,9 +69,39 @@ func buildDeveloperForm() {
 	quitButton := tview.NewButton("Quit").SetSelectedFunc(global.ExitApp)
 	quitButton.SetBorder(true)
 
+	presetButton := tview.NewButton("Presets").SetSelectedFunc(func() {
+		prevpage = "DevForm"
+		form := tview.NewForm().AddTextView("Presets", "", 0, 0, false, false).AddInputField("Path to save/load preset", "", 40, nil, func(newpath string) {
+			savePath = newpath
+		}).
+			AddButton("Save", savePreset).
+			AddButton("Load", func() {
+				jsonByte := global.Assure(os.ReadFile(savePath))
+				global.AssureNoReturn(json.Unmarshal(jsonByte, &preset))
+
+				patchScriptOne.Content = preset.PatchContentSelection
+				patchScriptOne.Assets = preset.PatchAssetSelection
+				patchScriptOne.CompressionType = preset.Compression
+
+				global.Root.RemovePage("presetForm")
+				global.Root.SwitchToPage(prevpage)
+				buildAssetList()
+				assetTextView.SetText(preset.AssetString)
+				buildContentList()
+				contentTextView.SetText(preset.ContentString)
+			}).
+			AddButton("Cancel", func() {
+				global.Root.RemovePage("presetForm")
+				global.Root.SwitchToPage(prevpage)
+			})
+		global.Root.AddAndSwitchToPage("presetForm", form, true)
+	})
+	presetButton.SetBorder(true)
+
 	buttonFlex := tview.NewFlex().SetDirection(tview.FlexColumn).
 		AddItem(contentButton, 0, 3, false).
 		AddItem(assetButton, 0, 3, false).
+		AddItem(presetButton, 0, 2, false).
 		AddItem(patchButton, 0, 2, false).
 		AddItem(quitButton, 0, 2, false)
 

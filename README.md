@@ -1,6 +1,6 @@
 # PatchManager 
 
-Is a utility to quickly replace sound and texture assets in VTOL VR with the goal of being simple to use both as a user and a patch maker.
+Is a utility to quickly replace sound and texture assets in Unity games with the goal of being simple to use both as a user and a patch maker.
 
 ## Creating your own patch
 
@@ -125,7 +125,7 @@ Due to DLCs being packaged into compressed bundle files, you need to modify them
 
 ### Copying resource files
 
-Since resource files need to be copied to VTOLVR_Data folder, we need to define a copy action to do this for us, for each resource file we plan to use, we need to define a copy action so it resembles as follows:
+Since resource files need to be copied to Data folder, we need to define a copy action to do this for us, for each resource file we plan to use, we need to define a copy action so it resembles as follows:
 
 ```
         {

@@ -38,10 +38,9 @@ Patchscript is the version of patchscript your patch is written in, mainly to ma
 Patchscript currently only has two valid patch types: `AudioClip` and `Texture2D`.
 To define a patch you need to know the following: the name of the asset, the asset type (found above), and the resource asset file that contains it. You also need the size, length (for AudioClips), and offset, you can find this in Unity Asset Bundle Extractor. The following is an example of this:
 
-![Alt text](example/1.png?raw=true)
-![Alt text](example/2.png?raw=true)
-![Alt text](example/3.png?raw=true)
-
+![Example 1](example/1.png?raw=true)
+![Example 2](example/2.png?raw=true)
+![Example 3](example/3.png?raw=true)
 
 ```
         {
@@ -133,7 +132,7 @@ Since resource files need to be copied to VTOLVR_Data folder, we need to define 
             "action": "copy",
             "actionData": {
                 "fileName": "assets1.resources",
-                "destination": "VTOLVR_Data\\example1.resources"
+                "destination": "VTOLVR_Data\\example1.resource"
             }
         },
 ```
@@ -142,6 +141,9 @@ Since resource files need to be copied to VTOLVR_Data folder, we need to define 
 
 Once you have created your own patchscript.json, you can then package it and test it. 
 To package it properly, you need to put it in a ZIP file along with your custom resource files so that the ZIP file structure resembles the following (Note, may have less or more resources/resS files depending on your patch):
+
+![Example 4](example/4.png?raw=true)
+
 
 ```
  patch.zip___

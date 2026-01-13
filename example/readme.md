@@ -1,1 +1,1 @@
-This example uses dummy files, so does not function.
+This example should be fully functioning.

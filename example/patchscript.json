@@ -1,6 +1,5 @@
 {
     "patchScriptVersion":1,
-    "motd": "Null",
     "data": [
         {
             "action": "importbundle",
@@ -10,14 +9,62 @@
                     {
                         "type": "import",
                         "assetType":"AudioClip",
-                        "assetName": "ttsw_autopilotOff",
-                        "assetPath": "assets1.resources"
+                        "assetName": "radarLocked",
+                        "assetPath": "example1.resource",
+                        "offset": 1600,
+                        "size": 864,
+                        "length": 0.189375
                     },
                     {
                         "type": "import",
                         "assetType":"AudioClip",
                         "assetName": "ttsw_pullUp",
-                        "assetPath": "assets1.resources"
+                        "assetPath": "example2.resource",
+                        "offset": 0,
+                        "size": 31104,
+                        "length": 4.105465 
+                    },
+                                        {
+                        "type": "import",
+                        "assetType":"Texture2D",
+                        "assetName": "rwrTexture",
+                        "assetPath": "example3.assets.resS",
+                        "offset": 691040,
+                        "size": 691040
+                    }
+                ]
+            }
+        },
+        {
+            "action": "importbundle",
+            "actionData": {
+                "originalFilePath": "DLC\\2531290\\2531290",
+                "operations": [
+                    {
+                        "type": "import",
+                        "assetType":"AudioClip",
+                        "assetName": "radarLocked",
+                        "assetPath": "example1.resource",
+                        "offset": 1600,
+                        "size": 864,
+                        "length": 0.189375
+                    },
+                    {
+                        "type": "import",
+                        "assetType":"AudioClip",
+                        "assetName": "ttsw_pullUp",
+                        "assetPath": "example2.resource",
+                        "offset": 0,
+                        "size": 31104,
+                        "length": 4.105465 
+                    },
+                                        {
+                        "type": "import",
+                        "assetType":"Texture2D",
+                        "assetName": "rwrTexture",
+                        "assetPath": "example3.assets.resS",
+                        "offset": 691040,
+                        "size": 691040
                     }
                 ]
             }
@@ -29,15 +76,29 @@
                 "operations": [
                     {
                         "type": "import",
-                        "assetType": "AudioClip",
-                        "assetName": "ttsw_autopilotOff",
-                        "assetPath": "assets2.resources"
+                        "assetType":"AudioClip",
+                        "assetName": "radarLocked",
+                        "assetPath": "example1.resource",
+                        "offset": 1600,
+                        "size": 864,
+                        "length": 0.189375
                     },
                     {
                         "type": "import",
-                        "assetType": "AudioClip",
+                        "assetType":"AudioClip",
                         "assetName": "ttsw_pullUp",
-                        "assetPath": "assets3.resources"
+                        "assetPath": "example2.resource",
+                        "offset": 0,
+                        "size": 31104,
+                        "length": 4.105465 
+                    },
+                                        {
+                        "type": "import",
+                        "assetType":"Texture2D",
+                        "assetName": "rwrTexture",
+                        "assetPath": "example3.assets.resS",
+                        "offset": 691040,
+                        "size": 691040
                     }
                 ]
             }
@@ -46,21 +107,21 @@
             "action": "copy",
             "actionData": {
                 "fileName": "assets1.resources",
-                "destination": "VTOLVR_Data\\assets1.resources"
+                "destination": "VTOLVR_Data\\example1.resources"
             }
         },
                 {
             "action": "copy",
             "actionData": {
                 "fileName": "assets2.resources",
-                "destination": "VTOLVR_Data\\assets2.resources"
+                "destination": "VTOLVR_Data\\example2.resources"
             }
         },
                 {
             "action": "copy",
             "actionData": {
-                "fileName": "assets3.resources",
-                "destination": "VTOLVR_Data\\assets3.resources"
+                "fileName": "assets3.assets.resS",
+                "destination": "VTOLVR_Data\\example3.assets.resS"
             }
         }
     ]

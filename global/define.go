@@ -11,6 +11,7 @@ var TargetName string
 var TargetBuildID string
 var TargetAppID string
 var TargetPath string
+var TargetPathCheck string
 
 var SteamReader steamutils.SteamReader
 var Internet bool = true
@@ -30,6 +31,8 @@ Trouble fetching index.json, possible internet-related issue, but C:\patchman\in
 Press enter to continue...
 `
 var Directory string
+
+var OsName string
 
 var PatchmanUnityDir string
 

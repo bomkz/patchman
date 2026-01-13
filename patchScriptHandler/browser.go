@@ -2,6 +2,7 @@ package patchScriptHandler
 
 import (
 	"encoding/json"
+	"os"
 
 	"github.com/bomkz/patchman/global"
 	"github.com/rivo/tview"
@@ -40,11 +41,37 @@ func buildForm(motd string) {
 				patchData = x.Content
 				global.TargetAppID = x.AppID
 				global.TargetName = x.AppName
-				global.TargetBuildID = global.Assure(global.SteamReader.FindAppIDBuildID(x.AppID))
 				Motd = x.Motd
+				global.TargetPathCheck = x.LinuxPathCheck
 
-				basepath := global.Assure(global.SteamReader.FindAppIDPath(x.AppID))
-				global.CreateWorkingDirectories(basepath + x.AppPath)
+				switch global.OsName {
+				case "windows":
+					global.Root.RemovePage("gameform")
+					basepath := global.Assure(global.SteamReader.FindAppIDPath(x.AppID))
+					global.TargetBuildID = global.Assure(global.SteamReader.FindAppIDBuildID(x.AppID))
+					global.CreateWorkingDirectories(basepath + x.AppPath)
+				case "linux":
+
+					checkTextView := tview.NewTextView().SetLabel("").SetText("").SetSize(1, 20)
+					path := ""
+					global.Root.RemovePage("gameform")
+					form2 := tview.NewForm()
+					form2.AddTextView("Linux OS Detected...", "Automatic game path finding is not yet supported for linux, please insert the full path to where the game is installed below.", 20, 4, false, false).
+						AddInputField("Path to game", "", 20, nil, func(tmppath string) {
+							path = tmppath
+						}).
+						AddButton("Next", func() {
+							if checkGamePath(path, global.TargetPathCheck) {
+								global.Root.RemovePage("linuxpathcheck")
+								global.CreateWorkingDirectories(path)
+							} else {
+								checkTextView.SetText("Could not find game in path provided. Ensure path is the root of game folder.")
+							}
+						}).
+						AddFormItem(checkTextView)
+					global.Root.AddAndSwitchToPage("linuxpathcheck", form2, false)
+				}
+
 				break
 			}
 		}
@@ -56,10 +83,12 @@ func buildForm(motd string) {
 	global.Root.AddAndSwitchToPage("gameform", form, true)
 }
 
+func checkGamePath(path string, filecheck string) bool {
+	_, err := os.Stat(path + filecheck)
+	return !os.IsNotExist(err)
+}
+
 func buildGameForm() {
-
-	global.Root.RemovePage("gameform")
-
 	setPatchList()
 	setVariantList()
 

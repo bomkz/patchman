@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"runtime"
 	"syscall"
 
 	"github.com/bomkz/patchman/global"
@@ -30,7 +31,11 @@ func main() {
 		os.Exit(1)
 	}()
 
-	global.InitSteamReader()
+	global.OsName = runtime.GOOS
+
+	if global.OsName == "windows" {
+		global.InitSteamReader()
+	}
 
 	if len(os.Args) == 2 {
 		switch os.Args[1] {

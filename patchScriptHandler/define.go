@@ -3,11 +3,12 @@ package patchScriptHandler
 import _ "embed"
 
 type IndexStruct struct {
-	AppName string               `json:"appName"`
-	AppID   string               `json:"appID"`
-	AppPath string               `json:"appPath"`
-	Motd    string               `json:"motd"`
-	Content []IndexContentStruct `json:"content"`
+	AppName        string               `json:"appName"`
+	AppID          string               `json:"appID"`
+	AppPath        string               `json:"appPath"`
+	LinuxPathCheck string               `json:"linuxPathCheck"`
+	Motd           string               `json:"motd"`
+	Content        []IndexContentStruct `json:"content"`
 }
 
 type IndexContentStruct struct {
@@ -31,6 +32,9 @@ var index []IndexStruct
 
 //go:embed patchman-unity.exe
 var PatchmanUnityExe []byte
+
+//go:embed patchman-unity
+var PatchmanUnityLinux []byte
 
 //go:embed classData.tpk
 var ClassDataTpk []byte

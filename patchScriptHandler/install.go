@@ -20,6 +20,12 @@ func install(filePath string) {
 }
 
 func unpackDependencies() {
-	global.CreateAndWriteProgramWorkingDirectory(PatchmanUnityExe, "patchman-unity.exe")
+	switch global.OsName {
+	case "windows":
+		global.CreateAndWriteProgramWorkingDirectory(PatchmanUnityExe, "patchman-unity.exe")
+	case "linux":
+		global.CreateAndWriteProgramWorkingDirectory(PatchmanUnityLinux, "patchman-unity")
+
+	}
 	global.CreateAndWriteProgramWorkingDirectory(ClassDataTpk, "classdata.tpk")
 }

@@ -12,33 +12,68 @@ import (
 // patcher.exe exportfrombundle --bundle "C:\BundlePath\unity.assets" --assetName "exampleAsset" --exportPath "C:\ExportPath\ExportName"
 
 func runPatchmanUnityBundles() {
-	cmd := exec.Command(global.Directory+"\\patchman-unity.exe", "batchimportbundle", global.Directory+".\\operations.json", CompressionType)
-	var out bytes.Buffer
-	cmd.Stdout = &out
 
-	err := cmd.Run()
-	if err != nil {
-		panic(err)
-	}
+	switch global.OsName {
+	case "windows":
+		cmd := exec.Command(global.Directory+"\\patchman-unity.exe", "batchimportbundle", global.Directory+".\\operations.json", CompressionType)
+		var out bytes.Buffer
+		cmd.Stdout = &out
 
-	if out.String() != "Done!" {
-		panic(out.String())
+		err := cmd.Run()
+		if err != nil {
+			panic(err)
+		}
+
+		if out.String() != "Done!" {
+			panic(out.String())
+		}
+
+	case "linux":
+		cmd := exec.Command(global.Directory+"\\patchman-unity", "batchimportbundle", global.Directory+".\\operations.json", CompressionType)
+		var out bytes.Buffer
+		cmd.Stdout = &out
+
+		err := cmd.Run()
+		if err != nil {
+			panic(err)
+		}
+
+		if out.String() != "Done!" {
+			panic(out.String())
+		}
+
 	}
 
 }
 
 func runPatchmanUnityAssets() {
-	cmd := exec.Command(global.Directory+"\\patchman-unity.exe", "batchimportasset", global.Directory+".\\operations.json")
-	var out bytes.Buffer
-	cmd.Stdout = &out
+	switch global.OsName {
+	case "windows":
+		cmd := exec.Command(global.Directory+"\\patchman-unity.exe", "batchimportasset", global.Directory+".\\operations.json")
+		var out bytes.Buffer
+		cmd.Stdout = &out
 
-	err := cmd.Run()
-	if err != nil {
-		panic(err)
-	}
+		err := cmd.Run()
+		if err != nil {
+			panic(err)
+		}
 
-	if out.String() != "Done!" {
-		panic(out.String())
+		if out.String() != "Done!" {
+			panic(out.String())
+		}
+	case "linux":
+		cmd := exec.Command(global.Directory+"\\patchman-unity", "batchimportasset", global.Directory+".\\operations.json")
+		var out bytes.Buffer
+		cmd.Stdout = &out
+
+		err := cmd.Run()
+		if err != nil {
+			panic(err)
+		}
+
+		if out.String() != "Done!" {
+			panic(out.String())
+		}
 	}
 }
 

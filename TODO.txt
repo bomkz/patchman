@@ -1,7 +1,0 @@
-Done:
-
--Add Assure
-
-TODO:
-
-- Convert to generic modding tool.

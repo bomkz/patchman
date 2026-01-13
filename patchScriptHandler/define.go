@@ -1,14 +1,23 @@
 package patchScriptHandler
 
-import _ "embed"
+import (
+	_ "embed"
+)
+
+type IndexModifiableContentStruct struct {
+	AssetName string `json:"assetName"`
+	AssetPath string `json:"assetPath"`
+}
 
 type IndexStruct struct {
-	AppName        string               `json:"appName"`
-	AppID          string               `json:"appID"`
-	AppPath        string               `json:"appPath"`
-	LinuxPathCheck string               `json:"linuxPathCheck"`
-	Motd           string               `json:"motd"`
-	Content        []IndexContentStruct `json:"content"`
+	AppName           string                         `json:"appName"`
+	AppID             string                         `json:"appID"`
+	AppPath           string                         `json:"appPath"`
+	LinuxPathCheck    string                         `json:"linuxPathCheck"`
+	Motd              string                         `json:"motd"`
+	ModifiableAssets  []string                       `json:"modifiableAssets"`
+	ModifiableContent []IndexModifiableContentStruct `json:"modifiableContent"`
+	Content           []IndexContentStruct           `json:"content"`
 }
 
 type IndexContentStruct struct {

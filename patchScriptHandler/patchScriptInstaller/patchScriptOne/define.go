@@ -19,6 +19,20 @@ type CopyStruct struct {
 	Destination string `json:"destination"`
 }
 
+var Assets []AssetSelection
+
+type AssetSelection struct {
+	AssetName string
+	Modify    bool
+}
+
+var Content []ContentSelection
+
+type ContentSelection struct {
+	ContentName string
+	ContentPath string
+	Modify      bool
+}
 type PatchmanUnityOperationsStruct struct {
 	Type      string  `json:"type"`
 	AssetType string  `json:"assetType"`

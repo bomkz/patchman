@@ -11,21 +11,6 @@ func HandleActions(actionData []byte) {
 
 	global.AssureNoReturn(json.Unmarshal(actionData, &actionScript))
 
-	for _, x := range actionScript {
-		switch x.Action {
-		case "importbundle":
-			var tmpData PatchmanUnityStruct
-			global.AssureNoReturn(json.Unmarshal(x.ActionData, &tmpData))
-		case "importasset":
-			var tmpData PatchmanUnityStruct
-			global.AssureNoReturn(json.Unmarshal(x.ActionData, &tmpData))
-
-		case "copy":
-			var tmpCopy CopyStruct
-			global.AssureNoReturn(json.Unmarshal(x.ActionData, &tmpCopy))
-		}
-	}
-
 	global.ExitTview()
 
 	for _, x := range actionScript {
@@ -66,6 +51,22 @@ func batchBundleImport(patchmanJson []byte) {
 
 	patchmanData.ModifiedFilePath = patchmanData.OriginalFilePath + ".mod"
 
+	var tmpOperations []PatchmanUnityOperationsStruct
+
+	for _, x := range Assets {
+		for _, y := range patchmanData.Operations {
+			if y.AssetName == x.AssetName && x.Modify {
+				tmpOperations = append(tmpOperations, y)
+			}
+		}
+	}
+
+	if len(tmpOperations) == 0 {
+		return
+	}
+
+	patchmanData.Operations = tmpOperations
+
 	createOperationsFile(patchmanData)
 
 	runPatchmanUnityBundles()
@@ -86,6 +87,22 @@ func batchAssetImport(patchmanJson []byte) {
 	patchmanData.OriginalFilePath = gwd + patchmanData.OriginalFilePath
 
 	patchmanData.ModifiedFilePath = patchmanData.OriginalFilePath + ".mod"
+
+	var tmpOperations []PatchmanUnityOperationsStruct
+
+	for _, x := range Assets {
+		for _, y := range patchmanData.Operations {
+			if y.AssetName == x.AssetName && x.Modify {
+				tmpOperations = append(tmpOperations, y)
+			}
+		}
+	}
+
+	if len(tmpOperations) == 0 {
+		return
+	}
+
+	patchmanData.Operations = tmpOperations
 
 	createOperationsFile(patchmanData)
 

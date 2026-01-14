@@ -6,7 +6,7 @@ import (
 	"github.com/rivo/tview"
 )
 
-func customGame() {
+func buildCustomGame() {
 	var appId string
 	var appPath string
 
@@ -77,4 +77,6 @@ func customGame() {
 	mainFlex.
 		SetTitle("Custom Game").
 		SetTitleColor(tcell.ColorLightPink)
+
+	global.Root.AddAndSwitchToPage("customgameform", mainFlex, true)
 }

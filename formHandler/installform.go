@@ -209,7 +209,6 @@ func buildInstallForm() {
 		AddItem(assetFlex, 0, 5, false)
 
 	global.Root.AddAndSwitchToPage("installform", containerFlex, true)
-
 }
 
 func beginInstall() {

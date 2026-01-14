@@ -18,7 +18,9 @@ func buildGameForm(motd string) {
 	form.
 		AddTextView("Select your game", "", 40, 1, false, false).
 		AddTextView("MOTD", motd, 40, 1, false, false).
-		AddFormItem(gameDropBox).AddButton("Next", gameNext)
+		AddFormItem(gameDropBox).
+		AddButton("Custom", buildCustomGame).
+		AddButton("Next", gameNext)
 
 	form.SetBorder(false)
 	global.Root.AddAndSwitchToPage("gameform", form, true)

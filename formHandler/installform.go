@@ -40,7 +40,7 @@ func buildInstallForm() {
 	motdTextView := tview.NewTextView().
 		SetText(Motd).
 		SetLabel("MOTD:        ").
-		SetSize(1, 40).
+		SetSize(2, 40).
 		SetScrollable(true)
 
 	assetTextView := tview.NewTextView().

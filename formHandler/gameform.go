@@ -17,7 +17,7 @@ func buildGameForm(motd string) {
 	form := tview.NewForm()
 	form.
 		AddTextView("Select your game", "", 40, 1, false, false).
-		AddTextView("MOTD", motd, 40, 1, false, false).
+		AddTextView("MOTD", motd, 120, 4, false, true).
 		AddFormItem(gameDropBox).
 		AddButton("Custom", buildCustomGame).
 		AddButton("Next", gameNext)

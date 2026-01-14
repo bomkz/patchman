@@ -1,9 +1,9 @@
-package patchScriptHandler
+package formHandler
 
 import (
 	_ "embed"
 
-	"github.com/bomkz/patchman/patchScriptHandler/patchScriptInstaller/patchScriptOne"
+	"github.com/bomkz/patchman/formHandler/installHandler/installer"
 )
 
 // Main index content struct, stores game info, modifiable asset and content information, and patches.
@@ -95,10 +95,10 @@ type PresetStruct struct {
 	CurrentContent int `json:"currentContent"`
 
 	// Array storing assets selected for install
-	PatchAssetSelection []patchScriptOne.AssetSelection `json:"assetSelection"`
+	PatchAssetSelection []installer.AssetSelection `json:"assetSelection"`
 
 	// Array storing content selected for install
-	PatchContentSelection []patchScriptOne.ContentSelection `json:"contentSelection"`
+	PatchContentSelection []installer.ContentSelection `json:"contentSelection"`
 
 	// Selected compression type
 	Compression string `json:"compression"`
@@ -139,12 +139,3 @@ var modPath string
 
 // Variable contains main index json content
 var index []IndexStruct
-
-//go:embed patchman-unity.exe
-var PatchmanUnityExe []byte
-
-//go:embed patchman-unity
-var PatchmanUnityLinux []byte
-
-//go:embed classData.tpk
-var ClassDataTpk []byte

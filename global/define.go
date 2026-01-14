@@ -1,6 +1,7 @@
 package global
 
 import (
+	_ "embed"
 	"os"
 
 	"github.com/bomkz/patchman/steamutils"
@@ -12,6 +13,15 @@ var TargetBuildID string
 var TargetAppID string
 var TargetPath string
 var TargetPathCheck string
+
+//go:embed patchman-unity.exe
+var PatchmanUnityExe []byte
+
+//go:embed patchman-unity
+var PatchmanUnityLinux []byte
+
+//go:embed classData.tpk
+var ClassDataTpk []byte
 
 var SteamReader steamutils.SteamReader
 var Internet bool = true

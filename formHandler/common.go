@@ -1,28 +1,36 @@
-package patchScriptHandler
+package formHandler
 
 import (
 	"encoding/json"
 	"os"
 
+	"github.com/bomkz/patchman/formHandler/installHandler/installer"
 	"github.com/bomkz/patchman/global"
-	"github.com/bomkz/patchman/patchScriptHandler/patchScriptInstaller/patchScriptOne"
 )
 
 func savePreset() {
-	preset.PatchAssetSelection = patchScriptOne.Assets
-	preset.PatchContentSelection = patchScriptOne.Content
+	preset.PatchAssetSelection = installer.Assets
+	preset.PatchContentSelection = installer.Content
 	presetByte := global.Assure(json.Marshal(preset))
 	presetFile := global.Assure(os.Create(savePath))
-	preset.Compression = patchScriptOne.CompressionType
+	preset.Compression = installer.CompressionType
 	defer presetFile.Close()
 
 	global.Assure(presetFile.Write(presetByte))
 	global.ExitAppWithMessage("Preset saved!")
 }
 
+func HandleForm(indexbyte []byte, motd string) {
+
+	// Unmarshals index to global variable
+	global.AssureNoReturn(json.Unmarshal(indexbyte, &index))
+
+	buildGameForm(motd)
+}
+
 func buildAssetList() {
 	preset.AssetString = ""
-	for _, x := range patchScriptOne.Assets {
+	for _, x := range installer.Assets {
 		if x.Modify {
 			if preset.AssetString == "" {
 				preset.AssetString += x.AssetName
@@ -35,7 +43,7 @@ func buildAssetList() {
 }
 func buildContentList() {
 	preset.ContentString = ""
-	for _, x := range patchScriptOne.Content {
+	for _, x := range installer.Content {
 		if x.Modify {
 
 			if preset.ContentString == "" {
@@ -58,7 +66,7 @@ func selectedContent(option string, optionIndex int) {
 
 func setContentList() {
 	var tmpslice []string
-	for _, x := range patchScriptOne.Content {
+	for _, x := range installer.Content {
 		tmpslice = append(tmpslice, x.ContentName)
 	}
 
@@ -74,7 +82,7 @@ func checkGamePath(path string, filecheck string) bool {
 
 func setAssetList() {
 	var tmpslice []string
-	for _, x := range patchScriptOne.Assets {
+	for _, x := range installer.Assets {
 		tmpslice = append(tmpslice, x.AssetName)
 	}
 

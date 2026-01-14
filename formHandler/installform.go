@@ -1,15 +1,15 @@
-package patchScriptHandler
+package formHandler
 
 import (
 	"encoding/json"
 	"os"
 
+	"github.com/bomkz/patchman/formHandler/installHandler/installer"
 	"github.com/bomkz/patchman/global"
-	"github.com/bomkz/patchman/patchScriptHandler/patchScriptInstaller/patchScriptOne"
 	"github.com/rivo/tview"
 )
 
-func buildGameForm() {
+func buildInstallForm() {
 
 	setPatchList()
 	setContentList()
@@ -109,9 +109,9 @@ func buildGameForm() {
 				jsonByte := global.Assure(os.ReadFile(savePath))
 				global.AssureNoReturn(json.Unmarshal(jsonByte, &preset))
 
-				patchScriptOne.Content = preset.PatchContentSelection
-				patchScriptOne.Assets = preset.PatchAssetSelection
-				patchScriptOne.CompressionType = preset.Compression
+				installer.Content = preset.PatchContentSelection
+				installer.Assets = preset.PatchAssetSelection
+				installer.CompressionType = preset.Compression
 
 				global.Root.RemovePage("presetForm")
 				global.Root.SwitchToPage("installform")
@@ -128,20 +128,20 @@ func buildGameForm() {
 	}
 
 	contentFunc := func() {
-		if patchScriptOne.Content[preset.CurrentContent].Modify {
-			patchScriptOne.Content[preset.CurrentContent].Modify = false
+		if installer.Content[preset.CurrentContent].Modify {
+			installer.Content[preset.CurrentContent].Modify = false
 		} else {
-			patchScriptOne.Content[preset.CurrentContent].Modify = true
+			installer.Content[preset.CurrentContent].Modify = true
 		}
 		buildContentList()
 		contentTextView.SetText(preset.ContentString)
 	}
 
 	assetFunc := func() {
-		if patchScriptOne.Assets[preset.CurrentAsset].Modify {
-			patchScriptOne.Assets[preset.CurrentAsset].Modify = false
+		if installer.Assets[preset.CurrentAsset].Modify {
+			installer.Assets[preset.CurrentAsset].Modify = false
 		} else {
-			patchScriptOne.Assets[preset.CurrentAsset].Modify = true
+			installer.Assets[preset.CurrentAsset].Modify = true
 		}
 		buildAssetList()
 		assetTextView.SetText(preset.AssetString)
@@ -212,75 +212,36 @@ func buildGameForm() {
 
 }
 
-func gameNext() {
-	global.TargetName = games[currentGame]
-
-	for _, x := range index {
-		if x.AppName == global.TargetName {
-			patchData = x.Patches
-			for _, y := range x.ModifiableAssets {
-				newAsset := patchScriptOne.AssetSelection{
-					AssetName: y,
-					Modify:    true,
+func beginInstall() {
+	for _, x := range patchData {
+		if x.PatchName == patches[currentPatch] {
+			for _, y := range x.PatchVariants {
+				if y.Variant == variants[currentVariant] {
+					global.DownloadFileToProgramWorkingDirectory("patchman.zip", y.DownloadLink)
 				}
-				patchScriptOne.Assets = append(patchScriptOne.Assets, newAsset)
 			}
-			for _, y := range x.ModifiableContent {
-				newContent := patchScriptOne.ContentSelection{
-					ContentName: y.ContentName,
-					ContentPath: y.ContentPath,
-					Modify:      true,
-				}
-				patchScriptOne.Content = append(patchScriptOne.Content, newContent)
-			}
-			global.TargetAppID = x.AppID
-			global.TargetName = x.AppName
-			Motd = x.Motd
-			global.TargetPathCheck = x.LinuxPathCheck
-
-			switch global.OsName {
-			case "windows":
-				global.Root.RemovePage("gameform")
-				basepath := global.Assure(global.SteamReader.FindAppIDPath(x.AppID))
-				global.TargetBuildID = global.Assure(global.SteamReader.FindAppIDBuildID(x.AppID))
-				global.CreateWorkingDirectories(basepath + x.AppPath)
-			case "linux":
-
-				checkTextView := tview.NewTextView().SetLabel("").SetText("").SetSize(1, 20)
-				path := ""
-				global.Root.RemovePage("gameform")
-				form2 := tview.NewForm()
-				form2.AddTextView("Linux OS Detected...", "Automatic game path finding is not yet supported for linux, please insert the full path to where the game is installed below.", 20, 4, false, false).
-					AddInputField("Path to game", "", 20, nil, func(tmppath string) {
-						path = tmppath
-					}).
-					AddButton("Next", func() {
-						if checkGamePath(path, global.TargetPathCheck) {
-							global.Root.RemovePage("linuxpathcheck")
-							global.CreateWorkingDirectories(path)
-						} else {
-							checkTextView.SetText("Could not find game in path provided. Ensure path is the root of game folder.")
-						}
-					}).
-					AddFormItem(checkTextView)
-				global.Root.AddAndSwitchToPage("linuxpathcheck", form2, false)
-			}
-
-			break
 		}
 	}
 
-	buildGameForm()
+	install("patchman.zip")
+	global.Root.RemovePage("installform")
 }
 
-func buildGameList() {
-	games = []string{}
-	for _, g := range index {
-		games = append(games, g.AppName)
+func setPatchList() {
+	patches = []string{}
+	for _, patch := range patchData {
+		patches = append(patches, patch.PatchName)
+	}
+}
+
+func setVariantList() {
+	variants = []string{}
+	for _, variant := range patchData[currentPatch].PatchVariants {
+		variants = append(variants, variant.Variant)
 	}
 
 }
 
-func selectedGame(option string, optionIndex int) {
-	currentGame = optionIndex
+func selectedVariant(option string, optionIndex int) {
+	currentVariant = optionIndex
 }

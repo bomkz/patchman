@@ -1,4 +1,4 @@
-package patchScriptOne
+package installer
 
 import "encoding/json"
 

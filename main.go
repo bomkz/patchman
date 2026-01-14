@@ -10,7 +10,7 @@ import (
 	"syscall"
 
 	"github.com/bomkz/patchman/global"
-	"github.com/bomkz/patchman/index"
+	"github.com/bomkz/patchman/indexHandler"
 )
 
 func main() {
@@ -53,7 +53,7 @@ func main() {
 
 	initTview()
 
-	index.BuildIndex()
+	indexHandler.BuildIndex()
 
 	defer os.RemoveAll(global.Directory)
 	if err := global.App.SetRoot(global.Root, true).Run(); err != nil {

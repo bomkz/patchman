@@ -1,11 +1,11 @@
-package patchScriptInstaller
+package installHandler
 
 import (
 	"encoding/json"
 	"os"
 
+	"github.com/bomkz/patchman/formHandler/installHandler/installer"
 	"github.com/bomkz/patchman/global"
-	"github.com/bomkz/patchman/patchScriptHandler/patchScriptInstaller/patchScriptOne"
 )
 
 func HandleActionScript(actionscript []byte) {
@@ -14,7 +14,7 @@ func HandleActionScript(actionscript []byte) {
 	global.AssureNoReturn(json.Unmarshal(actionscript, &actionScript))
 
 	if actionScript.Patchscriptversion == 1 {
-		patchScriptOne.HandleActions(actionScript.Data)
+		installer.HandleActions(actionScript.Data)
 	}
 }
 

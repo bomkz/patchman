@@ -16,6 +16,17 @@ import (
 	"github.com/inancgumus/screen"
 )
 
+func UnpackDependencies() {
+	switch OsName {
+	case "windows":
+		CreateAndWriteProgramWorkingDirectory(PatchmanUnityExe, "patchman-unity.exe")
+	case "linux":
+		CreateAndWriteProgramWorkingDirectory(PatchmanUnityLinux, "patchman-unity")
+
+	}
+	CreateAndWriteProgramWorkingDirectory(ClassDataTpk, "classdata.tpk")
+}
+
 func ExitTview() {
 	App.Stop()
 	screen.Clear()

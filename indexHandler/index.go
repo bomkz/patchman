@@ -1,4 +1,4 @@
-package index
+package indexHandler
 
 import (
 	"encoding/json"
@@ -9,8 +9,8 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/bomkz/patchman/formHandler"
 	"github.com/bomkz/patchman/global"
-	"github.com/bomkz/patchman/patchScriptHandler"
 )
 
 // Builds Index by downloading and parsing, then sends to patchScriptHandler
@@ -33,7 +33,7 @@ func BuildIndex() {
 		panic(errors.New("form content is nil"))
 	}
 	// Send indexData to patchScriptHandler
-	patchScriptHandler.HandleForm(indexData, preindex.Content[1].Motd)
+	formHandler.HandleForm(indexData, preindex.Content[1].Motd)
 }
 
 // Downloads Index and parses it into index struct

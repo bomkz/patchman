@@ -1,4 +1,4 @@
-package index
+package indexHandler
 
 import "encoding/json"
 

@@ -1,11 +1,11 @@
-package patchScriptHandler
+package formHandler
 
 import (
 	"encoding/json"
 	"os"
 
+	"github.com/bomkz/patchman/formHandler/installHandler/installer"
 	"github.com/bomkz/patchman/global"
-	"github.com/bomkz/patchman/patchScriptHandler/patchScriptInstaller/patchScriptOne"
 	"github.com/rivo/tview"
 )
 
@@ -44,10 +44,10 @@ func buildDeveloperForm() {
 		SetSize(1, 40)
 	//-------------------------------------------------------------------\\
 	assetButton := tview.NewButton("Toggle Asset").SetSelectedFunc(func() {
-		if patchScriptOne.Assets[preset.CurrentAsset].Modify {
-			patchScriptOne.Assets[preset.CurrentAsset].Modify = false
+		if installer.Assets[preset.CurrentAsset].Modify {
+			installer.Assets[preset.CurrentAsset].Modify = false
 		} else {
-			patchScriptOne.Assets[preset.CurrentAsset].Modify = true
+			installer.Assets[preset.CurrentAsset].Modify = true
 		}
 		buildAssetList()
 		assetTextView.SetText(preset.AssetString)
@@ -55,10 +55,10 @@ func buildDeveloperForm() {
 	assetButton.SetBorder(true)
 
 	contentButton := tview.NewButton("Toggle Content").SetSelectedFunc(func() {
-		if patchScriptOne.Content[preset.CurrentContent].Modify {
-			patchScriptOne.Content[preset.CurrentContent].Modify = false
+		if installer.Content[preset.CurrentContent].Modify {
+			installer.Content[preset.CurrentContent].Modify = false
 		} else {
-			patchScriptOne.Content[preset.CurrentContent].Modify = true
+			installer.Content[preset.CurrentContent].Modify = true
 		}
 		buildContentList()
 		contentTextView.SetText(preset.ContentString)
@@ -84,9 +84,9 @@ func buildDeveloperForm() {
 				jsonByte := global.Assure(os.ReadFile(savePath))
 				global.AssureNoReturn(json.Unmarshal(jsonByte, &preset))
 
-				patchScriptOne.Content = preset.PatchContentSelection
-				patchScriptOne.Assets = preset.PatchAssetSelection
-				patchScriptOne.CompressionType = preset.Compression
+				installer.Content = preset.PatchContentSelection
+				installer.Assets = preset.PatchAssetSelection
+				installer.CompressionType = preset.Compression
 
 				global.Root.RemovePage("presetForm")
 				global.Root.SwitchToPage("custom")
@@ -154,7 +154,7 @@ func buildDeveloperForm() {
 }
 
 func setCompression(option string, optionIndex int) {
-	patchScriptOne.CompressionType = option
+	installer.CompressionType = option
 }
 func installFunc() {
 	install(modPath)

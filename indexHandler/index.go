@@ -21,10 +21,12 @@ func BuildIndex() {
 
 	// Go through Preindex content to find correct version
 	var indexData []byte
+	var motd string
 	for _, x := range preindex.Content {
 		version := global.Assure(strconv.Atoi(x.Version))
 		if version == useIndexVersion {
 			indexData = x.Content
+			motd = x.Motd
 		}
 	}
 
@@ -33,7 +35,7 @@ func BuildIndex() {
 		panic(errors.New("form content is nil"))
 	}
 	// Send indexData to patchScriptHandler
-	formHandler.HandleForm(indexData, preindex.Content[1].Motd)
+	formHandler.HandleForm(indexData, motd)
 }
 
 // Downloads Index and parses it into index struct

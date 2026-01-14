@@ -162,7 +162,7 @@ func buildInstallForm() {
 	patchButton.SetBorder(true)
 
 	customButton := tview.NewButton("Custom").
-		SetSelectedFunc(buildDeveloperForm)
+		SetSelectedFunc(buildCustomForm)
 	customButton.SetBorder(true)
 
 	quitButton := tview.NewButton("Quit").

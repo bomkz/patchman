@@ -104,6 +104,8 @@ type PresetStruct struct {
 	Compression string `json:"compression"`
 }
 
+var custom bool
+
 // Stores where presets should be saved
 var savePath string
 

@@ -16,13 +16,13 @@ var Compression = []string{
 	"LZ4Fast",
 }
 
-func buildDeveloperForm() {
+func buildCustomForm() {
 	global.Root.RemovePage("installform")
 
-	setContentList()
-	setAssetList()
 	buildAssetList()
 	buildContentList()
+	setContentList()
+	setAssetList()
 
 	//---------------------------------\\
 	assetDropDown := tview.NewDropDown().

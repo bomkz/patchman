@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 
+	"github.com/bomkz/patchman/formHandler/installHandler"
 	"github.com/bomkz/patchman/formHandler/installHandler/installer"
 	"github.com/bomkz/patchman/global"
 )
@@ -18,6 +19,18 @@ func savePreset() {
 
 	global.Assure(presetFile.Write(presetByte))
 	global.ExitAppWithMessage("Preset saved!")
+}
+
+func install(filePath string) {
+	global.UnpackDependencies()
+	global.UnzipIntoProgramWorkingDirectory(filePath)
+	patchscript := global.Assure(os.ReadFile(global.Directory + "\\patchscript.json"))
+	installHandler.HandleActionScript(patchscript)
+
+	global.ExitTview()
+
+	global.ExitAppWithMessage("Done!")
+
 }
 
 func HandleForm(indexbyte []byte, motd string) {
@@ -66,6 +79,7 @@ func selectedContent(option string, optionIndex int) {
 
 func setContentList() {
 	var tmpslice []string
+	preset.Content = []string{}
 	for _, x := range installer.Content {
 		tmpslice = append(tmpslice, x.ContentName)
 	}
@@ -82,6 +96,7 @@ func checkGamePath(path string, filecheck string) bool {
 
 func setAssetList() {
 	var tmpslice []string
+	preset.Assets = []string{}
 	for _, x := range installer.Assets {
 		tmpslice = append(tmpslice, x.AssetName)
 	}

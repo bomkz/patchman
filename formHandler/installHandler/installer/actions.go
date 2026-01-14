@@ -43,7 +43,13 @@ func batchBundleImport(patchmanJson []byte) {
 	if !global.ExistsAtGwd(patchmanData.OriginalFilePath) {
 		return
 	}
-
+	if len(Content) >= 1 && Content[1].ContentName != "none" && Content[1].ContentPath != "none" {
+		for _, x := range Content {
+			if patchmanData.OriginalFilePath == x.ContentPath && !x.Modify {
+				return
+			}
+		}
+	}
 	gwd := global.GetGwd()
 
 	renameFile := patchmanData.OriginalFilePath
@@ -51,21 +57,22 @@ func batchBundleImport(patchmanJson []byte) {
 
 	patchmanData.ModifiedFilePath = patchmanData.OriginalFilePath + ".mod"
 
-	var tmpOperations []PatchmanUnityOperationsStruct
+	if len(Assets) >= 1 && Assets[1].AssetName != "none" {
+		var tmpOperations []PatchmanUnityOperationsStruct
 
-	for _, x := range Assets {
-		for _, y := range patchmanData.Operations {
-			if y.AssetName == x.AssetName && x.Modify {
-				tmpOperations = append(tmpOperations, y)
+		for _, x := range Assets {
+			for _, y := range patchmanData.Operations {
+				if y.AssetName == x.AssetName && x.Modify {
+					tmpOperations = append(tmpOperations, y)
+				}
 			}
 		}
-	}
 
-	if len(tmpOperations) == 0 {
-		return
+		if len(tmpOperations) == 0 {
+			return
+		}
+		patchmanData.Operations = tmpOperations
 	}
-
-	patchmanData.Operations = tmpOperations
 
 	createOperationsFile(patchmanData)
 
@@ -80,6 +87,14 @@ func batchAssetImport(patchmanJson []byte) {
 
 	global.AssureNoReturn(json.Unmarshal(patchmanJson, &patchmanData))
 
+	if len(Content) >= 1 && Content[1].ContentName != "none" && Content[1].ContentPath != "none" {
+		for _, x := range Content {
+			if patchmanData.OriginalFilePath == x.ContentPath && !x.Modify {
+				return
+			}
+		}
+	}
+
 	gwd := global.GetGwd()
 
 	renameFile := patchmanData.OriginalFilePath
@@ -90,16 +105,21 @@ func batchAssetImport(patchmanJson []byte) {
 
 	var tmpOperations []PatchmanUnityOperationsStruct
 
-	for _, x := range Assets {
-		for _, y := range patchmanData.Operations {
-			if y.AssetName == x.AssetName && x.Modify {
-				tmpOperations = append(tmpOperations, y)
+	if len(Assets) >= 1 && Assets[1].AssetName != "none" {
+		var tmpOperations []PatchmanUnityOperationsStruct
+
+		for _, x := range Assets {
+			for _, y := range patchmanData.Operations {
+				if y.AssetName == x.AssetName && x.Modify {
+					tmpOperations = append(tmpOperations, y)
+				}
 			}
 		}
-	}
 
-	if len(tmpOperations) == 0 {
-		return
+		if len(tmpOperations) == 0 {
+			return
+		}
+		patchmanData.Operations = tmpOperations
 	}
 
 	patchmanData.Operations = tmpOperations

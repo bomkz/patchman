@@ -1,6 +1,8 @@
 # PatchManager 
 
-Is a utility to quickly replace sound and texture assets in Unity games with the goal of being simple to use both as a user and a patch maker.
+Is a utility to quickly and easily replace sound and texture assets in Unity games with the goal of being simple to use both as a user and a patch maker.
+
+Originally a patch manager for VTOL VR, I realized there's nothing VTOL VR specific about this that could be used to patch other Unity games.
 
 ## Creating your own patch
 
@@ -86,6 +88,8 @@ The following is an example of this:
                         "assetType":"Texture2D",
                         "assetName": "rwrTexture",
                         "assetPath": "example3.assets.resS",
+                        "height": 360,
+                        "width": 360,
                         "offset": 691040,
                         "size": 691040
                     }

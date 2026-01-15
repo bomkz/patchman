@@ -29,6 +29,8 @@
                         "assetType":"Texture2D",
                         "assetName": "rwrTexture",
                         "assetPath": "example3.assets.resS",
+                        "height": 360,
+                        "width": 360,
                         "offset": 691040,
                         "size": 691040
                     }

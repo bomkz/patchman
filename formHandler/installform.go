@@ -170,8 +170,8 @@ func buildInstallForm() {
 	quitButton.SetBorder(true)
 	//---------------------------------------------------------\\
 	buttonFlex := tview.NewFlex().SetDirection(tview.FlexColumn).
-		AddItem(contentButton, 0, 3, false).
-		AddItem(assetButton, 0, 3, false).
+		AddItem(contentButton, 0, 4, false).
+		AddItem(assetButton, 0, 4, false).
 		AddItem(patchButton, 0, 2, false).
 		AddItem(presetButton, 0, 2, false).
 		AddItem(customButton, 0, 2, false).

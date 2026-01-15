@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/bomkz/patchman/formHandler/installHandler/installer"
 	"github.com/bomkz/patchman/global"
+	"github.com/bomkz/patchman/installHandler/installer"
 	"github.com/rivo/tview"
 )
 

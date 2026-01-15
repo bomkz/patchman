@@ -103,8 +103,6 @@ func batchAssetImport(patchmanJson []byte) {
 
 	patchmanData.ModifiedFilePath = patchmanData.OriginalFilePath + ".mod"
 
-	var tmpOperations []PatchmanUnityOperationsStruct
-
 	if len(Assets) >= 1 && Assets[1].AssetName != "none" {
 		var tmpOperations []PatchmanUnityOperationsStruct
 
@@ -121,8 +119,6 @@ func batchAssetImport(patchmanJson []byte) {
 		}
 		patchmanData.Operations = tmpOperations
 	}
-
-	patchmanData.Operations = tmpOperations
 
 	createOperationsFile(patchmanData)
 

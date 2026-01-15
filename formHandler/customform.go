@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/bomkz/patchman/formHandler/installHandler/installer"
 	"github.com/bomkz/patchman/global"
+	"github.com/bomkz/patchman/installHandler/installer"
 	"github.com/rivo/tview"
 )
 
@@ -157,8 +157,9 @@ func setCompression(option string, optionIndex int) {
 	installer.CompressionType = option
 }
 func installFunc() {
-	install(modPath)
 	global.Root.RemovePage("DevForm")
+	global.CopyToProgramWorkingDirectory(modPath, "patchscript.zip")
+	install(".\\patchscript.zip")
 }
 
 func pathField(path string) {

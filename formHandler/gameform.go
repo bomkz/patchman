@@ -1,8 +1,8 @@
 package formHandler
 
 import (
-	"github.com/bomkz/patchman/formHandler/installHandler/installer"
 	"github.com/bomkz/patchman/global"
+	"github.com/bomkz/patchman/installHandler/installer"
 	"github.com/rivo/tview"
 )
 
@@ -19,8 +19,8 @@ func buildGameForm(motd string) {
 		AddTextView("Select your game", "", 40, 1, false, false).
 		AddTextView("MOTD", motd, 120, 4, false, true).
 		AddFormItem(gameDropBox).
-		AddButton("Custom", buildCustomGame).
-		AddButton("Next", gameNext)
+		AddButton("Next", gameNext).
+		AddButton("Custom", buildCustomGame)
 
 	form.SetBorder(false)
 	global.Root.AddAndSwitchToPage("gameform", form, true)

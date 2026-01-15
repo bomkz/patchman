@@ -39,6 +39,8 @@ type PatchmanUnityOperationsStruct struct {
 	AssetName string  `json:"assetName"`
 	AssetPath string  `json:"assetPath"`
 	Length    float32 `json:"length"`
+	Width     int     `json:"width"`
+	Height    int     `json:"height"`
 	Offset    int64   `json:"offset"`
 	Size      int64   `json:"size"`
 }

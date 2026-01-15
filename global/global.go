@@ -97,6 +97,22 @@ func CopyFromProgramWorkingDirectory(fileName string, target string) {
 	Assure(io.Copy(outputFile, inputFile))
 }
 
+// Copies file from patchRoot to gameRoot
+func CopyToProgramWorkingDirectory(fileName string, target string) {
+	dst := sanitizeFilePath(target)
+
+	// Open src file
+	inputFile := Assure(os.Open(fileName))
+	defer inputFile.Close()
+
+	// Create dst file and defer for closing
+	outputFile := Assure(pwd.Create(dst))
+	defer outputFile.Close()
+
+	// Copy contents from src to dst
+	Assure(io.Copy(outputFile, inputFile))
+}
+
 // Deletes file from gwd
 func DeleteFromGameWorkingDirectory(target string) {
 	tgt := sanitizeFilePath(target)

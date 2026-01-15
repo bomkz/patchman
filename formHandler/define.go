@@ -3,7 +3,7 @@ package formHandler
 import (
 	_ "embed"
 
-	"github.com/bomkz/patchman/formHandler/installHandler/installer"
+	"github.com/bomkz/patchman/installHandler/installer"
 )
 
 // Main index content struct, stores game info, modifiable asset and content information, and patches.

@@ -20,6 +20,15 @@ This is valid: `VTOLVR_Data\resources.assets`
 
 This is not valid: `C:\Program Files(x86)\steam\steamapps\common\VTOL VR\VTOLVR_Data\resources.assets`
 
+### Creating custom assets
+
+Download the Unity version your game uses, create a new empty 3D project.
+
+Import your custom sounds and textures, highlight all sounds, drag and drop them into the viewport.
+Next create a new cube, and drag your texture onto it. You want to tweak the texture's settings so that it matches the game's default settings.
+
+Finally, build your unity project and go to that project's data folder. There you will find sharedassets0.resource/.assets/.assets.resS
+
 
 ### Defining patches
 
@@ -36,7 +45,13 @@ Patchscript is the version of patchscript your patch is written in, mainly to ma
 ### Patching Assets
 
 Patchscript currently only has two valid patch types: `AudioClip` and `Texture2D`.
-To define a patch you need to know the following: the name of the asset, the asset type (found above), and the resource asset file that contains it. You also need the size, length (for AudioClips), and offset, you can find this in Unity Asset Bundle Extractor. The following is an example of this:
+To define a patch you need to know the following: the name of the asset, the asset type (found above), and the resource asset file that contains it. You also need the size, length (for AudioClips), and offset, you can find this in Unity Asset Bundle Extractor. 
+
+https://github.com/SeriousCache/UABE/releases/tag/v3.0-beta1
+or
+https://github.com/nesrak1/UABEA/releases/latest
+
+The following is an example of this:
 
 ![Example 1](example/1.png?raw=true)
 ![Example 2](example/2.png?raw=true)

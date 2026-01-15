@@ -22,7 +22,7 @@ func buildInstallForm() {
 	descTextView := tview.NewTextView().
 		SetText(patchData[currentPatch].PatchDesc).
 		SetLabel("Description: ").
-		SetSize(1, 40).
+		SetSize(2, 100).
 		SetScrollable(true)
 
 	authTextView := tview.NewTextView().

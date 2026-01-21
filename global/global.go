@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"os/exec"
@@ -62,22 +63,20 @@ func CreateAndWriteProgramWorkingDirectory(fileByte []byte, target string) {
 	dst := sanitizeFilePath(target)
 
 	// Create file, defer for close.
-	outputFile := Assure(pwd.Create(dst))
+	outputFile := Assure(os.Create(pwdDir + "\\.\\" + dst))
 	defer outputFile.Close()
 
 	// Write file contents
 	Assure(outputFile.Write(fileByte))
 }
 
-// Creates temporary directory and opens as patchRoot, opens game directory as gameRoot
 func CreateWorkingDirectories(gameDirectory string) {
 
-	// Create temporary directory for patch root
-	Directory = Assure(os.MkdirTemp(".\\", "patchman-"))
+	pwdDir = Assure(os.MkdirTemp(".\\", "patchman-"))
 
-	// Open current working directory and game root
-	pwd = Assure(os.OpenRoot(Directory))
-	gwd = Assure(os.OpenRoot(gameDirectory))
+	Directory = pwdDir
+
+	gwdDir = gameDirectory
 }
 
 // Copies file from patchRoot to gameRoot
@@ -86,11 +85,11 @@ func CopyFromProgramWorkingDirectory(fileName string, target string) {
 	dst := sanitizeFilePath(target)
 
 	// Open src file
-	inputFile := Assure(pwd.Open(src))
+	inputFile := Assure(os.Open(pwdDir + "\\.\\" + src))
 	defer inputFile.Close()
 
 	// Create dst file and defer for closing
-	outputFile := Assure(gwd.Create(dst))
+	outputFile := Assure(os.Create(gwdDir + "\\.\\" + dst))
 	defer outputFile.Close()
 
 	// Copy contents from src to dst
@@ -106,7 +105,7 @@ func CopyToProgramWorkingDirectory(fileName string, target string) {
 	defer inputFile.Close()
 
 	// Create dst file and defer for closing
-	outputFile := Assure(pwd.Create(dst))
+	outputFile := Assure(os.Create(pwdDir + "\\.\\" + dst))
 	defer outputFile.Close()
 
 	// Copy contents from src to dst
@@ -116,37 +115,41 @@ func CopyToProgramWorkingDirectory(fileName string, target string) {
 // Deletes file from gwd
 func DeleteFromGameWorkingDirectory(target string) {
 	tgt := sanitizeFilePath(target)
-	AssureNoReturn(gwd.Remove(tgt))
+	AssureNoReturn(os.Remove(gwdDir + "\\.\\" + tgt))
 }
 
 // Cleans up temporary pwd
 func CleanProgramWorkingDirectory() {
-	pwd.Close()
 	AssureNoReturn(os.RemoveAll(Directory))
 }
 
 // Checks if file exists at given path
 func ExistsAtPwd(fileName string) bool {
 	src := sanitizeFilePath(fileName)
-	_, err := pwd.Stat(src)
+	_, err := os.Stat(pwdDir + "\\.\\" + src)
 	return !os.IsNotExist(err)
 }
 
 // Checks if file exists at given path
 func ExistsAtGwd(fileName string) bool {
 	src := sanitizeFilePath(fileName)
-	_, err := gwd.Stat(src)
+	_, err := os.Stat(gwdDir + "\\.\\" + src)
+	if os.IsNotExist(err) {
+		return false
+	} else if err != nil {
+		log.Fatal(err)
+	}
 	return !os.IsNotExist(err)
 }
 
 func GetGwd() string {
-	return gwd.Name()
+	return gwdDir
 }
 
 // Downloads file from URL to given path in pwd
 func DownloadFileToProgramWorkingDirectory(filePath, url string) {
 	dst := sanitizeFilePath(filePath)
-	outputFile := Assure(pwd.Create(dst))
+	outputFile := Assure(os.Create(pwdDir + "\\.\\" + dst))
 	defer outputFile.Close()
 
 	resp := Assure(http.Get(url))
@@ -174,18 +177,18 @@ func ClearScreen() {
 func RenameGameWorkingDirectoryFile(fileName string) {
 	tgt := sanitizeFilePath(fileName)
 
-	AssureNoReturn(gwd.Rename(tgt, tgt+".orig"))
-	AssureNoReturn(gwd.Rename(tgt+".mod", tgt))
+	AssureNoReturn(os.Rename(gwdDir+"\\.\\"+tgt, gwdDir+"\\.\\"+tgt+".orig"))
+	AssureNoReturn(os.Rename(gwdDir+"\\.\\"+tgt+".mod", gwdDir+"\\.\\"+tgt))
 
 }
 
 // Unzips given zipfile into pwd root
 func UnzipIntoProgramWorkingDirectory(zipfile string) {
-	r := Assure(zip.OpenReader(pwd.Name() + "\\" + zipfile))
+	r := Assure(zip.OpenReader(pwdDir + "\\.\\" + zipfile))
 	defer r.Close()
 
 	for _, f := range r.File {
-		outFile := Assure(pwd.OpenFile(f.Name, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode()))
+		outFile := Assure(os.OpenFile(pwdDir+"\\.\\"+f.Name, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode()))
 
 		rc := Assure(f.Open())
 

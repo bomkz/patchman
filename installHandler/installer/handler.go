@@ -49,7 +49,7 @@ func runPatchmanUnityBundles() {
 func runPatchmanUnityAssets() {
 	switch global.OsName {
 	case "windows":
-		cmd := exec.Command(global.Directory+"\\patchman-unity.exe", "batchimportasset", global.Directory+".\\operations.json")
+		cmd := exec.Command(global.Directory+"\\patchman-unity.exe", "batchimportasset", global.Directory+".\\operations.json", global.Directory+".\\classdata.tpk")
 		var out bytes.Buffer
 		cmd.Stdout = &out
 

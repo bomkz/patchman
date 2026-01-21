@@ -9,6 +9,10 @@ import (
 func HandleActions(actionData []byte) {
 	var actionScript []ActionScriptStruct
 
+	if CompressionType == "" {
+		CompressionType = "none"
+	}
+
 	global.AssureNoReturn(json.Unmarshal(actionData, &actionScript))
 
 	global.ExitTview()

@@ -2,7 +2,6 @@ package global
 
 import (
 	_ "embed"
-	"os"
 
 	"github.com/bomkz/patchman/steamutils"
 	"github.com/rivo/tview"
@@ -49,5 +48,6 @@ var PatchmanUnityDir string
 var App *tview.Application
 var Root *tview.Pages
 
-var pwd *os.Root
-var gwd *os.Root
+var pwdDir string
+
+var gwdDir string

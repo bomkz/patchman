@@ -1,5 +1,14 @@
 package guihandler
 
+import (
+	"encoding/json"
+
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/widget"
+	"github.com/bomkz/patchman/global"
+	"github.com/bomkz/patchman/steamutils"
+)
+
 func buildGameListWindowsSteam() {
 	sr := global.Assure(steamutils.NewSteamReader(steamutils.SteamReaderConfig{FormatSteamPath: true}))
 
@@ -20,30 +29,31 @@ func buildGameListWindowsSteam() {
 	buildIdText := buildIdTextPreset + "None Selected"
 	buildIdTextWidget := widget.NewLabel(buildIdText)
 
-	gameTextWidget := widget.NewLabel("Select game to modify.")
 	gameSelect := widget.NewSelect(gameOptions, func(s string) {
-		for _, x := range index {
-			if x.AppName == s {
-				gamePath := global.Assure(sr.FindAppIDPath(x.AppID))
+		for x, y := range index {
+			if y.AppName == s {
+				gamePath := global.Assure(sr.FindAppIDPath(y.AppID))
 				gamePathText = gamePathTextPreset + gamePath
 				gamePathTextWidget.SetText(gamePathText)
 
-				buildId := global.Assure(sr.FindAppIDBuildID(x.AppID))
+				buildId := global.Assure(sr.FindAppIDBuildID(y.AppID))
 				buildIdText = buildIdTextPreset + buildId
 				buildIdTextWidget.SetText(buildIdText)
 			}
+			currentGame = x
 		}
+
 	})
+	gameSelect.PlaceHolder = "Select game to modify"
 
 	global.MainWindow.SetContent(container.NewVBox(
 		steamPathTextWidget,
 		gamePathTextWidget,
 		buildIdTextWidget,
-		gameTextWidget,
 		gameSelect,
 		container.NewHBox(
-			widget.NewButton("Next", func() { os.Exit(0) }),
-			widget.NewButton("Cancel", func() { os.Exit(0) }),
+			widget.NewButton("Next", func() { buildPatchHandler() }),
+			widget.NewButton("Cancel", func() { global.App.Quit() }),
 		),
 	))
 }

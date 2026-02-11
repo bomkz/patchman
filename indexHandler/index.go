@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	"github.com/bomkz/patchman/global"
+	"tawesoft.co.uk/go/dialog"
 )
 
 // Builds Index by downloading and parsing, then sends to patchScriptHandler
@@ -49,14 +50,10 @@ func handleIndex() {
 		global.Internet = false
 		exists := checkLocalDbNoInternet()
 		if !exists {
-			fmt.Println(err, global.NoInternetInstruct)
-			os.RemoveAll(global.Directory)
-			fmt.Scanln()
-			os.Exit(1)
+			dialog.Alert(err.Error() + "\n" + global.NoInternetInstruct)
+			os.Exit(0)
 		} else {
-
-			fmt.Println(global.NoInternet)
-			fmt.Scanln()
+			dialog.Alert(global.NoInternet)
 		}
 	}
 
@@ -66,14 +63,12 @@ func handleIndex() {
 		global.Internet = false
 		exists := checkLocalDbNoInternet()
 		if !exists {
-			fmt.Println("Could not find a compatible index version, reverting to offline mode.", global.NoInternetInstruct)
-			os.RemoveAll(global.Directory)
-			fmt.Scanln()
-			os.Exit(1)
+
+			dialog.Alert("Could not find a compatible index version, reverting to offline mode.\n" + global.NoInternetInstruct)
+			os.Exit(0)
 		} else {
 
-			fmt.Println("Could not find a compatible index version, reverting to offline mode.", global.NoInternet)
-			fmt.Scanln()
+			dialog.Alert("Could not find a compatible index version, reverting to offline mode." + global.NoInternet)
 		}
 	} else {
 		//TODO

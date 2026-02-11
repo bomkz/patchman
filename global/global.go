@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"os/exec"
@@ -15,6 +14,7 @@ import (
 
 	"github.com/bomkz/patchman/steamutils"
 	"github.com/inancgumus/screen"
+	"tawesoft.co.uk/go/dialog"
 )
 
 func UnpackDependencies() {
@@ -36,25 +36,6 @@ func ExitApp() {
 	ExitTview()
 	screen.Clear()
 	os.Exit(0)
-}
-
-func ExitAppWithMessage(message string) {
-	ExitTview()
-	screen.Clear()
-	fmt.Println(message)
-	fmt.Println("Press Enter to exit...")
-	fmt.Scanln()
-	os.Exit(0)
-}
-
-func FatalError(err error) {
-	ExitTview()
-	fmt.Println(err)
-	fmt.Println("Press Enter to exit")
-	fmt.Scanln()
-
-	ExitApp()
-
 }
 
 // Creates file at target path relative to patch root and writes byte array to it.
@@ -136,7 +117,7 @@ func ExistsAtGwd(fileName string) bool {
 	if os.IsNotExist(err) {
 		return false
 	} else if err != nil {
-		log.Fatal(err)
+		FatalError(err)
 	}
 	return !os.IsNotExist(err)
 }
@@ -155,10 +136,17 @@ func DownloadFileToProgramWorkingDirectory(filePath, url string) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		panic(fmt.Errorf("bad status: %s", resp.Status))
+		FatalError(fmt.Errorf("bad status: %s", resp.Status))
 	}
 
 	Assure(io.Copy(outputFile, resp.Body))
+}
+
+func FatalError(err error) {
+	err1 := os.WriteFile("./patchman.log", []byte(err.Error()), os.ModeAppend)
+	if err1 != nil {
+		dialog.Alert("%s", "Could not create or write to log file: "+err1.Error()+"\n\n"+"Main Error: "+err.Error())
+	}
 }
 
 func ClearScreen() {
@@ -211,7 +199,10 @@ func Assure[T any](v T, err error) T {
 	if err != nil {
 		CleanProgramWorkingDirectory()
 
-		panic(err) // fail fast on critical fault
+		err1 := os.WriteFile("./patchman.log", []byte(err.Error()), os.ModeAppend)
+		if err1 != nil {
+			dialog.Alert("%s", "Could not create or write to log file: "+err1.Error()+"\n\n"+"Main Error: "+err.Error())
+		}
 	}
 	return v
 }
@@ -221,7 +212,10 @@ func AssureNoReturn(err error) {
 	if err != nil {
 		CleanProgramWorkingDirectory()
 
-		panic(err) // fail fast on critical fault
+		err1 := os.WriteFile("./patchman.log", []byte(err.Error()), os.ModeAppend)
+		if err1 != nil {
+			dialog.Alert("%s", "Could not create or write to log file: "+err1.Error()+"\n\n"+"Main Error: "+err.Error())
+		}
 	}
 }
 

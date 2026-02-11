@@ -2,7 +2,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"os/signal"
 	"runtime"
@@ -70,7 +69,7 @@ func promptElevate() {
 
 	err := windows.ShellExecute(0, verbPtr, exePtr, argPtr, cwdPtr, showCmd)
 	if err != nil {
-		fmt.Println(err)
+		global.FatalError(err)
 	}
 }
 

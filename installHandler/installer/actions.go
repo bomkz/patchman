@@ -28,7 +28,6 @@ func HandleActions(actionData []byte) {
 		}
 	}
 
-	global.ExitAppWithMessage("Done!")
 }
 
 func handleCopy(actionData []byte) {

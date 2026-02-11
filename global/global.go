@@ -29,7 +29,6 @@ func UnpackDependencies() {
 }
 
 func ExitTview() {
-	App.Stop()
 	screen.Clear()
 }
 

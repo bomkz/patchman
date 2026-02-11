@@ -38,7 +38,6 @@ func HandleForm(indexbyte []byte, motd string) {
 	// Unmarshals index to global variable
 	global.AssureNoReturn(json.Unmarshal(indexbyte, &index))
 
-	buildGameForm(motd)
 }
 
 func buildAssetList() {

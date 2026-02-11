@@ -3,8 +3,8 @@ package global
 import (
 	_ "embed"
 
+	"fyne.io/fyne/v2"
 	"github.com/bomkz/patchman/steamutils"
-	"github.com/rivo/tview"
 )
 
 var TargetName string
@@ -45,9 +45,16 @@ var OsName string
 
 var PatchmanUnityDir string
 
-var App *tview.Application
-var Root *tview.Pages
-
 var pwdDir string
 
 var gwdDir string
+
+var IndexData []byte
+
+var IndexMotd string
+
+var SteamPath string
+
+var App fyne.App
+
+var MainWindow fyne.Window

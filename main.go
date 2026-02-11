@@ -3,14 +3,17 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/signal"
 	"runtime"
+	"strings"
 	"syscall"
 
+	"fyne.io/fyne/v2/app"
 	"github.com/bomkz/patchman/global"
+	guihandler "github.com/bomkz/patchman/guiHandler"
 	"github.com/bomkz/patchman/indexHandler"
+	"golang.org/x/sys/windows"
 )
 
 func main() {
@@ -37,30 +40,48 @@ func main() {
 		global.InitSteamReader()
 	}
 
-	if len(os.Args) == 2 {
-		switch os.Args[1] {
-		case "/?", "-?", "?", "/help", "/h", "-h", "--help", "h", "help":
-			fmt.Println(helpArgument)
-			os.Exit(0)
-
-		case "/version", "/v", "--version", "-v", "v", "version":
-			fmt.Println(versionArgument)
-			os.Exit(0)
-		}
-	} else if len(os.Args) > 2 {
-		log.Fatal("Unrecognized argument: " + os.Args[1] + "\nValid examples:\npatchman.exe [game buildid override] \npatchman.exe 18407725\npatchman.exe version\n patchman.exe help\npatchman.exe patchstatus")
-	}
-
-	initTview()
+	initFyne()
 
 	indexHandler.BuildIndex()
 
-	defer os.RemoveAll(global.Directory)
-	if err := global.App.SetRoot(global.Root, true).Run(); err != nil {
-		global.FatalError(err)
+	guihandler.InitGui()
+}
+
+func initFyne() {
+	global.App = app.New()
+
+	global.MainWindow = global.App.NewWindow("Patchman")
+
+}
+
+// Elevates self as admin
+func promptElevate() {
+	verb := "runas"
+	exe, _ := os.Executable()
+	cwd, _ := os.Getwd()
+	args := strings.Join(os.Args[1:], " ")
+
+	verbPtr, _ := syscall.UTF16PtrFromString(verb)
+	exePtr, _ := syscall.UTF16PtrFromString(exe)
+	cwdPtr, _ := syscall.UTF16PtrFromString(cwd)
+	argPtr, _ := syscall.UTF16PtrFromString(args)
+
+	var showCmd int32 = 1 //SW_NORMAL
+
+	err := windows.ShellExecute(0, verbPtr, exePtr, argPtr, cwdPtr, showCmd)
+	if err != nil {
+		fmt.Println(err)
 	}
+}
 
-	global.CleanProgramWorkingDirectory()
-
-	global.ExitAppWithMessage("Done!")
+// Returns whether running as admin or not.
+func checkAdmin() bool {
+	_, err := os.Open("\\\\.\\PHYSICALDRIVE0")
+	isadmin := false
+	if err != nil {
+		isadmin = false
+	} else {
+		isadmin = true
+	}
+	return isadmin
 }

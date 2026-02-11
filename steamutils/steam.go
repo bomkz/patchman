@@ -9,6 +9,47 @@ import (
 	"golang.org/x/sys/windows/registry"
 )
 
+func NewSteamReader(steamReaderConfig SteamReaderConfig) (steamreader SteamReader, err error) {
+
+	if steamReaderConfig.LibraryVdfPathFinder == nil {
+		steamReaderConfig.LibraryVdfPathFinder = checkDefaultLibraryPath
+	}
+
+	steamReaderConfig.customSteamPathFinder = true
+	if steamReaderConfig.SteamPathFinder == nil {
+		steamReaderConfig.SteamPathFinder = GetSteamPath
+		steamReaderConfig.customSteamPathFinder = false
+	}
+
+	steamreader.SteamReaderConfig = steamReaderConfig
+
+	if steamReaderConfig.CustomSteamPath == "" {
+		steamreader.steamPath, err = steamreader.SteamReaderConfig.SteamPathFinder()
+		if err != nil {
+			return
+		}
+	}
+
+	if steamReaderConfig.CustomLibraryVdfPath == "" {
+		steamreader.libraryVdfPath, err = steamreader.SteamReaderConfig.LibraryVdfPathFinder(steamreader.steamPath)
+		if err != nil {
+			return
+		}
+	}
+
+	libraryVdfByte, err := os.ReadFile(steamreader.libraryVdfPath)
+	if err != nil {
+		return
+	}
+
+	steamreader.libraryVdfMap, err = Unmarshal(libraryVdfByte)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
 func (steamreader *SteamReader) FindAppIDBuildID(AppID string) (buildId string, err error) {
 
 	dir, err := steamreader.FindAppIDPath(AppID)
@@ -53,50 +94,41 @@ func (steamreader *SteamReader) GetLibraryVdfMap() *orderedmap.OrderedMap {
 	return steamreader.libraryVdfMap
 }
 func (steamreader *SteamReader) GetSteamPath() string {
+	if !steamreader.SteamReaderConfig.customSteamPathFinder {
+		pathStrings := strings.Split(steamreader.steamPath, "\\")
+		rebuiltPathString := strings.ToUpper(pathStrings[0]) + "\\"
+		if pathStrings[1] == "program files (x86)" {
+			rebuiltPathString += "Program Files (x86)\\"
+
+			for x, y := range pathStrings {
+				if x == 0 {
+					continue
+				} else if x == 1 {
+					continue
+				}
+				if y == "steam" {
+					rebuiltPathString += "Steam\\"
+				} else {
+					rebuiltPathString += y + "\\"
+				}
+			}
+		} else {
+			for x, y := range pathStrings {
+				if x == 0 {
+					continue
+				}
+				rebuiltPathString += y + "\\"
+
+			}
+
+		}
+		return rebuiltPathString
+	}
 	return steamreader.steamPath
 }
 
 func (steamreader *SteamReader) GetLibraryVdfPath() string {
 	return steamreader.libraryVdfPath
-}
-
-func NewSteamReader(steamReaderConfig SteamReaderConfig) (steamreader SteamReader, err error) {
-
-	if steamReaderConfig.LibraryVdfPathFinder == nil {
-		steamReaderConfig.LibraryVdfPathFinder = checkDefaultLibraryPath
-	}
-
-	if steamReaderConfig.SteamPathFinder == nil {
-		steamReaderConfig.SteamPathFinder = GetSteamPath
-	}
-
-	steamreader.SteamReaderConfig = steamReaderConfig
-
-	if steamReaderConfig.CustomSteamPath == "" {
-		steamreader.steamPath, err = steamreader.SteamReaderConfig.SteamPathFinder()
-		if err != nil {
-			return
-		}
-	}
-
-	if steamReaderConfig.CustomLibraryVdfPath == "" {
-		steamreader.libraryVdfPath, err = steamreader.SteamReaderConfig.LibraryVdfPathFinder(steamreader.steamPath)
-		if err != nil {
-			return
-		}
-	}
-
-	libraryVdfByte, err := os.ReadFile(steamreader.libraryVdfPath)
-	if err != nil {
-		return
-	}
-
-	steamreader.libraryVdfMap, err = Unmarshal(libraryVdfByte)
-	if err != nil {
-		return
-	}
-
-	return
 }
 
 // Goes through all libraries in libraryfolders.vdf to find the path of the library containing the target appid
@@ -143,6 +175,7 @@ func (steamreader *SteamReader) FindAppIDPath(targetAppID string) (string, error
 					return "", fmt.Errorf("library path for library %s is not a string", libKey)
 				}
 
+				pathStr = strings.ReplaceAll(pathStr, "\\\\", "\\")
 				return pathStr, nil
 			}
 		}

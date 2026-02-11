@@ -9,7 +9,6 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/bomkz/patchman/formHandler"
 	"github.com/bomkz/patchman/global"
 )
 
@@ -35,7 +34,9 @@ func BuildIndex() {
 		panic(errors.New("form content is nil"))
 	}
 	// Send indexData to patchScriptHandler
-	formHandler.HandleForm(indexData, motd)
+
+	global.IndexData = indexData
+	global.IndexMotd = motd
 }
 
 // Downloads Index and parses it into index struct

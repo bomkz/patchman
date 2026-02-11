@@ -10,7 +10,7 @@ import (
 
 func buildPatchHandler() {
 
-	testWidget := widget.NewLabel("meow")
+	testWidget := widget.NewLabel("⚠️🍗bbq chicken alert🍗⚠️")
 	global.MainWindow.SetContent(container.NewVBox(
 		testWidget,
 		container.NewHBox(

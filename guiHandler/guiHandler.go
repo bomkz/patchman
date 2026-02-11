@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/bomkz/patchman/global"
-	"github.com/bomkz/patchman/steamutils"
+	"github.com/bomkz/steamutils"
 )
 
 func InitGui() {

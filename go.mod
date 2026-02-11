@@ -1,10 +1,12 @@
 module github.com/bomkz/patchman
 
-go 1.25
+go 1.25.5
 
 require fyne.io/fyne/v2 v2.7.2
 
 require tawesoft.co.uk/go/dialog v0.0.0-20201103210221-4175697d086f
+
+require github.com/bomkz/steamutils v0.0.1 // indirect
 
 require (
 	fyne.io/systray v1.12.0 // indirect
@@ -37,7 +39,7 @@ require (
 	golang.org/x/crypto v0.46.0 // indirect
 	golang.org/x/image v0.24.0 // indirect
 	golang.org/x/net v0.48.0 // indirect
-	golang.org/x/sys v0.40.0
+	golang.org/x/sys v0.41.0
 	golang.org/x/term v0.38.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

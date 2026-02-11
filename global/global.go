@@ -11,8 +11,9 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"time"
 
-	"github.com/bomkz/patchman/steamutils"
+	"github.com/bomkz/steamutils"
 	"github.com/inancgumus/screen"
 	"tawesoft.co.uk/go/dialog"
 )
@@ -143,10 +144,25 @@ func DownloadFileToProgramWorkingDirectory(filePath, url string) {
 }
 
 func FatalError(err error) {
-	err1 := os.WriteFile("./patchman.log", []byte(err.Error()), os.ModeAppend)
+
+	logfile, err1 := os.OpenFile("./patchman.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err1 != nil {
 		dialog.Alert("%s", "Could not create or write to log file: "+err1.Error()+"\n\n"+"Main Error: "+err.Error())
+		os.Exit(1)
+
 	}
+	timestamp := time.Now().Truncate(time.Second).String()
+
+	if _, err1 := logfile.WriteString(timestamp + err.Error() + "\n"); err1 != nil {
+		dialog.Alert("%s", "Could not create or write to log file: "+err1.Error()+"\n\n"+"Main Error: "+err.Error())
+	}
+
+	dialog.Alert("%s", "Fatal Error: "+err.Error()+"\n\nError saved to log file patchman.log in current directory.")
+
+	logfile.Close()
+
+	os.Exit(1)
+
 }
 
 func ClearScreen() {
@@ -197,12 +213,7 @@ func InitSteamReader() (err error) {
 // Assure is a helper function to avoid boilerplate error handling.
 func Assure[T any](v T, err error) T {
 	if err != nil {
-		CleanProgramWorkingDirectory()
-
-		err1 := os.WriteFile("./patchman.log", []byte(err.Error()), os.ModeAppend)
-		if err1 != nil {
-			dialog.Alert("%s", "Could not create or write to log file: "+err1.Error()+"\n\n"+"Main Error: "+err.Error())
-		}
+		FatalError(err)
 	}
 	return v
 }
@@ -210,12 +221,7 @@ func Assure[T any](v T, err error) T {
 // AssureNoReturn is a helper function to avoid boilerplate error handling when a given functioning does not return a value.
 func AssureNoReturn(err error) {
 	if err != nil {
-		CleanProgramWorkingDirectory()
-
-		err1 := os.WriteFile("./patchman.log", []byte(err.Error()), os.ModeAppend)
-		if err1 != nil {
-			dialog.Alert("%s", "Could not create or write to log file: "+err1.Error()+"\n\n"+"Main Error: "+err.Error())
-		}
+		FatalError(err)
 	}
 }
 

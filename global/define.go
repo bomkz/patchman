@@ -4,7 +4,7 @@ import (
 	_ "embed"
 
 	"fyne.io/fyne/v2"
-	"github.com/bomkz/patchman/steamutils"
+	"github.com/bomkz/steamutils"
 )
 
 var TargetName string

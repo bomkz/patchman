@@ -2,11 +2,9 @@ package indexHandler
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/bomkz/patchman/global"
@@ -32,7 +30,9 @@ func BuildIndex() {
 
 	// Check if indexData is nil
 	if indexData == nil {
-		panic(errors.New("form content is nil"))
+		global.Internet = false
+		dialog.Alert("%s", global.NoInternet)
+
 	}
 	// Send indexData to patchScriptHandler
 
@@ -48,44 +48,17 @@ func handleIndex() {
 	// If error exists, assume no internet connection, go offline mode.
 	if err != nil {
 		global.Internet = false
-		exists := checkLocalDbNoInternet()
-		if !exists {
-			dialog.Alert(err.Error() + "\n" + global.NoInternetInstruct)
-			os.Exit(0)
-		} else {
-			dialog.Alert(global.NoInternet)
-		}
+		dialog.Alert("%s", global.NoInternet)
+		return
 	}
 
 	parseIndex()
-
-	if useIndexVersion == 99 {
+	if PreIndexVersion == 99 {
 		global.Internet = false
-		exists := checkLocalDbNoInternet()
-		if !exists {
+		dialog.Alert("%s", global.NoInternet)
+		return
 
-			dialog.Alert("Could not find a compatible index version, reverting to offline mode.\n" + global.NoInternetInstruct)
-			os.Exit(0)
-		} else {
-
-			dialog.Alert("Could not find a compatible index version, reverting to offline mode." + global.NoInternet)
-		}
-	} else {
-		//TODO
 	}
-
-}
-
-func loadPreIndex() (data []byte, err error) {
-	if !global.Internet {
-		indexmem, err = os.ReadFile("C:\\patchman\\index.json")
-		if err != nil {
-			return
-		}
-	}
-
-	data = indexmem
-	return
 }
 
 // Downloads Patchman Index from given URL and stores in indexmem
@@ -104,9 +77,12 @@ func downloadIndex(url string) (err error) {
 }
 
 func parseIndex() {
-	preindexbyte := global.Assure(loadPreIndex())
 
-	global.AssureNoReturn(json.Unmarshal(preindexbyte, &preindex))
+	if err := json.Unmarshal(indexmem, &preindex); err != nil {
+		global.Internet = false
+		dialog.Alert("%s", global.NoInternet)
+		return
+	}
 
 	for _, x := range preindex.Content {
 		preindexversion := global.Assure(strconv.Atoi(x.Version))
@@ -118,9 +94,4 @@ func parseIndex() {
 		}
 	}
 
-}
-
-func checkLocalDbNoInternet() bool {
-	_, error := os.Stat("C:\\patchman\\index.json")
-	return !errors.Is(error, os.ErrNotExist)
 }

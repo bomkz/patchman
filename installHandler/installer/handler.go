@@ -3,6 +3,7 @@ package installer
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"os"
 	"os/exec"
 
@@ -21,11 +22,11 @@ func runPatchmanUnityBundles() {
 
 		err := cmd.Run()
 		if err != nil {
-			panic(err)
+			global.FatalError(err)
 		}
 
 		if out.String() != "Done!" {
-			panic(out.String())
+			global.FatalError(errors.New(out.String()))
 		}
 
 	case "linux":
@@ -35,11 +36,11 @@ func runPatchmanUnityBundles() {
 
 		err := cmd.Run()
 		if err != nil {
-			panic(err)
+			global.FatalError(err)
 		}
 
 		if out.String() != "Done!" {
-			panic(out.String())
+			global.FatalError(errors.New(out.String()))
 		}
 
 	}
@@ -55,11 +56,11 @@ func runPatchmanUnityAssets() {
 
 		err := cmd.Run()
 		if err != nil {
-			panic(err)
+			global.FatalError(err)
 		}
 
 		if out.String() != "Done!" {
-			panic(out.String())
+			global.FatalError(errors.New(out.String()))
 		}
 	case "linux":
 		cmd := exec.Command(global.Directory+"\\patchman-unity", "batchimportasset", global.Directory+".\\operations.json")
@@ -68,11 +69,11 @@ func runPatchmanUnityAssets() {
 
 		err := cmd.Run()
 		if err != nil {
-			panic(err)
+			global.FatalError(err)
 		}
 
 		if out.String() != "Done!" {
-			panic(out.String())
+			global.FatalError(errors.New(out.String()))
 		}
 	}
 }

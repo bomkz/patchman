@@ -75,20 +75,8 @@ type PresetStruct struct {
 	// List of assets for asset dropdown box
 	Assets []string `json:"assets"`
 
-	// Asset String for selected asset textview.
-	AssetString string `json:"assetString"`
-
-	// Asset currently selected by user as index.
-	CurrentAsset int `json:"currentAsset"`
-
 	// List of Content for content dropdown box
 	Content []string `json:"content"`
-
-	// Content String for selected content textview.
-	ContentString string `json:"contentString"`
-
-	// Content currently selected by user as index.
-	CurrentContent int `json:"currentContent"`
 
 	// Array storing assets selected for install
 	PatchAssetSelection []installer.AssetSelection `json:"assetSelection"`

@@ -3,7 +3,6 @@ package main
 
 import (
 	"os"
-	"os/signal"
 	"runtime"
 	"strings"
 	"syscall"
@@ -20,18 +19,8 @@ func main() {
 	// Check for admin rights
 	if isAdmin := checkAdmin(); !isAdmin {
 		promptElevate()
-		os.Exit(0)
+		global.ExitSuccess()
 	}
-
-	// Handle Ctrl+C
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-
-	// Cleanup on exit
-	go func() {
-		<-c
-		os.Exit(1)
-	}()
 
 	global.OsName = runtime.GOOS
 

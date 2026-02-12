@@ -15,8 +15,6 @@ func HandleActions(actionData []byte) {
 
 	global.AssureNoReturn(json.Unmarshal(actionData, &actionScript))
 
-	global.ExitTview()
-
 	for _, x := range actionScript {
 		switch x.Action {
 		case "importbundle":
@@ -90,7 +88,7 @@ func batchAssetImport(patchmanJson []byte) {
 
 	global.AssureNoReturn(json.Unmarshal(patchmanJson, &patchmanData))
 
-	if len(Content) >= 1 && Content[1].ContentName != "none" && Content[1].ContentPath != "none" {
+	if len(Content) >= 1 && Content[0].ContentName != "none" && Content[0].ContentPath != "none" {
 		for _, x := range Content {
 			if patchmanData.OriginalFilePath == x.ContentPath && !x.Modify {
 				return

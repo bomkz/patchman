@@ -44,6 +44,7 @@ func buildPatchHandler() {
 				for _, z := range y.PatchVariants {
 					variants = append(variants, z.Variant)
 				}
+				variantSelect.SetOptions(variants)
 			}
 		}
 	})
@@ -55,10 +56,17 @@ func buildPatchHandler() {
 		patchAuthWidget,
 		patchLinkWidget,
 		container.NewHBox(
-			widget.NewButton("Next", func() { os.Exit(0) }),
+			widget.NewButton("Next", func() { handlePatch() }),
 			widget.NewButton("Custom", func() { os.Exit(0) }),
-			widget.NewButton("Cancel", func() { os.Exit(0) }),
+			widget.NewButton("Cancel", func() { global.ExitSuccess() }),
 		),
 	))
+}
+
+func handlePatch() {
+
+	global.DownloadFileToProgramWorkingDirectory("./patchman.zip", index[currentGame].Patches[currentPatch].PatchVariants[currentVariant].DownloadLink)
+	global.UnzipIntoProgramWorkingDirectory("./patchman.zip")
+	buildContentHandler()
 
 }

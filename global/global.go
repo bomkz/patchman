@@ -14,7 +14,6 @@ import (
 	"time"
 
 	"github.com/bomkz/steamutils"
-	"github.com/inancgumus/screen"
 	"tawesoft.co.uk/go/dialog"
 )
 
@@ -27,16 +26,6 @@ func UnpackDependencies() {
 
 	}
 	CreateAndWriteProgramWorkingDirectory(ClassDataTpk, "classdata.tpk")
-}
-
-func ExitTview() {
-	screen.Clear()
-}
-
-func ExitApp() {
-	ExitTview()
-	screen.Clear()
-	os.Exit(0)
 }
 
 // Creates file at target path relative to patch root and writes byte array to it.
@@ -153,7 +142,7 @@ func FatalError(err error) {
 	}
 	timestamp := time.Now().Truncate(time.Second).String()
 
-	if _, err1 := logfile.WriteString(timestamp + err.Error() + "\n"); err1 != nil {
+	if _, err1 := logfile.WriteString(timestamp + ": " + err.Error() + "\n"); err1 != nil {
 		dialog.Alert("%s", "Could not create or write to log file: "+err1.Error()+"\n\n"+"Main Error: "+err.Error())
 	}
 
@@ -229,8 +218,12 @@ func AssureNoReturn(err error) {
 func sanitizeFilePath(path string) (sanitizedPath string) {
 	sanitizedPath = filepath.Clean(path)
 	if filepath.IsAbs(path) || strings.HasPrefix(path, "..") {
-		panic(errors.New("Cannot use absolute filepaths in copy argument."))
+		FatalError(errors.New("Cannot use absolute filepaths in copy argument."))
 	}
 
 	return
+}
+
+func ExitSuccess() {
+	os.Exit(0)
 }

@@ -13,9 +13,10 @@ func InitGui() {
 		global.SteamPath = "Not Installed or Detected."
 	} else {
 		if strings.ToLower(global.OsName) == "windows" {
-
-			global.SteamPath = sr.GetSteamPath()
-			buildGameListWindowsSteam()
+			if global.Internet {
+				global.SteamPath = sr.GetSteamPath()
+				buildGameListWindowsSteam()
+			}
 		}
 	}
 

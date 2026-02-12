@@ -321,13 +321,12 @@ You can contact me on Discord @f45a to vet your patch and add it into the index.
 
 ## Compiling 
 
-Modify information in: versioninfo.json && modinstaller.exe.manifest 
+Install: 
+    MSYS2
+    Fyne Required toolkits: https://docs.fyne.io/started/quick/
+
 
 ```
-go get github.com/josephspurrier/goversioninfo/cmd/goversioninfo
-go install github.com/josephspurrier/goversioninfo/cmd/goversioninfo
-go generate
 go build
 
-signtool sign /tr http://timestamp.digicert.com /td sha256 /fd sha256 /f <certificate> "modinstaller.exe"
 ```

@@ -28,11 +28,11 @@ func buildGameListWindowsSteam() {
 	buildIdTextPreset := "Build ID: "
 	buildIdText := buildIdTextPreset + "None Selected"
 	buildIdTextWidget := widget.NewLabel(buildIdText)
-
+	var gamePath string
 	gameSelect := widget.NewSelect(gameOptions, func(s string) {
 		for x, y := range index {
 			if y.AppName == s {
-				gamePath := global.Assure(sr.FindAppIDPath(y.AppID))
+				gamePath = global.Assure(sr.FindAppIDPath(y.AppID))
 				gamePathText = gamePathTextPreset + gamePath
 				gamePathTextWidget.SetText(gamePathText)
 
@@ -52,7 +52,10 @@ func buildGameListWindowsSteam() {
 		buildIdTextWidget,
 		gameSelect,
 		container.NewHBox(
-			widget.NewButton("Next", func() { buildPatchHandler() }),
+			widget.NewButton("Next", func() {
+				global.CreateWorkingDirectories(gamePath + "\\")
+				buildPatchHandler()
+			}),
 			widget.NewButton("Cancel", func() { global.App.Quit() }),
 		),
 	))

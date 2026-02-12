@@ -1,4 +1,4 @@
-package guihandler
+package guiHandler
 
 import (
 	"fyne.io/fyne/v2/container"

@@ -1,8 +1,6 @@
-package guihandler
+package guiHandler
 
 import (
-	"strings"
-
 	"github.com/bomkz/patchman/global"
 	"github.com/bomkz/steamutils"
 )
@@ -12,12 +10,8 @@ func InitGui() {
 	if err != nil {
 		global.SteamPath = "Not Installed or Detected."
 	} else {
-		if strings.ToLower(global.OsName) == "windows" {
-			if global.Internet {
-				global.SteamPath = sr.GetSteamPath()
-				buildGameListWindowsSteam()
-			}
-		}
+		global.SteamPath = sr.GetSteamPath()
+		buildGameListSteam()
 	}
 
 	global.MainWindow.ShowAndRun()

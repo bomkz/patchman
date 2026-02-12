@@ -6,7 +6,10 @@ require fyne.io/fyne/v2 v2.7.2
 
 require tawesoft.co.uk/go/dialog v0.0.0-20201103210221-4175697d086f
 
-require github.com/bomkz/steamutils v0.0.1 // indirect
+require (
+	github.com/Microsoft/go-winio v0.6.2 // indirect
+	github.com/bomkz/steamutils v0.0.3 // indirect
+)
 
 require (
 	fyne.io/systray v1.12.0 // indirect

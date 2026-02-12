@@ -2,6 +2,7 @@ package global
 
 import (
 	"archive/zip"
+	"bufio"
 	"errors"
 	"fmt"
 	"io"
@@ -13,18 +14,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bomkz/steamutils"
 	"tawesoft.co.uk/go/dialog"
 )
 
 func UnpackDependencies() {
-	switch OsName {
-	case "windows":
-		CreateAndWriteProgramWorkingDirectory(PatchmanUnityExe, "patchman-unity.exe")
-	case "linux":
-		CreateAndWriteProgramWorkingDirectory(PatchmanUnityLinux, "patchman-unity")
-
-	}
+	CreateAndWriteProgramWorkingDirectory(PatchmanUnity, "patchman-unity.exe")
 	CreateAndWriteProgramWorkingDirectory(ClassDataTpk, "classdata.tpk")
 }
 
@@ -154,6 +148,21 @@ func FatalError(err error) {
 
 }
 
+func WriteHelper(data []byte) {
+	Assure(Cmd.Stdout.Write(data))
+}
+
+func ReadHelper() []byte {
+
+	scanner := bufio.NewScanner(Cmd.Stdin)
+	line := scanner.Text()
+	if line == "exit" {
+		return nil
+	}
+
+	return []byte(line)
+}
+
 func ClearScreen() {
 	if runtime.GOOS == "windows" {
 		cmd := exec.Command("cmd", "/c", "cls")
@@ -189,14 +198,6 @@ func UnzipIntoProgramWorkingDirectory(zipfile string) {
 		rc.Close()
 	}
 
-}
-
-func InitSteamReader() (err error) {
-	SteamReader, err = steamutils.NewSteamReader(steamutils.SteamReaderConfig{})
-	if err != nil {
-		return
-	}
-	return
 }
 
 // Assure is a helper function to avoid boilerplate error handling.

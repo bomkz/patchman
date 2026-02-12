@@ -1,4 +1,4 @@
-package guihandler
+package guiHandler
 
 import "github.com/bomkz/patchman/installHandler/installer"
 

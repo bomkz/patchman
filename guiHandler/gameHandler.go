@@ -1,4 +1,4 @@
-package guihandler
+package guiHandler
 
 import (
 	"encoding/json"
@@ -9,7 +9,7 @@ import (
 	"github.com/bomkz/steamutils"
 )
 
-func buildGameListWindowsSteam() {
+func buildGameListSteam() {
 	sr := global.Assure(steamutils.NewSteamReader(steamutils.SteamReaderConfig{FormatSteamPath: true}))
 
 	global.AssureNoReturn(json.Unmarshal(global.IndexData, &index))
@@ -32,7 +32,8 @@ func buildGameListWindowsSteam() {
 	gameSelect := widget.NewSelect(gameOptions, func(s string) {
 		for x, y := range index {
 			if y.AppName == s {
-				gamePath = global.Assure(sr.FindAppIDPath(y.AppID))
+				games := global.Assure(sr.GetInstalledAppByID(y.AppID))
+				gamePath = games.FullPath
 				gamePathText = gamePathTextPreset + gamePath
 				gamePathTextWidget.SetText(gamePathText)
 
@@ -53,7 +54,9 @@ func buildGameListWindowsSteam() {
 		gameSelect,
 		container.NewHBox(
 			widget.NewButton("Next", func() {
-				global.CreateWorkingDirectories(gamePath + "\\")
+
+				global.CreateWorkingDirectories(gamePath)
+
 				buildPatchHandler()
 			}),
 			widget.NewButton("Cancel", func() { global.App.Quit() }),

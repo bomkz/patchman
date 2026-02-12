@@ -16,7 +16,7 @@ func HandleActions(actionData []byte) {
 	global.AssureNoReturn(json.Unmarshal(actionData, &actionScript))
 
 	for _, x := range actionScript {
-		switch x.Action {
+  		switch x.Action {
 		case "importbundle":
 			batchBundleImport(x.ActionData)
 		case "importasset":

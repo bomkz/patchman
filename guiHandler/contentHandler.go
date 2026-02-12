@@ -1,4 +1,4 @@
-package guihandler
+package guiHandler
 
 import (
 	"encoding/json"

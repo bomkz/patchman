@@ -2,7 +2,6 @@ package global
 
 import (
 	"archive/zip"
-	"bufio"
 	"errors"
 	"fmt"
 	"io"
@@ -41,23 +40,7 @@ func CreateWorkingDirectories(gameDirectory string) {
 	Directory = pwdDir
 
 	gwdDir = gameDirectory
-}
 
-// Copies file from patchRoot to gameRoot
-func CopyFromProgramWorkingDirectory(fileName string, target string) {
-	src := sanitizeFilePath(fileName)
-	dst := sanitizeFilePath(target)
-
-	// Open src file
-	inputFile := Assure(os.Open(pwdDir + "\\.\\" + src))
-	defer inputFile.Close()
-
-	// Create dst file and defer for closing
-	outputFile := Assure(os.Create(gwdDir + "\\.\\" + dst))
-	defer outputFile.Close()
-
-	// Copy contents from src to dst
-	Assure(io.Copy(outputFile, inputFile))
 }
 
 // Copies file from patchRoot to gameRoot
@@ -76,12 +59,6 @@ func CopyToProgramWorkingDirectory(fileName string, target string) {
 	Assure(io.Copy(outputFile, inputFile))
 }
 
-// Deletes file from gwd
-func DeleteFromGameWorkingDirectory(target string) {
-	tgt := sanitizeFilePath(target)
-	AssureNoReturn(os.Remove(gwdDir + "\\.\\" + tgt))
-}
-
 // Cleans up temporary pwd
 func CleanProgramWorkingDirectory() {
 	AssureNoReturn(os.RemoveAll(Directory))
@@ -91,18 +68,6 @@ func CleanProgramWorkingDirectory() {
 func ExistsAtPwd(fileName string) bool {
 	src := sanitizeFilePath(fileName)
 	_, err := os.Stat(pwdDir + "\\.\\" + src)
-	return !os.IsNotExist(err)
-}
-
-// Checks if file exists at given path
-func ExistsAtGwd(fileName string) bool {
-	src := sanitizeFilePath(fileName)
-	_, err := os.Stat(gwdDir + "\\.\\" + src)
-	if os.IsNotExist(err) {
-		return false
-	} else if err != nil {
-		FatalError(err)
-	}
 	return !os.IsNotExist(err)
 }
 
@@ -148,21 +113,6 @@ func FatalError(err error) {
 
 }
 
-func WriteHelper(data []byte) {
-	Assure(Cmd.Stdout.Write(data))
-}
-
-func ReadHelper() []byte {
-
-	scanner := bufio.NewScanner(Cmd.Stdin)
-	line := scanner.Text()
-	if line == "exit" {
-		return nil
-	}
-
-	return []byte(line)
-}
-
 func ClearScreen() {
 	if runtime.GOOS == "windows" {
 		cmd := exec.Command("cmd", "/c", "cls")
@@ -173,14 +123,6 @@ func ClearScreen() {
 		cmd.Stdout = os.Stdout
 		cmd.Run()
 	}
-}
-
-func RenameGameWorkingDirectoryFile(fileName string) {
-	tgt := sanitizeFilePath(fileName)
-
-	AssureNoReturn(os.Rename(gwdDir+"\\.\\"+tgt, gwdDir+"\\.\\"+tgt+".orig"))
-	AssureNoReturn(os.Rename(gwdDir+"\\.\\"+tgt+".mod", gwdDir+"\\.\\"+tgt))
-
 }
 
 // Unzips given zipfile into pwd root

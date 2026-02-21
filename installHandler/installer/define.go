@@ -14,10 +14,6 @@ type PatchmanUnityStruct struct {
 	ModifiedFilePath string                          `json:"modifiedFilePath"`
 	Operations       []PatchmanUnityOperationsStruct `json:"operations"`
 }
-type CopyStruct struct {
-	FileName    string `json:"fileName"`
-	Destination string `json:"destination"`
-}
 
 var Assets []AssetSelection
 

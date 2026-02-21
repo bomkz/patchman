@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/bomkz/patchman/global"
+	"github.com/bomkz/patchman/ipc"
 )
 
 func HandleActions(actionData []byte) {
@@ -16,24 +17,15 @@ func HandleActions(actionData []byte) {
 	global.AssureNoReturn(json.Unmarshal(actionData, &actionScript))
 
 	for _, x := range actionScript {
-  		switch x.Action {
+		switch x.Action {
 		case "importbundle":
 			batchBundleImport(x.ActionData)
 		case "importasset":
 			batchAssetImport(x.ActionData)
 		case "copy":
-			handleCopy(x.ActionData)
+			ipc.Copy(x.ActionData)
 		}
 	}
-
-}
-
-func handleCopy(actionData []byte) {
-	var copyData CopyStruct
-
-	global.AssureNoReturn(json.Unmarshal(actionData, &copyData))
-	copyData.Destination = global.TargetPath + copyData.Destination
-	global.CopyFromProgramWorkingDirectory(copyData.FileName, copyData.Destination)
 
 }
 
@@ -41,7 +33,7 @@ func batchBundleImport(patchmanJson []byte) {
 	var patchmanData PatchmanUnityStruct
 
 	global.AssureNoReturn(json.Unmarshal(patchmanJson, &patchmanData))
-	if !global.ExistsAtGwd(patchmanData.OriginalFilePath) {
+	if !ipc.ExistsAtGwd(patchmanData.OriginalFilePath) {
 		return
 	}
 	if len(Content) >= 1 && Content[1].ContentName != "none" && Content[1].ContentPath != "none" {
@@ -54,7 +46,7 @@ func batchBundleImport(patchmanJson []byte) {
 	gwd := global.GetGwd()
 
 	renameFile := patchmanData.OriginalFilePath
-	patchmanData.OriginalFilePath = gwd + patchmanData.OriginalFilePath
+	patchmanData.OriginalFilePath = gwd + "\\" + patchmanData.OriginalFilePath
 
 	patchmanData.ModifiedFilePath = patchmanData.OriginalFilePath + ".mod"
 
@@ -77,9 +69,9 @@ func batchBundleImport(patchmanJson []byte) {
 
 	createOperationsFile(patchmanData)
 
-	runPatchmanUnityBundles()
+	ipc.PatchBundles(CompressionType)
 
-	global.RenameGameWorkingDirectoryFile(renameFile)
+	ipc.RenameGameWorkingDirectoryFile(renameFile)
 
 }
 
@@ -100,7 +92,7 @@ func batchAssetImport(patchmanJson []byte) {
 
 	renameFile := patchmanData.OriginalFilePath
 
-	patchmanData.OriginalFilePath = gwd + patchmanData.OriginalFilePath
+	patchmanData.OriginalFilePath = gwd + "\\" + patchmanData.OriginalFilePath
 
 	patchmanData.ModifiedFilePath = patchmanData.OriginalFilePath + ".mod"
 
@@ -123,8 +115,8 @@ func batchAssetImport(patchmanJson []byte) {
 
 	createOperationsFile(patchmanData)
 
-	runPatchmanUnityAssets()
+	ipc.PatchAssets()
 
-	global.RenameGameWorkingDirectoryFile(renameFile)
+	ipc.RenameGameWorkingDirectoryFile(renameFile)
 
 }

@@ -6,11 +6,10 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 	"github.com/bomkz/patchman/global"
-	"github.com/bomkz/steamutils"
+	"github.com/bomkz/patchman/ipc"
 )
 
 func buildGameListSteam() {
-	sr := global.Assure(steamutils.NewSteamReader(steamutils.SteamReaderConfig{FormatSteamPath: true}))
 
 	global.AssureNoReturn(json.Unmarshal(global.IndexData, &index))
 
@@ -32,12 +31,12 @@ func buildGameListSteam() {
 	gameSelect := widget.NewSelect(gameOptions, func(s string) {
 		for x, y := range index {
 			if y.AppName == s {
-				games := global.Assure(sr.GetInstalledAppByID(y.AppID))
-				gamePath = games.FullPath
+				game := ipc.GameAppById(y.AppID)
+				gamePath = game.FullPath
 				gamePathText = gamePathTextPreset + gamePath
 				gamePathTextWidget.SetText(gamePathText)
 
-				buildId := global.Assure(sr.FindAppIDBuildID(y.AppID))
+				buildId := game.BuildID
 				buildIdText = buildIdTextPreset + buildId
 				buildIdTextWidget.SetText(buildIdText)
 			}
@@ -56,6 +55,9 @@ func buildGameListSteam() {
 			widget.NewButton("Next", func() {
 
 				global.CreateWorkingDirectories(gamePath)
+
+				ipc.Pwd(global.Directory)
+				ipc.Gwd(gamePath)
 
 				buildPatchHandler()
 			}),

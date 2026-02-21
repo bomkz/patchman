@@ -2,16 +2,9 @@ package global
 
 import (
 	_ "embed"
-	"os/exec"
 
 	"fyne.io/fyne/v2"
 )
-
-var TargetName string
-var TargetBuildID string
-var TargetAppID string
-var TargetPath string
-var TargetPathCheck string
 
 //go:embed classData.tpk
 var ClassDataTpk []byte
@@ -37,7 +30,13 @@ var IndexMotd string
 
 var SteamPath string
 
+var Helper bool
+
 var App fyne.App
 
 var MainWindow fyne.Window
-var Cmd *exec.Cmd
+
+type Message struct {
+	Type    string `json:"type"`
+	Payload []byte `json:"payload"`
+}

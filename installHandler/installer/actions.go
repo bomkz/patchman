@@ -36,7 +36,7 @@ func batchBundleImport(patchmanJson []byte) {
 	if !ipc.ExistsAtGwd(patchmanData.OriginalFilePath) {
 		return
 	}
-	if len(Content) >= 1 && Content[1].ContentName != "none" && Content[1].ContentPath != "none" {
+	if len(Content) >= 1 && Content[0].ContentName != "none" && Content[0].ContentPath != "none" {
 		for _, x := range Content {
 			if patchmanData.OriginalFilePath == x.ContentPath && !x.Modify {
 				return
@@ -50,7 +50,7 @@ func batchBundleImport(patchmanJson []byte) {
 
 	patchmanData.ModifiedFilePath = patchmanData.OriginalFilePath + ".mod"
 
-	if len(Assets) >= 1 && Assets[1].AssetName != "none" {
+	if len(Assets) >= 1 && Assets[0].AssetName != "none" {
 		var tmpOperations []PatchmanUnityOperationsStruct
 
 		for _, x := range Assets {
@@ -96,7 +96,7 @@ func batchAssetImport(patchmanJson []byte) {
 
 	patchmanData.ModifiedFilePath = patchmanData.OriginalFilePath + ".mod"
 
-	if len(Assets) >= 1 && Assets[1].AssetName != "none" {
+	if len(Assets) >= 1 && Assets[0].AssetName != "none" {
 		var tmpOperations []PatchmanUnityOperationsStruct
 
 		for _, x := range Assets {

@@ -142,7 +142,6 @@ func beginInstall() {
 
 	installer.Content = preset.PatchContentSelection
 	installer.Assets = preset.PatchAssetSelection
-	installHandler.HandleActionScript(patchscript)
-	handleFinish()
-
+	go installHandler.HandleActionScript(patchscript)
+	buildInstaller()
 }

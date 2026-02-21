@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"syscall"
 	"time"
 
 	"github.com/bomkz/patchman/ipc/procman"
@@ -64,6 +65,10 @@ func patchAssets() {
 	switch runtime.GOOS {
 	case "windows":
 		cmd := exec.Command(pwdDir+"\\patchman-unity.exe", "batchimportasset", pwdDir+".\\operations.json", pwdDir+".\\classdata.tpk")
+		cmd.SysProcAttr = &syscall.SysProcAttr{
+			HideWindow:    true,
+			CreationFlags: 0x08000000,
+		}
 		var out bytes.Buffer
 		cmd.Stdout = &out
 
@@ -114,6 +119,10 @@ func patchBundles(CompressionType string) {
 	switch runtime.GOOS {
 	case "windows":
 		cmd := exec.Command(pwdDir+"\\patchman-unity.exe", "batchimportbundle", pwdDir+".\\operations.json", CompressionType)
+		cmd.SysProcAttr = &syscall.SysProcAttr{
+			HideWindow:    true,
+			CreationFlags: 0x08000000,
+		}
 		var out bytes.Buffer
 		cmd.Stdout = &out
 
@@ -209,9 +218,9 @@ func checkExistsAtGwd(fileName string) bool {
 func existsAtGwd(fileName string) {
 	exists := checkExistsAtGwd(fileName)
 	if exists {
-		procman.Write("existsatgwd", []byte("true"))
+		procman.Write("true", nil)
 	} else {
-		procman.Write("existsatgwd", []byte("false"))
+		procman.Write("false", nil)
 	}
 
 }

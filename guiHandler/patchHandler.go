@@ -1,8 +1,6 @@
 package guiHandler
 
 import (
-	"os"
-
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 	"github.com/bomkz/patchman/global"
@@ -57,7 +55,7 @@ func buildPatchHandler() {
 		patchLinkWidget,
 		container.NewHBox(
 			widget.NewButton("Next", func() { handlePatch() }),
-			widget.NewButton("Custom", func() { os.Exit(0) }),
+			widget.NewButton("Custom", func() { buildCustomPatchHandler() }),
 			widget.NewButton("Cancel", func() { global.ExitSuccess() }),
 		),
 	))

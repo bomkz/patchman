@@ -17,6 +17,7 @@ Trouble downloading or reading https://github.com/bomkz/patchman-index, possible
 var Directory string
 
 var OsName string
+var Installed = make(chan bool)
 
 var PatchmanUnityDir string
 

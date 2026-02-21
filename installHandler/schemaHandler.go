@@ -16,6 +16,7 @@ func HandleActionScript(actionscript []byte) {
 	if actionScript.Patchscriptversion == 1 {
 		installer.HandleActions(actionScript.Data)
 	}
+	global.Installed <- true
 }
 
 func BeginTestJson() {

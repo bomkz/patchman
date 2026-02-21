@@ -47,7 +47,7 @@ func initParent() {
 
 	go handleRead(conn)
 	go handleWrite(conn)
-	//go heartBeat()
+	go heartBeat()
 
 }
 
@@ -71,7 +71,7 @@ func initHelper() {
 
 	go handleRead(conn)
 	go handleWrite(conn)
-	//go heartBeat()
+	go heartBeat()
 }
 
 func launchHelper() int {
@@ -177,11 +177,11 @@ func handleRead(conn net.Conn) {
 
 func heartBeat() {
 	for {
-		time.Sleep(1000 * time.Second)
+		time.Sleep(30 * time.Second)
 		var ping = global.Message{Type: "ping"}
 		WriteMsg <- ping
 		select {
-		case <-time.Tick(10000 * time.Second):
+		case <-time.Tick(60 * time.Second):
 			if global.Helper {
 				// Section 1
 				writeLogPriviledged(errors.New("Patchman unexpectedly quit."), "heartBeat():S1")

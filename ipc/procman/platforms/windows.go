@@ -177,11 +177,11 @@ func handleRead(conn net.Conn) {
 
 func heartBeat() {
 	for {
-		time.Sleep(30 * time.Second)
+		time.Sleep(5 * time.Second)
 		var ping = global.Message{Type: "ping"}
 		WriteMsg <- ping
 		select {
-		case <-time.Tick(60 * time.Second):
+		case <-time.Tick(10 * time.Second):
 			if global.Helper {
 				// Section 1
 				writeLogPriviledged(errors.New("Patchman unexpectedly quit."), "heartBeat():S1")

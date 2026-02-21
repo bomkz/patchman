@@ -19,6 +19,7 @@ func buildGameListSteam() {
 
 	steamPathText := "Steam Path: " + global.SteamPath
 	steamPathTextWidget := widget.NewLabel(steamPathText)
+	motdText := widget.NewLabel(global.IndexMotd)
 
 	gamePathTextPreset := "Game Path: "
 	gamePathText := gamePathTextPreset + "None Selected"
@@ -51,6 +52,7 @@ func buildGameListSteam() {
 		gamePathTextWidget,
 		buildIdTextWidget,
 		gameSelect,
+		motdText,
 		container.NewHBox(
 			widget.NewButton("Next", func() {
 

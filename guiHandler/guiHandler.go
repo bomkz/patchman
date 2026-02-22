@@ -17,6 +17,9 @@ import (
 func InitGui() {
 	global.SteamPath, global.SteamFound = ipc.SteamPath()
 	global.MainWindow.SetContent(widget.NewLabel(""))
+	global.MainWindow.SetCloseIntercept(func() {
+		os.Exit(0)
+	})
 	go func() {
 		validateCustomGames()
 		buildGameListSteam()
@@ -29,7 +32,7 @@ func validateCustomGames() {
 	_, err := os.Stat(customDir)
 
 	if err != nil {
-		if !errors.Is(err, os.ErrNotExist) {
+		if errors.Is(err, os.ErrNotExist) {
 			return
 
 		}
@@ -105,24 +108,26 @@ func fixPath(resource string, resourceType string) (newPath string) {
 				}
 			}, global.MainWindow)
 
-			global.MainWindow.SetContent(container.NewVBox(
-				errorLabel,
-				newLocation,
-				widget.NewButton("Open File Picker", func() {
-					newLocationFilePickerDialog.Show()
-				}),
-				widget.NewButton("Save", func() {
-					_, err := os.Stat(newLocation.Text)
-					if err != nil {
-						if errors.Is(err, os.ErrNotExist) {
-							return
+			fyne.DoAndWait(func() {
+				global.MainWindow.SetContent(container.NewVBox(
+					errorLabel,
+					newLocation,
+					widget.NewButton("Open File Picker", func() {
+						newLocationFilePickerDialog.Show()
+					}),
+					widget.NewButton("Save", func() {
+						_, err := os.Stat(newLocation.Text)
+						if err != nil {
+							if errors.Is(err, os.ErrNotExist) {
+								return
+							}
 						}
-					}
 
-					newPathChan <- newLocation.Text
+						newPathChan <- newLocation.Text
 
-				}),
-			))
+					}),
+				))
+			})
 		}
 		if resourceType == "folder" {
 			newLocationFolderPickerDialog := dialog.NewFolderOpen(func(lu fyne.ListableURI, err error) {
@@ -142,29 +147,27 @@ func fixPath(resource string, resourceType string) (newPath string) {
 					newLocation.SetText(filePath)
 				}
 			}, global.MainWindow)
+			fyne.DoAndWait(func() {
 
-			global.MainWindow.SetCloseIntercept(func() {
-				os.Exit(0)
-			})
+				global.MainWindow.SetContent(container.NewVBox(
+					errorLabel,
+					newLocation,
+					widget.NewButton("Open Folder Picker", func() {
+						newLocationFolderPickerDialog.Show()
+					}),
+					widget.NewButton("Save", func() {
 
-			global.MainWindow.SetContent(container.NewVBox(
-				errorLabel,
-				newLocation,
-				widget.NewButton("Open Folder Picker", func() {
-					newLocationFolderPickerDialog.Show()
-				}),
-				widget.NewButton("Save", func() {
-
-					_, err := os.Stat(newLocation.Text)
-					if err != nil {
-						if errors.Is(err, os.ErrNotExist) {
-							return
+						_, err := os.Stat(newLocation.Text)
+						if err != nil {
+							if errors.Is(err, os.ErrNotExist) {
+								return
+							}
 						}
-					}
-					newPathChan <- newLocation.Text
+						newPathChan <- newLocation.Text
 
-				}),
-			))
+					}),
+				))
+			})
 		}
 	}()
 	newPath = <-newPathChan

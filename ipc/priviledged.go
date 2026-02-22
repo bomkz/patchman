@@ -1,21 +1,18 @@
 package ipc
 
 import (
-	"bytes"
 	"encoding/json"
 	"io"
 	"os"
-	"os/exec"
-	"runtime"
-	"syscall"
 	"time"
 
+	"github.com/bomkz/patchman/global"
 	"github.com/bomkz/patchman/ipc/procman"
 	"github.com/bomkz/steamutils"
 )
 
-func steamPath() {
-	sr, err := steamutils.NewSteamReader(steamutils.SteamReaderConfig{})
+func steamPath(user string) {
+	sr, err := steamutils.NewSteamReader(steamutils.SteamReaderConfig{UserName: user})
 	if err != nil {
 		procman.Write("error", []byte(err.Error()))
 		return
@@ -62,98 +59,19 @@ func StartHelper() {
 	messageHandler()
 }
 
-func patchAssets() {
-	switch runtime.GOOS {
-	case "windows":
-		cmd := exec.Command(pwdDir+"\\patchman-unity.exe", "batchimportasset", pwdDir+".\\operations.json", pwdDir+".\\classdata.tpk")
-		cmd.SysProcAttr = &syscall.SysProcAttr{
-			HideWindow:    true,
-			CreationFlags: 0x08000000,
-		}
-		var out bytes.Buffer
-		cmd.Stdout = &out
-
-		err := cmd.Run()
-		if err != nil {
-			procman.Write("error", []byte(err.Error()))
-		}
-
-		if out.String() != "Done!" {
-			procman.Write("error", out.Bytes())
-		}
-		procman.Write("success", nil)
-
-	case "linux":
-		cmd := exec.Command(pwdDir+"\\patchman-unity", "batchimportasset", pwdDir+".\\operations.json")
-		var out bytes.Buffer
-		cmd.Stdout = &out
-
-		err := cmd.Run()
-		if err != nil {
-			procman.Write("error", []byte(err.Error()))
-		}
-
-		if out.String() != "Done!" {
-			procman.Write("error", out.Bytes())
-		}
-
-		procman.Write("success", nil)
-	}
-
-}
 func renameGameWorkingDirectoryFile(fileName string) {
 	tgt := fileName
 
-	err := os.Rename(gwdDir+"\\.\\"+tgt, gwdDir+"\\.\\"+tgt+".orig")
+	err := os.Rename(gwdDir+global.PathSeparator()+"."+global.PathSeparator()+tgt, gwdDir+global.PathSeparator()+"."+global.PathSeparator()+tgt+".orig")
 	if err != nil {
 		procman.Write("error", []byte(err.Error()))
 	}
-	err = os.Rename(gwdDir+"\\.\\"+tgt+".mod", gwdDir+"\\.\\"+tgt)
+	err = os.Rename(gwdDir+global.PathSeparator()+"."+global.PathSeparator()+tgt+".mod", gwdDir+global.PathSeparator()+"."+global.PathSeparator()+tgt)
 	if err != nil {
 		procman.Write("error", []byte(err.Error()))
 	}
 
 	procman.Write("success", nil)
-}
-
-func patchBundles(CompressionType string) {
-	switch runtime.GOOS {
-	case "windows":
-		cmd := exec.Command(pwdDir+"\\patchman-unity.exe", "batchimportbundle", pwdDir+".\\operations.json", CompressionType)
-		cmd.SysProcAttr = &syscall.SysProcAttr{
-			HideWindow:    true,
-			CreationFlags: 0x08000000,
-		}
-		var out bytes.Buffer
-		cmd.Stdout = &out
-
-		err := cmd.Run()
-		if err != nil {
-			procman.Write("error", []byte(err.Error()))
-		}
-
-		if out.String() != "Done!" {
-			procman.Write("error", out.Bytes())
-		}
-
-		procman.Write("success", nil)
-
-	default:
-		cmd := exec.Command(pwdDir+"\\patchman-unity", "batchimportbundle", pwdDir+".\\operations.json", CompressionType)
-		var out bytes.Buffer
-		cmd.Stdout = &out
-
-		err := cmd.Run()
-		if err != nil {
-			procman.Write("error", []byte(err.Error()))
-		}
-
-		if out.String() != "Done!" {
-			procman.Write("error", out.Bytes())
-		}
-		procman.Write("success", nil)
-
-	}
 }
 
 // Copies file from patchRoot to gameRoot
@@ -162,14 +80,14 @@ func CopyFromProgramWorkingDirectory(fileName string, target string) {
 	dst := target
 
 	// Open src file
-	inputFile, err := os.Open(pwdDir + "\\.\\" + src)
+	inputFile, err := os.Open(pwdDir + global.PathSeparator() + "." + global.PathSeparator() + src)
 	if err != nil {
 		fatalErrorPriviledged(err)
 	}
 	defer inputFile.Close()
 
 	// Create dst file and defer for closing
-	outputFile, err := os.Create(gwdDir + "\\.\\" + dst)
+	outputFile, err := os.Create(gwdDir + global.PathSeparator() + "." + global.PathSeparator() + dst)
 	if err != nil {
 		fatalErrorPriviledged(err)
 	}
@@ -207,7 +125,7 @@ var gwdDir string
 
 func checkExistsAtGwd(fileName string) bool {
 	src := fileName
-	_, err := os.Stat(gwdDir + "\\.\\" + src)
+	_, err := os.Stat(gwdDir + global.PathSeparator() + "." + global.PathSeparator() + src)
 	if os.IsNotExist(err) {
 		return false
 	} else if err != nil {
@@ -232,7 +150,7 @@ func messageHandler() {
 
 		switch string(message.Type) {
 		case "steampath":
-			steamPath()
+			steamPath(string(message.Payload))
 		case "gameappbyid":
 			appId := string(message.Payload)
 			gameByAppId(appId)

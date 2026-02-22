@@ -33,20 +33,22 @@ func buildCustomPatchHandler() {
 
 	filePicker.SetFilter(storage.NewExtensionFileFilter([]string{".zip"}))
 
-	global.MainWindow.SetContent(container.NewVBox(
-		info,
-		dir,
-		widget.NewButton("Open Picker", func() { filePicker.Show() }),
-		blank,
-		container.NewHBox(
-			widget.NewButton("Next", func() {
-				writeToPwd(fileDir)
-				global.UnzipIntoProgramWorkingDirectory("./patchman.zip")
-				buildContentHandler()
-			}),
-			widget.NewButton("Cancel", func() { global.ExitSuccess() }),
-		),
-	))
+	fyne.DoAndWait(func() {
+		global.MainWindow.SetContent(container.NewVBox(
+			info,
+			dir,
+			widget.NewButton("Open Picker", func() { filePicker.Show() }),
+			blank,
+			container.NewHBox(
+				widget.NewButton("Next", func() {
+					writeToPwd(fileDir)
+					global.UnzipIntoProgramWorkingDirectory("./patchman.zip")
+					buildContentHandler()
+				}),
+				widget.NewButton("Cancel", func() { global.ExitSuccess() }),
+			),
+		))
+	})
 }
 
 func writeToPwd(openedFile string) {

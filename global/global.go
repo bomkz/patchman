@@ -26,7 +26,7 @@ func CreateAndWriteProgramWorkingDirectory(fileByte []byte, target string) {
 	dst := sanitizeFilePath(target)
 
 	// Create file, defer for close.
-	outputFile := Assure(os.Create(pwdDir + "\\.\\" + dst))
+	outputFile := Assure(os.Create(pwdDir + PathSeparator() + "." + PathSeparator() + dst))
 	defer outputFile.Close()
 
 	// Write file contents
@@ -35,7 +35,7 @@ func CreateAndWriteProgramWorkingDirectory(fileByte []byte, target string) {
 
 func CreateWorkingDirectories(gameDirectory string) {
 
-	pwdDir = Assure(os.MkdirTemp(".\\", "patchman-"))
+	pwdDir = Assure(os.MkdirTemp("", "patchman-"))
 
 	Directory = pwdDir
 
@@ -52,7 +52,7 @@ func CopyToProgramWorkingDirectory(fileName string, target string) {
 	defer inputFile.Close()
 
 	// Create dst file and defer for closing
-	outputFile := Assure(os.Create(pwdDir + "\\.\\" + dst))
+	outputFile := Assure(os.Create(pwdDir + PathSeparator() + "." + PathSeparator() + dst))
 	defer outputFile.Close()
 
 	// Copy contents from src to dst
@@ -67,7 +67,7 @@ func CleanProgramWorkingDirectory() {
 // Checks if file exists at given path
 func ExistsAtPwd(fileName string) bool {
 	src := sanitizeFilePath(fileName)
-	_, err := os.Stat(pwdDir + "\\.\\" + src)
+	_, err := os.Stat(pwdDir + PathSeparator() + "." + PathSeparator() + src)
 	return !os.IsNotExist(err)
 }
 
@@ -78,7 +78,7 @@ func GetGwd() string {
 // Downloads file from URL to given path in pwd
 func DownloadFileToProgramWorkingDirectory(filePath, url string) {
 	dst := sanitizeFilePath(filePath)
-	outputFile := Assure(os.Create(pwdDir + "\\.\\" + dst))
+	outputFile := Assure(os.Create(pwdDir + PathSeparator() + "." + PathSeparator() + dst))
 	defer outputFile.Close()
 
 	resp := Assure(http.Get(url))
@@ -89,6 +89,13 @@ func DownloadFileToProgramWorkingDirectory(filePath, url string) {
 	}
 
 	Assure(io.Copy(outputFile, resp.Body))
+}
+
+func PathSeparator() string {
+	if OsName == "windows" {
+		return "\\"
+	}
+	return "/"
 }
 
 func FatalError(err error) {
@@ -146,11 +153,11 @@ func ClearScreen() {
 
 // Unzips given zipfile into pwd root
 func UnzipIntoProgramWorkingDirectory(zipfile string) {
-	r := Assure(zip.OpenReader(pwdDir + "\\.\\" + zipfile))
+	r := Assure(zip.OpenReader(pwdDir + PathSeparator() + "." + PathSeparator() + zipfile))
 	defer r.Close()
 
 	for _, f := range r.File {
-		outFile := Assure(os.OpenFile(pwdDir+"\\.\\"+f.Name, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode()))
+		outFile := Assure(os.OpenFile(pwdDir+PathSeparator()+"."+PathSeparator()+f.Name, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode()))
 
 		rc := Assure(f.Open())
 

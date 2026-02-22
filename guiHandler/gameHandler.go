@@ -2,9 +2,11 @@ package guiHandler
 
 import (
 	"encoding/json"
+	"errors"
 	"os"
 	"strings"
 
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 	"github.com/bomkz/patchman/global"
@@ -18,7 +20,12 @@ func buildGameListSteam() {
 		global.AssureNoReturn(json.Unmarshal(global.IndexData, &index))
 	}
 
-	customGameDir := global.Assure(os.ReadDir(global.Assure(os.UserHomeDir()) + PathSeparator() + "patchman"))
+	customGameDir, err := os.ReadDir(global.Assure(os.UserHomeDir()) + PathSeparator() + "patchman")
+	if err != nil {
+		if !errors.Is(err, os.ErrNotExist) {
+			global.FatalError(err)
+		}
+	}
 	for _, x := range customGameDir {
 
 		gameByte := global.Assure(os.ReadFile(global.Assure(os.UserHomeDir()) + PathSeparator() + "patchman" + PathSeparator() + x.Name()))
@@ -125,31 +132,33 @@ func buildGameListSteam() {
 	})
 
 	gameSelect.PlaceHolder = "Select game to modify"
+	fyne.DoAndWait(func() {
+		global.MainWindow.SetContent(container.NewVBox(
+			steamPathTextWidget,
+			gamePathTextWidget,
+			buildIdTextWidget,
+			gameSelect,
+			motdText,
+			container.NewHBox(
+				widget.NewButton("Next", func() {
 
-	global.MainWindow.SetContent(container.NewVBox(
-		steamPathTextWidget,
-		gamePathTextWidget,
-		buildIdTextWidget,
-		gameSelect,
-		motdText,
-		container.NewHBox(
-			widget.NewButton("Next", func() {
+					if buildIdTextWidget.Text == buildIdTextPreset+"N/A" || buildIdTextWidget.Text == buildIdTextPreset+"None Selected" {
+						return
+					}
+					if customGame {
+						buildCustomGame()
+						return
+					}
+					global.CreateWorkingDirectories(gamePath)
 
-				if buildIdTextWidget.Text == buildIdTextPreset+"N/A" || buildIdTextWidget.Text == buildIdTextPreset+"None Selected" {
-					return
-				}
-				if customGame {
-					buildCustomGame()
-					return
-				}
-				global.CreateWorkingDirectories(gamePath)
+					ipc.Pwd(global.Directory)
+					ipc.Gwd(gamePath)
 
-				ipc.Pwd(global.Directory)
-				ipc.Gwd(gamePath)
+					buildPatchHandler()
+				}),
+				widget.NewButton("Cancel", func() { global.App.Quit() }),
+			),
+		))
+	})
 
-				buildPatchHandler()
-			}),
-			widget.NewButton("Cancel", func() { global.App.Quit() }),
-		),
-	))
 }

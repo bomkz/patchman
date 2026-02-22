@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 	"github.com/bomkz/patchman/global"
@@ -55,18 +56,20 @@ func buildContentHandler() {
 	assetCheckGroup.SetSelected(preset.Assets)
 
 	compressionSelect := widget.NewSelect([]string{"None", "LZMA", "LZ4"}, func(s string) { preset.Compression = s })
-	global.MainWindow.SetContent(container.NewVBox(
-		container.NewHBox(
-			assetCheckGroup,
-			contentCheckGroup,
-		),
-		compressionSelect,
+	fyne.DoAndWait(func() {
+		global.MainWindow.SetContent(container.NewVBox(
+			container.NewHBox(
+				assetCheckGroup,
+				contentCheckGroup,
+			),
+			compressionSelect,
 
-		container.NewHBox(
-			widget.NewButton("Next", func() { beginInstall() }),
-			widget.NewButton("Cancel", func() { global.ExitSuccess() }),
-		),
-	))
+			container.NewHBox(
+				widget.NewButton("Next", func() { beginInstall() }),
+				widget.NewButton("Cancel", func() { global.ExitSuccess() }),
+			),
+		))
+	})
 }
 
 func buildAssetContentList() {
@@ -81,7 +84,7 @@ func buildAssetContentList() {
 func detectModifiedAssetsContent() {
 	var actionScript installHandler.ActionScriptStruct
 
-	actionscript := global.Assure(os.ReadFile(global.Directory + ".\\patchscript.json"))
+	actionscript := global.Assure(os.ReadFile(global.Directory + global.PathSeparator() + "patchscript.json"))
 
 	global.AssureNoReturn(json.Unmarshal(actionscript, &actionScript))
 
@@ -138,7 +141,7 @@ func detectModifiedAssetsContent() {
 
 func beginInstall() {
 	global.UnpackDependencies()
-	patchscript := global.Assure(os.ReadFile(global.Directory + "\\patchscript.json"))
+	patchscript := global.Assure(os.ReadFile(global.Directory + global.PathSeparator() + "patchscript.json"))
 
 	installer.Content = preset.PatchContentSelection
 	installer.Assets = preset.PatchAssetSelection

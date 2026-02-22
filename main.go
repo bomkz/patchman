@@ -1,10 +1,8 @@
-//go:build windows
-// +build windows
+//go:build linux
 
 package main
 
 import (
-	"fmt"
 	"runtime"
 
 	"fyne.io/fyne/v2/app"
@@ -17,7 +15,6 @@ import (
 
 func main() {
 
-	fmt.Println("meow")
 	procman.InitProcess()
 
 	if !global.Helper {

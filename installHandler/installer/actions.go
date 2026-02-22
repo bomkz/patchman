@@ -2,6 +2,7 @@ package installer
 
 import (
 	"encoding/json"
+	"strings"
 
 	"github.com/bomkz/patchman/global"
 	"github.com/bomkz/patchman/ipc"
@@ -45,8 +46,11 @@ func batchBundleImport(patchmanJson []byte) {
 	}
 	gwd := global.GetGwd()
 
+	patchmanData.OriginalFilePath = strings.ReplaceAll(patchmanData.OriginalFilePath, "/", global.PathSeparator())
+	patchmanData.OriginalFilePath = strings.ReplaceAll(patchmanData.OriginalFilePath, "\\", global.PathSeparator())
+
 	renameFile := patchmanData.OriginalFilePath
-	patchmanData.OriginalFilePath = gwd + "\\" + patchmanData.OriginalFilePath
+	patchmanData.OriginalFilePath = gwd + global.PathSeparator() + patchmanData.OriginalFilePath
 
 	patchmanData.ModifiedFilePath = patchmanData.OriginalFilePath + ".mod"
 
@@ -90,9 +94,12 @@ func batchAssetImport(patchmanJson []byte) {
 
 	gwd := global.GetGwd()
 
+	patchmanData.OriginalFilePath = strings.ReplaceAll(patchmanData.OriginalFilePath, "/", global.PathSeparator())
+	patchmanData.OriginalFilePath = strings.ReplaceAll(patchmanData.OriginalFilePath, "\\", global.PathSeparator())
+
 	renameFile := patchmanData.OriginalFilePath
 
-	patchmanData.OriginalFilePath = gwd + "\\" + patchmanData.OriginalFilePath
+	patchmanData.OriginalFilePath = gwd + global.PathSeparator() + patchmanData.OriginalFilePath
 
 	patchmanData.ModifiedFilePath = patchmanData.OriginalFilePath + ".mod"
 

@@ -1,6 +1,7 @@
 package guiHandler
 
 import (
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 	"github.com/bomkz/patchman/global"
@@ -47,18 +48,21 @@ func buildPatchHandler() {
 		}
 	})
 
-	global.MainWindow.SetContent(container.NewVBox(
-		patchSelect,
-		variantSelect,
-		patchDescWidget,
-		patchAuthWidget,
-		patchLinkWidget,
-		container.NewHBox(
-			widget.NewButton("Next", func() { handlePatch() }),
-			widget.NewButton("Custom", func() { buildCustomPatchHandler() }),
-			widget.NewButton("Cancel", func() { global.ExitSuccess() }),
-		),
-	))
+	fyne.DoAndWait(func() {
+		global.MainWindow.SetContent(container.NewVBox(
+			patchSelect,
+			variantSelect,
+			patchDescWidget,
+			patchAuthWidget,
+			patchLinkWidget,
+			container.NewHBox(
+				widget.NewButton("Next", func() { handlePatch() }),
+				widget.NewButton("Custom", func() { buildCustomPatchHandler() }),
+				widget.NewButton("Cancel", func() { global.ExitSuccess() }),
+			),
+		))
+		global.MainWindow.Resize(fyne.NewSize(400, 200))
+	})
 }
 
 func handlePatch() {

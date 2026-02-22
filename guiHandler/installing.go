@@ -32,9 +32,11 @@ func buildInstaller() {
 		playGIF(missile.Missile, img)
 	}
 
-	global.MainWindow.SetContent(container.NewVBox(installingText,
-		img))
-	global.MainWindow.Resize(fyne.NewSize(250, 100))
+	fyne.DoAndWait(func() {
+		global.MainWindow.SetContent(container.NewVBox(installingText,
+			img))
+		global.MainWindow.Resize(fyne.NewSize(250, 100))
+	})
 
 }
 

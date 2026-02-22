@@ -3,6 +3,7 @@ package ipc
 import (
 	"encoding/json"
 	"errors"
+	"os/user"
 
 	"github.com/bomkz/patchman/global"
 	"github.com/bomkz/patchman/ipc/procman"
@@ -11,7 +12,8 @@ import (
 
 func SteamPath() (steamPath string, found bool) {
 
-	procman.Write("steampath", nil)
+	curUser := global.Assure(user.Current())
+	procman.Write("steampath", []byte(curUser.Username))
 	msg := procman.Read()
 
 	switch msg.Type {

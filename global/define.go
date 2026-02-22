@@ -6,7 +6,7 @@ import (
 	"fyne.io/fyne/v2"
 )
 
-//go:embed classData.tpk
+//go:embed classdata.tpk
 var ClassDataTpk []byte
 
 var Internet bool = true

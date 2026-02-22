@@ -68,109 +68,111 @@ func buildCustomGame() {
 		}
 	}, global.MainWindow)
 
-	global.MainWindow.SetContent(container.NewVBox(
-		gameNameWidget,
-		gameLocationEntryWidget,
-		widget.NewButton("Folder Picker", func() {
-			gameLocationFolderPickerDialog.Show()
-		}),
-		contentNameEntryWidget,
-		contentLocationEntryWidget,
-		widget.NewButton("File Picker", func() { contentLocationFilePickerDialog.Show() }),
-		container.NewHBox(
-			widget.NewButton("Add", func() {
-
-				if contentLocationEntryWidget.Text == "" {
-					return
-				}
-				if contentNameEntryWidget.Text == "" {
-					return
-				}
-				newContent := Content{
-					Name: contentNameEntryWidget.Text,
-					Path: contentLocationEntryWidget.Text,
-				}
-				contents = append(contents, newContent)
-				contentsString := []string{}
-
-				for _, x := range contents {
-					contentsString = append(contentsString, x.Name)
-				}
-				contentListWidget.SetOptions(contentsString)
+	fyne.DoAndWait(func() {
+		global.MainWindow.SetContent(container.NewVBox(
+			gameNameWidget,
+			gameLocationEntryWidget,
+			widget.NewButton("Folder Picker", func() {
+				gameLocationFolderPickerDialog.Show()
 			}),
-			widget.NewButton("Remove", func() {
-				tmpContents := []Content{}
-				for _, x := range contents {
+			contentNameEntryWidget,
+			contentLocationEntryWidget,
+			widget.NewButton("File Picker", func() { contentLocationFilePickerDialog.Show() }),
+			container.NewHBox(
+				widget.NewButton("Add", func() {
 
-					if x.Name == contentListWidget.Selected {
-						continue
+					if contentLocationEntryWidget.Text == "" {
+						return
 					}
-					tmpContents = append(tmpContents, x)
-					contents = tmpContents
-
+					if contentNameEntryWidget.Text == "" {
+						return
+					}
+					newContent := Content{
+						Name: contentNameEntryWidget.Text,
+						Path: contentLocationEntryWidget.Text,
+					}
+					contents = append(contents, newContent)
 					contentsString := []string{}
+
 					for _, x := range contents {
 						contentsString = append(contentsString, x.Name)
 					}
 					contentListWidget.SetOptions(contentsString)
-					contentListWidget.ClearSelected()
-				}
+				}),
+				widget.NewButton("Remove", func() {
+					tmpContents := []Content{}
+					for _, x := range contents {
 
-			}),
-			contentListWidget,
-		),
-		container.NewHBox(
-			widget.NewButton("Save Custom Game", func() {
-				if len(contents) == 0 {
-					return
-				}
-				if gameNameWidget.Text == "" {
-					return
-				}
-				if gameLocationEntryWidget.Text == "" {
-					return
-				}
+						if x.Name == contentListWidget.Selected {
+							continue
+						}
+						tmpContents = append(tmpContents, x)
+						contents = tmpContents
 
-				type customGame struct {
-					Name     string    `json:"name"`
-					Location string    `json:"location"`
-					Content  []Content `json:"content"`
-				}
-
-				newGame := CustomGame{
-					Name:     gameNameWidget.Text,
-					Location: gameLocationEntryWidget.Text,
-					Content:  contents,
-				}
-				saveGame(newGame)
-
-			}),
-			widget.NewButton("Import Custom Game", func() {
-				importPicker := dialog.NewFileOpen(func(reader fyne.URIReadCloser, err error) {
-					if err != nil {
-						global.FatalError(err)
+						contentsString := []string{}
+						for _, x := range contents {
+							contentsString = append(contentsString, x.Name)
+						}
+						contentListWidget.SetOptions(contentsString)
+						contentListWidget.ClearSelected()
 					}
 
-					if reader != nil {
-						tmpGame := CustomGame{}
-						gameByte := global.Assure(io.ReadAll(reader))
-						global.AssureNoReturn(json.Unmarshal(gameByte, &tmpGame))
-						tmpGame.Location = strings.ReplaceAll(tmpGame.Location, "\\", PathSeparator())
-						tmpGame.Location = strings.ReplaceAll(tmpGame.Location, "/", PathSeparator())
-						for x := range tmpGame.Content {
-							tmpGame.Content[x].Path = strings.ReplaceAll(tmpGame.Content[x].Path, "\\", PathSeparator())
-							tmpGame.Content[x].Path = strings.ReplaceAll(tmpGame.Content[x].Path, "/", PathSeparator())
+				}),
+				contentListWidget,
+			),
+			container.NewHBox(
+				widget.NewButton("Save Custom Game", func() {
+					if len(contents) == 0 {
+						return
+					}
+					if gameNameWidget.Text == "" {
+						return
+					}
+					if gameLocationEntryWidget.Text == "" {
+						return
+					}
 
+					type customGame struct {
+						Name     string    `json:"name"`
+						Location string    `json:"location"`
+						Content  []Content `json:"content"`
+					}
+
+					newGame := CustomGame{
+						Name:     gameNameWidget.Text,
+						Location: gameLocationEntryWidget.Text,
+						Content:  contents,
+					}
+					saveGame(newGame)
+
+				}),
+				widget.NewButton("Import Custom Game", func() {
+					importPicker := dialog.NewFileOpen(func(reader fyne.URIReadCloser, err error) {
+						if err != nil {
+							global.FatalError(err)
 						}
 
-						os.WriteFile(global.Assure(os.UserHomeDir())+tmpGame.Name, gameByte, 0755)
-					}
-				}, global.MainWindow)
-				importPicker.Show()
-			}),
-			widget.NewButton("Cancel", func() { global.App.Quit() }),
-		),
-	))
+						if reader != nil {
+							tmpGame := CustomGame{}
+							gameByte := global.Assure(io.ReadAll(reader))
+							global.AssureNoReturn(json.Unmarshal(gameByte, &tmpGame))
+							tmpGame.Location = strings.ReplaceAll(tmpGame.Location, "\\", PathSeparator())
+							tmpGame.Location = strings.ReplaceAll(tmpGame.Location, "/", PathSeparator())
+							for x := range tmpGame.Content {
+								tmpGame.Content[x].Path = strings.ReplaceAll(tmpGame.Content[x].Path, "\\", PathSeparator())
+								tmpGame.Content[x].Path = strings.ReplaceAll(tmpGame.Content[x].Path, "/", PathSeparator())
+
+							}
+
+							os.WriteFile(global.Assure(os.UserHomeDir())+tmpGame.Name, gameByte, 0755)
+						}
+					}, global.MainWindow)
+					importPicker.Show()
+				}),
+				widget.NewButton("Cancel", func() { global.App.Quit() }),
+			),
+		))
+	})
 }
 
 type Content struct {
@@ -202,10 +204,13 @@ func saveGame(game CustomGame) {
 
 	savedWidget := widget.NewLabel("Custom Game Saved")
 
-	global.MainWindow.SetContent(container.NewVBox(savedWidget,
-		widget.NewButton("Finish", func() {
-			os.Exit(0)
-		})))
+	fyne.DoAndWait(func() {
+		global.MainWindow.SetContent(container.NewVBox(savedWidget,
+			widget.NewButton("Finish", func() {
+				os.Exit(0)
+			})))
+		global.MainWindow.Resize(fyne.NewSize(1, 1))
+	})
 }
 
 func checkFileExists(fileName string) string {

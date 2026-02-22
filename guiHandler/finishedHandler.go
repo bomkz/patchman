@@ -9,12 +9,14 @@ import (
 
 func handleFinish() {
 	finishText := widget.NewLabel("Patchman has finished installing\nyour patch successfully.")
-	global.MainWindow.SetContent(container.NewVBox(
-		finishText,
-		container.NewHBox(
-			widget.NewButton("Finish", func() { global.ExitSuccess() }),
-		),
-	))
-	global.MainWindow.Resize(fyne.NewSize(100, 50))
+	fyne.DoAndWait(func() {
+		global.MainWindow.SetContent(container.NewVBox(
+			finishText,
+			container.NewHBox(
+				widget.NewButton("Finish", func() { global.ExitSuccess() }),
+			),
+		))
+		global.MainWindow.Resize(fyne.NewSize(100, 50))
+	})
 
 }

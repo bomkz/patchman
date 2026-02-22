@@ -14,4 +14,6 @@ patchman-*
 example.json
 *.json
 *1770480*
+*.tar.xz
+appimage
 *.log

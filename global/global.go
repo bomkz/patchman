@@ -113,6 +113,25 @@ func FatalError(err error) {
 
 }
 
+func WriteLog(logstring string) {
+
+	logfile, err1 := os.OpenFile("./patchman.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err1 != nil {
+		dialog.Alert("%s", "Could not create or write to log file: "+err1.Error()+"\n\n"+": "+logstring)
+
+	}
+	timestamp := time.Now().Truncate(time.Second).String()
+
+	if _, err1 := logfile.WriteString(timestamp + ": " + logstring); err1 != nil {
+		dialog.Alert("%s", "Could not create or write to log file: "+err1.Error()+"\n\n"+": "+logstring)
+	}
+
+	dialog.Alert(logstring)
+
+	logfile.Close()
+
+}
+
 func ClearScreen() {
 	if runtime.GOOS == "windows" {
 		cmd := exec.Command("cmd", "/c", "cls")

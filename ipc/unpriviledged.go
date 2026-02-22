@@ -9,24 +9,24 @@ import (
 	"github.com/bomkz/steamutils"
 )
 
-func SteamPath() (steamPath string) {
+func SteamPath() (steamPath string, found bool) {
 
 	procman.Write("steampath", nil)
 	msg := procman.Read()
 
 	switch msg.Type {
 	case "error":
-		global.FatalError(errors.New(string(msg.Payload)))
-		return ""
+		global.WriteLog(string(msg.Payload))
+		return
 	case "steampath":
-		return string(msg.Payload)
+		return string(msg.Payload), true
 	default:
 		global.FatalError(errors.New("Unrecognized response:" + msg.Type))
 		return
 	}
 }
 
-func GameAppById(appId string) (game steamutils.InstalledApp) {
+func GameAppById(appId string) (game steamutils.InstalledApp, found bool) {
 	procman.Write("gameappbyid", []byte(appId))
 	msg := procman.Read()
 
@@ -34,8 +34,12 @@ func GameAppById(appId string) (game steamutils.InstalledApp) {
 	case "error":
 		global.FatalError(errors.New(string(msg.Payload)))
 		return
+	case "notfound":
+		global.WriteLog(string(msg.Payload))
+		return
 	case "gameappbyid":
 		json.Unmarshal(msg.Payload, &game)
+		found = true
 		return
 	default:
 		global.FatalError(errors.New("Unrecognized response: " + msg.Type))

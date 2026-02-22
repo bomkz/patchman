@@ -88,16 +88,8 @@ type PresetStruct struct {
 	Compression string `json:"compression"`
 }
 
-var custom bool
-
-// Stores where presets should be saved
-var savePath string
-
 // Stores Message of the Day
 var Motd string
-
-// Array containing individual patch data.
-var patchData []IndexPatchStruct
 
 // Array containing patch list for dropdown box
 var patches = []string{}
@@ -119,9 +111,6 @@ var preset PresetStruct
 
 // Stores the game list for the dropdown box
 var gameOptions []string
-
-// Stores where the custom modpath is in custom form
-var modPath string
 
 // Variable contains main index json content
 var index []IndexStruct

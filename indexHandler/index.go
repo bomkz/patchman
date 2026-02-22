@@ -64,7 +64,10 @@ func handleIndex() {
 // Downloads Patchman Index from given URL and stores in indexmem
 func downloadIndex(url string) (err error) {
 
-	resp := global.Assure(http.Get(url))
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {

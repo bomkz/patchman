@@ -17,8 +17,8 @@ import (
 func steamPath() {
 	sr, err := steamutils.NewSteamReader(steamutils.SteamReaderConfig{})
 	if err != nil {
-		fatalErrorPriviledged(err)
-
+		procman.Write("error", []byte(err.Error()))
+		return
 	}
 	steamPath := sr.GetSteamPath()
 
@@ -34,7 +34,8 @@ func gameByAppId(appID string) {
 	//Section 2
 	game, err := sr.GetInstalledAppByID(appID)
 	if err != nil {
-		fatalErrorPriviledged(err)
+		procman.Write("notfound", []byte(err.Error()))
+		return
 	}
 
 	//Section 3

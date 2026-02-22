@@ -6,7 +6,7 @@ require fyne.io/fyne/v2 v2.7.2
 
 require (
 	github.com/Microsoft/go-winio v0.6.2
-	github.com/bomkz/steamutils v0.0.3
+	github.com/bomkz/steamutils v0.0.9
 	tawesoft.co.uk/go/dialog v0.0.0-20201103210221-4175697d086f
 )
 

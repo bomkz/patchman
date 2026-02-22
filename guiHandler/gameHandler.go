@@ -14,7 +14,7 @@ import (
 
 func buildGameListSteam() {
 
-	if global.Internet {
+	if global.Internet && global.SteamFound {
 		global.AssureNoReturn(json.Unmarshal(global.IndexData, &index))
 	}
 

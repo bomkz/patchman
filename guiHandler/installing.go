@@ -34,6 +34,7 @@ func buildInstaller() {
 
 	global.MainWindow.SetContent(container.NewVBox(installingText,
 		img))
+	global.MainWindow.Resize(fyne.NewSize(250, 100))
 
 }
 

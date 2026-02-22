@@ -20,7 +20,7 @@ import (
 func buildInstaller() {
 	go waitForInstall()
 
-	roll := rand.Intn(4) + 1
+	roll := rand.Intn(6) + 1
 
 	img := canvas.NewImageFromImage(nil)
 	img.FillMode = canvas.ImageFillContain

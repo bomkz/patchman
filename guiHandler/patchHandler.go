@@ -1,6 +1,8 @@
 package guiHandler
 
 import (
+	"strings"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
@@ -56,7 +58,18 @@ func buildPatchHandler() {
 			patchAuthWidget,
 			patchLinkWidget,
 			container.NewHBox(
-				widget.NewButton("Next", func() { handlePatch() }),
+				widget.NewButton("Next", func() {
+					if strings.Contains(patchDescWidget.Text, "None Selected") {
+						return
+					}
+					if strings.Contains(patchAuthWidget.Text, "None Selected") {
+						return
+					}
+					if strings.Contains(patchLinkWidget.Text, "None Selected") {
+						return
+					}
+					handlePatch()
+				}),
 				widget.NewButton("Custom", func() { buildCustomPatchHandler() }),
 				widget.NewButton("Cancel", func() { global.ExitSuccess() }),
 			),

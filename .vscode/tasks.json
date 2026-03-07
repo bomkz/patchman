@@ -4,7 +4,7 @@
         {
             "label": "build-gui",
             "type": "shell",
-            "command": "go build -tags wayland -o debug.exe"
+            "command": "go build -o debug.exe"
         }
     ]
 }

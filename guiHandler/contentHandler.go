@@ -99,9 +99,9 @@ func detectModifiedAssetsContent() {
 			baseContent = x
 		}
 	}
-	index[currentGame].ModifiableContent = []IndexModifiableContentStruct{}
 
 	var tmpContent []IndexModifiableContentStruct
+
 	for _, x := range actionScriptData {
 		if x.Action == "importasset" {
 			var patchmanData installer.PatchmanUnityStruct

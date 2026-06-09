@@ -2,8 +2,6 @@
 
 Is a utility to quickly and easily replace sound and texture assets in Unity games with the goal of being simple to use both as a user and a patch maker.
 
-Originally a patch manager for VTOL VR, I realized there's nothing VTOL VR specific about this that could be used to patch other Unity games.
-
 ## Creating your own patch
 
 PatchManager uses its own JSON-based patch"script", where you define the actions needed to patch the game once, with the ability to work across future versions of the game provided the asset names have not changed.
